@@ -1,0 +1,131 @@
+.endorsements-page { animation: fadeIn 0.5s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header { margin-bottom: 32px; }
+
+.page-breadcrumb {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 8px;
+}
+.page-breadcrumb span { color: #00b4ff; }
+
+.page-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.page-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 6px;
+}
+
+/* Choice cards */
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 700px;
+}
+
+.choice-card {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 36px 28px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.choice-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--card-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.choice-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255,255,255,0.055);
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 30px var(--card-glow);
+}
+
+.choice-card:hover::before { opacity: 1; }
+
+.choice-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--card-icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.choice-card:hover .choice-icon { transform: scale(1.08) rotate(-4deg); }
+
+.choice-icon svg {
+  width: 26px;
+  height: 26px;
+  color: var(--card-color);
+}
+
+.choice-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+}
+
+.choice-card:hover .choice-title { color: var(--card-color); }
+
+.choice-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+}
+
+.choice-arrow {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--card-color);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.3s ease;
+}
+
+.choice-arrow svg { width: 14px; height: 14px; }
+.choice-card:hover .choice-arrow { opacity: 1; transform: translateX(0); }
+
+@media (max-width: 600px) {
+  .choice-grid { grid-template-columns: 1fr; }
+}

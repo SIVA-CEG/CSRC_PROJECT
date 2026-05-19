@@ -1,0 +1,192 @@
+.section-card {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 36px 30px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 200px;
+  backdrop-filter: blur(10px);
+}
+
+/* Glow border on hover */
+.section-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--card-color), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Glow blob behind card */
+.section-card::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 160%;
+  height: 160%;
+  background: radial-gradient(circle at 40% 40%, var(--card-color), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px var(--card-glow);
+}
+
+.section-card:hover::before {
+  opacity: 1;
+}
+
+.section-card:hover::after {
+  opacity: 0.07;
+}
+
+.section-card:active {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Icon container */
+.card-icon-wrap {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: var(--card-icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+  flex-shrink: 0;
+}
+
+.section-card:hover .card-icon-wrap {
+  transform: scale(1.1) rotate(-4deg);
+  box-shadow: 0 8px 24px var(--card-glow);
+}
+
+.card-icon-wrap svg {
+  width: 28px;
+  height: 28px;
+  color: var(--card-color);
+  transition: all 0.3s ease;
+}
+
+/* Card text */
+.card-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.section-card:hover .card-title {
+  color: var(--card-color);
+}
+
+.card-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+/* Card count tag */
+.card-tag {
+  position: relative;
+  z-index: 1;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--card-color);
+  background: var(--card-icon-bg);
+  padding: 4px 12px;
+  border-radius: 20px;
+  opacity: 0.85;
+}
+
+/* Arrow */
+.card-arrow {
+  position: absolute;
+  z-index: 1;
+  bottom: 24px;
+  right: 24px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--card-icon-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.35s ease;
+}
+
+.card-arrow svg {
+  width: 16px;
+  height: 16px;
+  color: var(--card-color);
+}
+
+.section-card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Shimmer effect on hover */
+.card-shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.04),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.section-card:hover .card-shimmer {
+  left: 160%;
+}

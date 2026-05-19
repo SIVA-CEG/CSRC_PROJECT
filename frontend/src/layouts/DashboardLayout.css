@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: rgb(8, 12, 26);
+  padding-top: 70px;
+}
+
+.dashboard-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 32px 36px;
+  min-height: calc(100vh - 70px);
+  position: relative;
+  z-index: 1;
+  transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 900px) {
+  .dashboard-content {
+    margin-left: 0;
+    padding: 20px 16px;
+  }
+}
