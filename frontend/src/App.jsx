@@ -1,20 +1,26 @@
+import "./App.css";
+
 function App() {
+  const buttons = [
+    "Dashboard",
+    "Profile",
+    "Settings",
+    "Analytics",
+    "Logout",
+  ];
+
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <button>Button 1</button>
-      <button>Button 2</button>
-      <button>Button 3</button>
-      <button>Button 4</button>
-      <button>Button 5</button>
+    <div className="container">
+      <div className="card">
+        <h1>CSRC Project</h1>
+        <p>Select an option below</p>
+
+        <div className="button-group">
+          {buttons.map((button, index) => (
+            <button key={index}>{button}</button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
