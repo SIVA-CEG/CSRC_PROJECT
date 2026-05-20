@@ -1,0 +1,301 @@
+/* ── Premium Design Tokens ───────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --ep-primary: #2563eb;       /* Rich Blue */
+  --ep-primary-hover: #1d4ed8; 
+  --ep-primary-light: #eff6ff; 
+  --ep-accent: #3b82f6;        
+  --ep-success: #10b981;       
+  --ep-danger: #ef4444;        
+  --ep-bg: #f4f7f9;            /* Very soft blue-grey */
+  --ep-card-bg: #ffffff;
+  --ep-text-main: #0f172a;     
+  --ep-text-muted: #64748b;    
+  --ep-border: #e2e8f0;        
+  --ep-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0,0,0,0.04);
+  --ep-shadow-md: 0 10px 20px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
+  --ep-shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0,0,0,0.04);
+  --ep-radius-md: 12px;
+  --ep-radius-lg: 20px;
+  --ep-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Page shell ──────────────────────────────────────────────────────────── */
+.ep-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--ep-bg);
+  min-height: 100vh;
+  padding: 30px 20px 80px;
+  color: var(--ep-text-main);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.ep-page.ep-loaded { opacity: 1; }
+.ep-container { max-width: 1040px; margin: 0 auto; position: relative; }
+
+/* ── Top Navigation ──────────────────────────────────────────────────────── */
+.ep-top-nav { margin-bottom: 24px; }
+.ep-btn-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; border: none; color: var(--ep-text-muted);
+  font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 12px;
+  border-radius: 8px; transition: var(--ep-transition);
+}
+.ep-btn-back:hover { background: #e2e8f0; color: var(--ep-text-main); transform: translateX(-4px); }
+
+/* ── Header banner ───────────────────────────────────────────────────────── */
+.ep-header-banner {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #fff;
+  border-radius: var(--ep-radius-lg);
+  padding: 40px 48px;
+  margin-bottom: 32px;
+  box-shadow: var(--ep-shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+.ep-header-glow {
+  position: absolute; top: -50%; right: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 60%);
+  border-radius: 50%; pointer-events: none;
+}
+.ep-header-title { font-size: 32px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+.ep-header-sub { font-size: 15px; color: #94a3b8; margin: 0; font-weight: 500; }
+
+/* ── Cards & Animations ──────────────────────────────────────────────────── */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ep-card {
+  background: var(--ep-card-bg);
+  border-radius: var(--ep-radius-lg);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: var(--ep-shadow-sm);
+  padding: 32px 40px;
+  margin-bottom: 24px;
+  transition: var(--ep-transition);
+  opacity: 0; animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.ep-card:hover { box-shadow: var(--ep-shadow-md); border-color: #cbd5e1; }
+
+.ep-anim-1 { animation-delay: 0.1s; } .ep-anim-2 { animation-delay: 0.15s; }
+.ep-anim-3 { animation-delay: 0.2s; } .ep-anim-4 { animation-delay: 0.25s; }
+.ep-anim-5 { animation-delay: 0.3s; } .ep-anim-6 { animation-delay: 0.35s; }
+.ep-anim-7 { animation-delay: 0.4s; } .ep-anim-8 { animation-delay: 0.45s; }
+
+.ep-card-heading {
+  font-size: 15px; font-weight: 700; color: var(--ep-primary);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 28px;
+  display: flex; align-items: center;
+}
+.ep-card-heading::after {
+  content: ''; flex-grow: 1; height: 1px; background: linear-gradient(90deg, var(--ep-border), transparent); margin-left: 16px;
+}
+.ep-flex-between { justify-content: space-between; }
+.ep-flex-between::after { display: none; }
+
+/* ── Typography & Labels ─────────────────────────────────────────────────── */
+.ep-label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+.ep-hint { font-size: 11px; color: #94a3b8; font-weight: 400; margin-left: 6px; font-style: italic; }
+
+/* ── Form controls ───────────────────────────────────────────────────────── */
+.ep-input-group { position: relative; }
+.ep-input, .ep-select, .ep-textarea {
+  width: 100%; padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--ep-border);
+  font-size: 14px; font-weight: 500; background: #f8fafc; color: var(--ep-text-main);
+  transition: var(--ep-transition); box-sizing: border-box; font-family: inherit;
+}
+.ep-input:hover, .ep-select:hover, .ep-textarea:hover { border-color: #cbd5e1; background: #fff; }
+.ep-input:focus, .ep-select:focus, .ep-textarea:focus {
+  border-color: var(--ep-primary); background: #fff; outline: none;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+.ep-textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+
+/* ── Premium Custom Radio Buttons ────────────────────────────────────────── */
+.ep-radio-card { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--ep-border); }
+.ep-radio-card-sm { padding: 16px; }
+.ep-radio-group { display: flex; flex-direction: column; gap: 14px; }
+.ep-radio-inline { flex-direction: row; gap: 24px; align-items: center; margin-top: 10px; }
+
+.ep-custom-radio-label {
+  display: inline-flex; align-items: center; font-size: 14px; font-weight: 500;
+  cursor: pointer; color: var(--ep-text-main); position: relative;
+  transition: var(--ep-transition);
+}
+.ep-custom-radio-label:hover { color: var(--ep-primary); }
+.ep-custom-radio-label input[type="radio"] { position: absolute; opacity: 0; cursor: pointer; }
+.ep-radio-circle {
+  height: 20px; width: 20px; border: 2px solid #cbd5e1; border-radius: 50%;
+  margin-right: 12px; display: inline-flex; align-items: center; justify-content: center;
+  transition: var(--ep-transition); background: #fff;
+}
+.ep-radio-circle::after {
+  content: ""; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--ep-primary); transform: scale(0); transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.ep-custom-radio-label input:checked ~ .ep-radio-circle { border-color: var(--ep-primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+.ep-custom-radio-label input:checked ~ .ep-radio-circle::after { transform: scale(1); }
+
+/* ── Toggle Buttons (GST) ────────────────────────────────────────────────── */
+.ep-gst-toggle-wrap { background: #f0f9ff; padding: 20px; border-radius: 12px; border: 1px dashed #bae6fd; }
+.ep-toggle-buttons { display: flex; gap: 12px; margin-top: 10px; }
+.ep-toggle-btn {
+  flex: 1; padding: 12px; border-radius: 8px; border: 2px solid transparent; background: #fff;
+  font-weight: 600; color: #475569; cursor: pointer; transition: var(--ep-transition); box-shadow: var(--ep-shadow-sm);
+}
+.ep-toggle-btn.active { background: var(--ep-primary); color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
+.ep-toggle-btn.active.danger { background: #f8fafc; color: var(--ep-text-main); border-color: #cbd5e1; box-shadow: none; }
+
+/* ── Financial Calc Box ──────────────────────────────────────────────────── */
+.ep-calc-box {
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border-radius: 16px; margin-top: 24px; overflow: hidden; color: #fff;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+}
+.ep-calc-header {
+  background: rgba(255,255,255,0.05); padding: 16px 24px; font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-transform: uppercase; letter-spacing: 1px; color: #93c5fd;
+}
+.ep-calc-body { padding: 24px; }
+.ep-calc-row {
+  display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; color: #cbd5e1;
+}
+.ep-calc-border { border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 16px; margin-bottom: 8px; }
+.ep-calc-subtotal { color: #fff; font-weight: 600; }
+.ep-calc-val { font-weight: 600; font-variant-numeric: tabular-nums; color: #fff; }
+.ep-gst-row { display: none; color: #60a5fa; font-weight: 600; animation: slideUpFade 0.3s forwards; }
+.ep-gst-row.visible { display: flex; }
+.ep-gst-row .ep-calc-val { color: #60a5fa; }
+.ep-calc-total {
+  margin-top: 16px; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.1);
+  font-weight: 800; font-size: 18px; align-items: center; color: #fff;
+}
+.ep-total-highlight { background: var(--ep-primary); padding: 6px 16px; border-radius: 8px; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+/* ── PI Bar ──────────────────────────────────────────────────────────────── */
+.ep-pi-bar {
+  background: linear-gradient(to right, #f8fafc, #f1f5f9); border: 1px solid var(--ep-border);
+  border-radius: 12px; padding: 24px; display: flex; gap: 24px; align-items: center; margin-top: 24px;
+}
+.ep-pi-avatar {
+  width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, var(--ep-primary), #4f46e5);
+  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; box-shadow: 0 8px 16px rgba(37,99,235,0.2);
+}
+.ep-pi-details { flex: 1; }
+.ep-pi-name { font-weight: 800; font-size: 18px; color: var(--ep-text-main); display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+.ep-pi-role { background: #dbeafe; color: var(--ep-primary); padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; }
+.ep-pi-meta { color: var(--ep-text-muted); font-size: 14px; margin-bottom: 12px; font-weight: 500; }
+.ep-pi-stats { color: #64748b; font-size: 13px; display: flex; gap: 20px; }
+.ep-icon-dot { display: inline-block; width: 6px; height: 6px; background: #cbd5e1; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+/* ── Table & Icons ───────────────────────────────────────────────────────── */
+.ep-table-wrap { overflow-x: auto; border: 1px solid var(--ep-border); border-radius: 12px; box-shadow: var(--ep-shadow-sm); }
+.ep-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; background: #fff; }
+.ep-table th { background: #f8fafc; padding: 14px 16px; border-bottom: 2px solid var(--ep-border); font-weight: 700; color: #475569; white-space: nowrap; }
+.ep-table td { padding: 12px 16px; border-bottom: 1px solid var(--ep-border); vertical-align: middle; }
+.ep-table tr:last-child td { border-bottom: none; }
+.ep-table-row-anim { animation: slideUpFade 0.3s ease-out; }
+
+.ep-row-btns-top { display: flex; gap: 8px; }
+.ep-btn-icon {
+  width: 32px; height: 32px; border-radius: 8px; border: none; font-size: 18px; font-weight: bold;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--ep-transition);
+}
+.ep-btn-add { background: #d1fae5; color: #059669; }
+.ep-btn-add:hover { background: #10b981; color: #fff; transform: scale(1.05); }
+.ep-btn-del { background: #fee2e2; color: #dc2626; }
+.ep-btn-del:hover:not(:disabled) { background: #ef4444; color: #fff; transform: scale(1.05); }
+.ep-btn-del:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Upload section ──────────────────────────────────────────────────────── */
+.ep-upload-grid { display: grid; gap: 16px; }
+.ep-upload-row {
+  display: flex; align-items: center; justify-content: space-between; padding: 20px 24px;
+  background: #f8fafc; border-radius: 12px; border: 1.5px dashed #cbd5e1; transition: var(--ep-transition);
+}
+.ep-upload-row:hover { border-color: var(--ep-primary); background: #f0f9ff; }
+.ep-upload-label-box { flex: 1; }
+.ep-upload-title { font-size: 15px; font-weight: 600; color: var(--ep-text-main); margin-bottom: 4px; }
+.ep-upload-sub { font-size: 12px; color: #94a3b8; }
+
+.ep-upload-control { display: flex; align-items: center; gap: 16px; flex-direction: row-reverse;}
+.ep-file-input { display: none; }
+.ep-file-btn {
+  background: #fff; border: 1px solid var(--ep-border); padding: 10px 20px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ep-text-main); transition: var(--ep-transition);
+  box-shadow: var(--ep-shadow-sm);
+}
+.ep-file-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.ep-file-btn.uploaded { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+.ep-file-badge { font-size: 13px; color: #059669; font-weight: 700; background: #d1fae5; padding: 6px 12px; border-radius: 20px; }
+
+/* ── Generate Button ─────────────────────────────────────────────────────── */
+.ep-generate-wrap { text-align: center; margin: 40px 0; }
+.ep-btn-generate {
+  background: linear-gradient(135deg, var(--ep-primary), #4f46e5);
+  color: #fff; border: none; cursor: pointer; font-size: 18px; font-weight: 800;
+  padding: 20px 48px; border-radius: 16px; box-shadow: 0 10px 20px rgba(37,99,235,0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  position: relative; overflow: hidden;
+}
+.ep-glow-effect::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+  transform: skewX(-20deg); transition: 0.5s;
+}
+.ep-btn-generate:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 30px rgba(37,99,235,0.4); }
+.ep-btn-generate:hover::before { left: 150%; }
+
+/* ── Modal Overlay ───────────────────────────────────────────────────────── */
+.ep-overlay {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
+  z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn { from { opacity: 0; backdrop-filter: blur(0px); } to { opacity: 1; backdrop-filter: blur(8px); } }
+
+.ep-modal {
+  background: var(--ep-bg); border-radius: 24px; padding: 32px; width: 100%; max-width: 1000px; max-height: 90vh;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column;
+  animation: slideUpFade 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ep-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.ep-modal-title { font-size: 24px; font-weight: 800; color: var(--ep-text-main); margin: 0; }
+.ep-btn-close {
+  background: #e2e8f0; border: none; width: 40px; height: 40px; border-radius: 50%;
+  cursor: pointer; font-size: 18px; color: #475569; transition: var(--ep-transition);
+  display: flex; align-items: center; justify-content: center;
+}
+.ep-btn-close:hover { background: #fecaca; color: var(--ep-danger); transform: rotate(90deg); }
+
+/* ── Format Tabs ─────────────────────────────────────────────────────────── */
+.ep-format-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;}
+.ep-format-tabs { display: flex; gap: 8px; background: #e2e8f0; padding: 6px; border-radius: 12px; }
+.ep-format-tab {
+  padding: 10px 20px; border-radius: 8px; border: none; background: transparent; color: #64748b;
+  cursor: pointer; font-weight: 600; font-size: 14px; transition: var(--ep-transition);
+}
+.ep-format-tab:hover { color: var(--ep-text-main); }
+.ep-format-tab.active { background: #fff; color: var(--ep-primary); box-shadow: var(--ep-shadow-sm); }
+
+.ep-btn-print {
+  background: #fff; color: var(--ep-text-main); border: 1.5px solid var(--ep-border); padding: 12px 24px;
+  border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--ep-transition);
+  display: flex; align-items: center; gap: 8px; box-shadow: var(--ep-shadow-sm);
+}
+.ep-btn-print:hover { background: var(--ep-primary); color: #fff; border-color: var(--ep-primary); box-shadow: 0 10px 15px rgba(37,99,235,0.2); transform: translateY(-2px); }
+
+/* ── Report preview pane ─────────────────────────────────────────────────── */
+.ep-report-wrap {
+  background: #475569; border-radius: 16px; overflow-y: auto; flex: 1; padding: 30px;
+  display: flex; justify-content: center; box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+}
