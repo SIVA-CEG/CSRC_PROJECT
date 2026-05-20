@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+.sanctioned-page {
+  animation: fadeInUp 0.5s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header { margin-bottom: 24px; }
+
+.page-breadcrumb {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 8px;
+}
+
+.page-breadcrumb span {
+  color: #a78bfa;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.page-breadcrumb span:hover { opacity: 0.7; text-decoration: underline; }
+
+.page-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+/* ── Table Card ── */
+.sanctioned-table-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.sanctioned-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sanctioned-table-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.5px;
+}
+
+.sanctioned-count-badge {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(167,139,250,0.1);
+  color: #a78bfa;
+  border: 1px solid rgba(167,139,250,0.2);
+  margin-left: 10px;
+}
+
+/* ── Search bar ── */
+.sanctioned-search-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sanctioned-search {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 9px;
+  padding: 7px 14px;
+  color: rgba(255,255,255,0.75);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  outline: none;
+  width: 160px;
+  transition: all 0.2s ease;
+}
+
+.sanctioned-search::placeholder { color: rgba(255,255,255,0.25); }
+
+.sanctioned-search:focus {
+  border-color: rgba(167,139,250,0.35);
+  background: rgba(255,255,255,0.07);
+  width: 200px;
+}
+
+/* ── Data Table ── */
+.sanctioned-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.sanctioned-table thead tr {
+  background: rgba(167,139,250,0.06);
+}
+
+.sanctioned-table th {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  padding: 13px 18px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.sanctioned-table td {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  padding: 15px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+  line-height: 1.55;
+}
+
+.sanctioned-table tbody tr {
+  transition: background 0.18s ease;
+}
+
+.sanctioned-table tbody tr:hover {
+  background: rgba(167,139,250,0.04);
+}
+
+.sanctioned-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* File No highlight */
+.file-no-cell {
+  color: #a78bfa;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Title cell */
+.title-cell {
+  max-width: 400px;
+  line-height: 1.55;
+}
+
+/* Cost cell */
+.sanctioned-cost-cell {
+  white-space: nowrap;
+  color: rgba(255,255,255,0.85);
+  font-weight: 500;
+}
+
+/* ── View Button ── */
+.sanctioned-view-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(167,139,250,0.12);
+  color: #a78bfa;
+  transition: all 0.2s ease;
+}
+
+.sanctioned-view-btn:hover {
+  background: rgba(167,139,250,0.25);
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(167,139,250,0.25);
+}
+
+.sanctioned-view-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Add New Button ── */
+.sanctioned-new-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 14px rgba(124,58,237,0.3);
+}
+
+.sanctioned-new-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+}
+
+.sanctioned-new-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Pagination ── */
+.sanctioned-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.sanctioned-page-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.45);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sanctioned-page-btn:hover {
+  background: rgba(167,139,250,0.1);
+  color: #a78bfa;
+  border-color: rgba(167,139,250,0.25);
+}
+
+.sanctioned-page-info {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  padding: 0 8px;
+}

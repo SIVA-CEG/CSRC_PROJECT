@@ -1,10 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
 
-.projects-main-page { animation: fadeIn 0.5s ease; }
+.subpage { animation: fadeIn 0.5s ease; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header { margin-bottom: 32px; }
+
+.page-breadcrumb {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 8px;
+}
+.page-breadcrumb span {
+  color: #38bdf8; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.page-breadcrumb span:hover { opacity: 0.7; text-decoration: underline; }
+
+.page-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 26px; font-weight: 700;
+  color: #fff; letter-spacing: 1px;
 }
 
 .page-subtitle {
@@ -14,59 +34,57 @@
   margin-top: 6px;
 }
 
-/* ── Cards Grid ── */
-.proj-cards-grid {
+.pay-cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 680px;
 }
 
-.proj-card-wrapper {
-  animation: fadeSlideUp 0.55s ease both;
+.pay-card-wrapper {
+  animation: fadeSlideUp 0.5s ease both;
 }
 
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(22px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Card ── */
-.proj-card {
+.pay-card {
   position: relative;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
-  padding: 26px 22px;
+  padding: 30px 24px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
   display: flex;
   flex-direction: column;
   gap: 14px;
-  min-height: 170px;
+  min-height: 185px;
 }
 
-.proj-card::before {
+.pay-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: var(--card-color);
+  background: var(--pay-color);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s;
 }
 
-.proj-card:hover {
+.pay-card:hover {
   transform: translateY(-6px);
   background: rgba(255,255,255,0.055);
   border-color: rgba(255,255,255,0.13);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 0 28px var(--card-glow);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.45), 0 0 28px var(--pay-glow);
 }
 
-.proj-card:hover::before { opacity: 1; }
+.pay-card:hover::before { opacity: 1; }
 
-/* Shimmer */
-.proj-card-shimmer {
+.pay-card-shimmer {
   position: absolute;
   top: 0; left: -100%;
   width: 60%; height: 100%;
@@ -75,64 +93,50 @@
   transition: left 0.6s ease;
   pointer-events: none;
 }
-.proj-card:hover .proj-card-shimmer { left: 160%; }
+.pay-card:hover .pay-card-shimmer { left: 160%; }
 
-/* Icon */
-.proj-card-icon {
+.pay-card-icon {
   width: 50px; height: 50px;
   border-radius: 14px;
-  background: var(--card-icon-bg);
+  background: var(--pay-icon-bg);
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
   transition: all 0.35s ease;
 }
-.proj-card:hover .proj-card-icon {
+.pay-card:hover .pay-card-icon {
   transform: scale(1.1) rotate(-4deg);
-  box-shadow: 0 6px 20px var(--card-glow);
+  box-shadow: 0 6px 20px var(--pay-glow);
 }
-.proj-card-icon svg {
-  width: 24px; height: 24px;
-  color: var(--card-color);
-}
+.pay-card-icon svg { width: 23px; height: 23px; color: var(--pay-color); }
 
-/* Text */
-.proj-card-content { flex: 1; }
-
-.proj-card-title {
+.pay-card-title {
   font-family: 'Rajdhani', sans-serif;
   font-size: 18px; font-weight: 700;
   color: #fff; letter-spacing: 0.5px;
-  margin-bottom: 6px;
-  transition: color 0.2s ease;
+  transition: color 0.2s;
 }
-.proj-card:hover .proj-card-title { color: var(--card-color); }
+.pay-card:hover .pay-card-title { color: var(--pay-color); }
 
-.proj-card-desc {
+.pay-card-desc {
   font-family: 'DM Sans', sans-serif;
   font-size: 12.5px; font-weight: 300;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.38);
   line-height: 1.55;
 }
 
-/* Arrow */
-.proj-card-arrow {
+.pay-card-arrow {
   position: absolute;
-  bottom: 20px; right: 20px;
-  width: 32px; height: 32px;
+  bottom: 18px; right: 18px;
+  width: 30px; height: 30px;
   border-radius: 50%;
-  background: var(--card-icon-bg);
+  background: var(--pay-icon-bg);
   display: flex; align-items: center; justify-content: center;
   opacity: 0;
-  transform: translateX(-8px);
+  transform: translateX(-6px);
   transition: all 0.3s ease;
 }
-.proj-card-arrow svg { width: 14px; height: 14px; color: var(--card-color); }
-.proj-card:hover .proj-card-arrow { opacity: 1; transform: translateX(0); }
+.pay-card-arrow svg { width: 13px; height: 13px; color: var(--pay-color); }
+.pay-card:hover .pay-card-arrow { opacity: 1; transform: translateX(0); }
 
-/* Responsive */
-@media (max-width: 1000px) {
-  .proj-cards-grid { grid-template-columns: repeat(2, 1fr); }
-}
 @media (max-width: 600px) {
-  .proj-cards-grid { grid-template-columns: 1fr; }
+  .pay-cards-grid { grid-template-columns: 1fr; }
 }

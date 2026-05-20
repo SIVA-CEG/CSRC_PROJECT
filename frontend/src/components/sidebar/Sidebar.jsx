@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 
-const ChevronDown = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="6 9 12 15 18 9"/>
-  </svg>
-);
-
 const navItems = [
   {
     id: 'profile',
@@ -23,8 +17,15 @@ const navItems = [
     label: 'My Projects',
     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17.5 14v6M14.5 17h6" strokeLinecap="round"/></svg>,
     sub: [
-      { id: 'proposals', label: 'Proposals' },
-      { id: 'sanctioned', label: 'Sanctioned Projects' },
+      { id: 'proposals',     label: 'Proposals' },
+      { id: 'sanctioned',    label: 'Sanctioned Projects' },
+      { id: 'ctdt',          label: 'CTDT Proceedings' },
+      { id: 'projectstaff',  label: 'Project Staff' },
+      { id: 'requestforms',  label: 'Request Forms' },
+      { id: 'paymentclaims', label: 'Payment Claims' },
+      { id: 'zbaslip',       label: 'ZBA Slip' },
+      { id: 'tsaslip',       label: 'TSA(H) Slip' },
+      { id: 'cmrgslip',      label: 'CMRG Slip' },
     ],
   },
   {
@@ -52,9 +53,8 @@ const navItems = [
 const Sidebar = ({ activePage, onNavigate }) => {
   const [openSubs, setOpenSubs] = useState({ projects: true });
 
-  const toggleSub = (id) => {
+  const toggleSub = (id) =>
     setOpenSubs(prev => ({ ...prev, [id]: !prev[id] }));
-  };
 
   return (
     <aside className="sidebar">
