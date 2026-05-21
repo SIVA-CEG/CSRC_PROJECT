@@ -562,3 +562,110 @@
   .sl-section-body { padding:16px; }
   .page-title { font-size:24px; }
 }
+
+.sanctioned-detail-card {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 22px;
+  padding: 28px;
+}
+
+.sanctioned-detail-top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.sanctioned-detail-title {
+  color: #fff;
+  font-size: 24px;
+  margin: 0;
+}
+
+.sanctioned-detail-sub {
+  color: rgba(255,255,255,0.45);
+  margin: 4px 0 0;
+}
+
+.sanctioned-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.sanctioned-detail-grid div {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.sanctioned-detail-grid span {
+  display: block;
+  color: rgba(255,255,255,0.42);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.sanctioned-detail-grid strong {
+  color: rgba(255,255,255,0.88);
+  font-size: 14px;
+}
+
+.sanctioned-detail-grid.small {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.sanctioned-inst-card {
+  margin-top: 26px;
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(167,139,250,0.18);
+}
+
+.sanctioned-inst-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.sanctioned-inst-header h3 {
+  color: #fff;
+  margin: 0;
+}
+
+.sanctioned-inst-header span {
+  color: #34d399;
+  background: rgba(52,211,153,0.12);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.sanctioned-detail-table th {
+  text-align: center;
+}
+
+.detail-group-row td {
+  font-weight: 700;
+  color: #a78bfa;
+  background: rgba(167,139,250,0.08);
+}
+
+.detail-total-row td {
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,180,255,0.1);
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .sanctioned-detail-grid,
+  .sanctioned-detail-grid.small {
+    grid-template-columns: 1fr;
+  }
+}

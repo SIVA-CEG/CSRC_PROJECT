@@ -464,14 +464,167 @@ const SearchInput = ({ placeholder, value, onChange }) => (
 );
 
 // ─── Tab 1: Sanctioned List ──────────────────────────────
+const sampleInstallments = [
+  {
+    label: '1st Installment',
+    sanctionRef: 'Proceedings No.CSRC/Office/617131/OBS',
+    sanctionDate: '13-02-2026',
+    installmentNo: '1',
+    sanctionType: 'To Generate',
+    ctdt: '2017',
+    sanctionRefStatus: 'Uploaded',
+    heads: [
+      { sl: 'A', head: 'Non-Recurring Heads', sanctioned: '', utilized: '' },
+      { sl: '1', head: 'Equipment', sanctioned: 4484482, utilized: 125000 },
+
+      { sl: 'B', head: 'Recurring Heads', sanctioned: '', utilized: '' },
+      { sl: '1', head: 'Manpower\n• one\nNo. of manpower types: 1', sanctioned: 4858456, utilized: 75000 },
+      { sl: '2', head: 'Consumables & Accessories', sanctioned: 262250, utilized: 12000 },
+      { sl: '3', head: 'Travel', sanctioned: 2520, utilized: 0 },
+      { sl: '4', head: 'Contingency', sanctioned: 50000, utilized: 5000 },
+
+      { sl: 'C', head: 'Overhead', sanctioned: 5155151, utilized: 0 },
+      { sl: '5', head: 'The Registrar A/C, Chennai 5%', sanctioned: 1718383.667, utilized: 0 },
+      { sl: '6', head: 'The Dean, Campus A/C 4%', sanctioned: 1374706.933, utilized: 0 },
+      { sl: '7', head: 'CSRC Revenue, Chennai 4%', sanctioned: 1374706.933, utilized: 0 },
+      { sl: '8', head: 'The Principal Investigator PDF 2%', sanctioned: 687353.467, utilized: 0 },
+
+      { sl: 'D', head: 'Scientific Social Responsibility Budget Detail', sanctioned: 151506, utilized: 0 },
+    ],
+  },
+
+  {
+    label: '2nd Installment',
+    sanctionRef: 'Proceedings No.CSRC/Office/617131/OBS-2',
+    sanctionDate: '20-08-2026',
+    installmentNo: '2',
+    sanctionType: 'CSRC Generated',
+    ctdt: '2017',
+    sanctionRefStatus: 'Uploaded',
+    heads: [
+      { sl: 'A', head: 'Non-Recurring Heads', sanctioned: '', utilized: '' },
+      { sl: '1', head: 'Equipment', sanctioned: 2500000, utilized: 600000 },
+
+      { sl: 'B', head: 'Recurring Heads', sanctioned: '', utilized: '' },
+      { sl: '1', head: 'Manpower\n• Project Assistant\nNo. of manpower types: 1', sanctioned: 300000, utilized: 100000 },
+      { sl: '2', head: 'Consumables & Accessories', sanctioned: 150000, utilized: 45000 },
+      { sl: '3', head: 'Travel', sanctioned: 50000, utilized: 10000 },
+      { sl: '4', head: 'Contingency', sanctioned: 75000, utilized: 20000 },
+
+      { sl: 'C', head: 'Overhead', sanctioned: 461250, utilized: 0 },
+      { sl: '5', head: 'The Registrar A/C, Chennai 5%', sanctioned: 153750, utilized: 0 },
+      { sl: '6', head: 'The Dean, Campus A/C 4%', sanctioned: 123000, utilized: 0 },
+      { sl: '7', head: 'CSRC Revenue, Chennai 4%', sanctioned: 123000, utilized: 0 },
+      { sl: '8', head: 'The Principal Investigator PDF 2%', sanctioned: 61500, utilized: 0 },
+
+      { sl: 'D', head: 'Scientific Social Responsibility Budget Detail', sanctioned: 50000, utilized: 0 },
+    ],
+  },
+];
+
+const SanctionedProjectDetails = ({ project, onBack }) => {
+  return (
+    <div className="sl-tab-content">
+      <div className="sanctioned-detail-card">
+        <div className="sanctioned-detail-top">
+          <button className="sanctioned-page-btn" onClick={onBack}>
+            ← Back
+          </button>
+
+          <div>
+            <h2 className="sanctioned-detail-title">Project Sanction Details</h2>
+            <p className="sanctioned-detail-sub">{project.fileNo}</p>
+          </div>
+        </div>
+
+        <div className="sanctioned-detail-grid">
+          <div><span>Project Title</span><strong>{project.title}</strong></div>
+          <div><span>Project Period</span><strong>13-02-2026 to 12-02-2028</strong></div>
+          <div><span>Total Cost</span><strong>₹ {project.cost}</strong></div>
+          <div><span>Funding Agency</span><strong>SERB</strong></div>
+          <div><span>Principal Investigator</span><strong>Dr. S. Balasivanandha Prabu</strong></div>
+          <div><span>Department</span><strong>Department of Mechanical Engineering</strong></div>
+        </div>
+
+        {sampleInstallments.map((inst, idx) => (
+          <div className="sanctioned-inst-card" key={idx}>
+            <div className="sanctioned-inst-header">
+              <h3>{inst.label}</h3>
+              <span>{inst.sanctionRefStatus}</span>
+            </div>
+
+            <div className="sanctioned-detail-grid small">
+              <div><span>Sanction Reference</span><strong>{inst.sanctionRef}</strong></div>
+              <div><span>Date</span><strong>{inst.sanctionDate}</strong></div>
+              <div><span>Installment No.</span><strong>{inst.installmentNo}</strong></div>
+              <div><span>Sanction Type</span><strong>{inst.sanctionType}</strong></div>
+              <div><span>CTDT</span><strong>{inst.ctdt}</strong></div>
+              <div><span>Sanction Ref</span><strong>{inst.sanctionRefStatus}</strong></div>
+            </div>
+
+            <div className="table-scroll-wrap">
+              <table className="sanctioned-table sanctioned-detail-table">
+                <thead>
+                  <tr>
+                    <th>Sl. No.</th>
+                    <th>Heads</th>
+                    <th>Sanctioned Amount (₹)</th>
+                    <th>Utilized Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inst.heads.map((row, i) => (
+                    <tr key={i} className={row.sanctioned === '' ? 'detail-group-row' : ''}>
+                      <td className="sl-num">{row.sl}</td>
+                      <td className="title-cell" style={{ whiteSpace: 'pre-line' }}>
+  {row.head}
+</td>
+                      <td className="sanctioned-cost-cell">
+                        {row.sanctioned === '' ? '' : fmtINR(row.sanctioned)}
+                      </td>
+                      <td className="sanctioned-cost-cell">
+                        {row.utilized === '' ? '' : fmtINR(row.utilized)}
+                      </td>
+                    </tr>
+                  ))}
+
+                  <tr className="detail-total-row">
+                    <td colSpan={2}>Total</td>
+                    <td>
+                      {fmtINR(inst.heads.reduce((s, h) => s + (parseFloat(h.sanctioned) || 0), 0))}
+                    </td>
+                    <td>
+                      {fmtINR(inst.heads.reduce((s, h) => s + (parseFloat(h.utilized) || 0), 0))}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const SanctionedListTab = () => {
   const [searchFile, setSearchFile] = useState('');
   const [searchTitle, setSearchTitle] = useState('');
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const filtered = sanctionedData.filter(d =>
     d.fileNo.toLowerCase().includes(searchFile.toLowerCase()) &&
     d.title.toLowerCase().includes(searchTitle.toLowerCase())
   );
+
+  if (selectedProject) {
+    return (
+      <SanctionedProjectDetails
+        project={selectedProject}
+        onBack={() => setSelectedProject(null)}
+      />
+    );
+  }
 
   return (
     <div className="sl-tab-content">
@@ -486,16 +639,26 @@ const SanctionedListTab = () => {
             <SearchInput placeholder="Search Title..." value={searchTitle} onChange={e => setSearchTitle(e.target.value)} />
           </div>
         </div>
+
         <div className="table-scroll-wrap">
           <table className="sanctioned-table">
             <thead>
               <tr>
-                <th>Sl.No</th><th>File No</th><th>Project Title</th><th>Total Cost (₹)</th><th>Action</th>
+                <th>Sl.No</th>
+                <th>File No</th>
+                <th>Project Title</th>
+                <th>Total Cost (₹)</th>
+                <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={5} style={{ textAlign: 'center', padding: '30px', color: 'rgba(255,255,255,0.3)' }}>No records found</td></tr>
+                <tr>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '30px', color: 'rgba(255,255,255,0.3)' }}>
+                    No records found
+                  </td>
+                </tr>
               ) : filtered.map(item => (
                 <tr key={item.sl}>
                   <td className="sl-num">{item.sl}</td>
@@ -503,7 +666,11 @@ const SanctionedListTab = () => {
                   <td className="title-cell">{item.title}</td>
                   <td className="sanctioned-cost-cell">{item.cost}</td>
                   <td>
-                    <button className="sanctioned-view-btn" title="View details">
+                    <button
+                      className="sanctioned-view-btn"
+                      title="View details"
+                      onClick={() => setSelectedProject(item)}
+                    >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                         <circle cx="12" cy="12" r="3" />
@@ -515,24 +682,13 @@ const SanctionedListTab = () => {
             </tbody>
           </table>
         </div>
+
         <div className="sanctioned-pagination">
-          <button className="sanctioned-page-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 13, height: 13 }}><polyline points="11 17 6 12 11 7" /><polyline points="18 17 13 12 18 7" /></svg>
-            First
-          </button>
-          <button className="sanctioned-page-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 13, height: 13 }}><polyline points="15 18 9 12 15 6" /></svg>
-            Prev
-          </button>
+          <button className="sanctioned-page-btn">« First</button>
+          <button className="sanctioned-page-btn">‹ Prev</button>
           <span className="sanctioned-page-info">1 – {filtered.length} of {filtered.length} records</span>
-          <button className="sanctioned-page-btn">
-            Next
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 13, height: 13 }}><polyline points="9 18 15 12 9 6" /></svg>
-          </button>
-          <button className="sanctioned-page-btn">
-            Last
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 13, height: 13 }}><polyline points="13 17 18 12 13 7" /><polyline points="6 17 11 12 6 7" /></svg>
-          </button>
+          <button className="sanctioned-page-btn">Next ›</button>
+          <button className="sanctioned-page-btn">Last »</button>
         </div>
       </div>
     </div>
