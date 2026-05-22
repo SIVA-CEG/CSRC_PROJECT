@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './RequestFormsPage.css';
+import ReappropriationPage from './ReappropriationPage';
+import ProjectExtensionPage from './ProjectExtensionPage';
 
 const reqCards = [
   {
@@ -81,23 +83,51 @@ const ReqCard = ({ title, desc, color, glow, icon, onClick }) => (
   </div>
 );
 
-const RequestFormsPage = ({ onNavigate }) => (
-  <div className="subpage">
-    <div className="page-header">
-      <div className="page-breadcrumb">
-        Home / <span onClick={() => onNavigate('projects')}>My Projects</span> / <span>Request Forms</span>
-      </div>
-      <h1 className="page-title">Request Forms</h1>
-      <p className="page-subtitle">Submit and track all project-related requests</p>
-    </div>
-    <div className="req-cards-grid">
-      {reqCards.map((c, i) => (
-        <div key={c.id} className="req-card-wrapper" style={{ animationDelay: `${i * 0.07}s` }}>
-          <ReqCard {...c} onClick={() => alert(`${c.title} — Coming Soon`)} />
+const RequestFormsPage = ({ onNavigate }) => {
+  const [subPage, setSubPage] = useState(null);
+
+  if (subPage === 'reappropriation') {
+    return <ReappropriationPage onNavigate={(target) => {
+      if (target === 'requestforms') setSubPage(null);
+      else if (onNavigate) onNavigate(target);
+    }} />;
+  }
+  if (subPage === 'project-extension') {
+  return <ProjectExtensionPage onNavigate={(t) => { if (t === 'requestforms') setSubPage(null); else onNavigate?.(t); }} />;
+}
+
+  const handleCardClick = (id) => {
+  if (id === 'reappropriation') {
+    setSubPage('reappropriation');
+    return;
+  }
+
+  if (id === 'project-extension') {
+    setSubPage('project-extension');
+    return;
+  }
+
+  alert(`${reqCards.find(c => c.id === id)?.title} — Coming Soon`);
+};
+
+  return (
+    <div className="subpage">
+      <div className="page-header">
+        <div className="page-breadcrumb">
+          Home / <span onClick={() => onNavigate('projects')}>My Projects</span> / <span>Request Forms</span>
         </div>
-      ))}
+        <h1 className="page-title">Request Forms</h1>
+        <p className="page-subtitle">Submit and track all project-related requests</p>
+      </div>
+      <div className="req-cards-grid">
+        {reqCards.map((c, i) => (
+          <div key={c.id} className="req-card-wrapper" style={{ animationDelay: `${i * 0.07}s` }}>
+            <ReqCard {...c} onClick={() => handleCardClick(c.id)} />
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default RequestFormsPage;
