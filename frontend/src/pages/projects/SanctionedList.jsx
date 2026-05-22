@@ -570,6 +570,7 @@ const SanctionedProjectDetails = ({ project, onBack }) => {
                     <th>Heads</th>
                     <th>Sanctioned Amount (₹)</th>
                     <th>Utilized Amount (₹)</th>
+                    <th>Balance Amount (₹)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -585,18 +586,29 @@ const SanctionedProjectDetails = ({ project, onBack }) => {
                       <td className="sanctioned-cost-cell">
                         {row.utilized === '' ? '' : fmtINR(row.utilized)}
                       </td>
+                      <td className="sanctioned-cost-cell">
+  {row.sanctioned === ''
+    ? ''
+    : fmtINR((parseFloat(row.sanctioned) || 0) - (parseFloat(row.utilized) || 0))}
+</td>
                     </tr>
                   ))}
 
                   <tr className="detail-total-row">
-                    <td colSpan={2}>Total</td>
-                    <td>
-                      {fmtINR(inst.heads.reduce((s, h) => s + (parseFloat(h.sanctioned) || 0), 0))}
-                    </td>
-                    <td>
-                      {fmtINR(inst.heads.reduce((s, h) => s + (parseFloat(h.utilized) || 0), 0))}
-                    </td>
-                  </tr>
+  <td colSpan={2}>Total</td>
+  <td>
+    {fmtINR(inst.heads.reduce((s, h) => s + (parseFloat(h.sanctioned) || 0), 0))}
+  </td>
+  <td>
+    {fmtINR(inst.heads.reduce((s, h) => s + (parseFloat(h.utilized) || 0), 0))}
+  </td>
+  <td>
+    {fmtINR(
+      inst.heads.reduce((s, h) => s + (parseFloat(h.sanctioned) || 0), 0) -
+      inst.heads.reduce((s, h) => s + (parseFloat(h.utilized) || 0), 0)
+    )}
+  </td>
+</tr>
                 </tbody>
               </table>
             </div>

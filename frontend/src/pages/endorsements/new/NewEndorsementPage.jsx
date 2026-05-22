@@ -75,7 +75,7 @@ const FUNDING_AGENCIES = [
   "Technology Development Projects (TDP)", "TEXMiN", "TIH Foundation for IoT & IoE", "TIH-IoT", "TNPCB", "TNRPF", 
   "TNSCST", "TNSCT", "UGC", "UGC-DAE CSR", "UK Aid", "UKIERI", "United Nations Children's Fund (UNICEF)", 
   "University of Bath", "Welkinrim Technologies Pvt. Ltd., Chennai", "Wellcome Trust-India Alliance", "WISER", 
-  "Xagrotor Tek Private Limited"
+  "Xagrotor Tek Private Limited", "Others"
 ].sort();
 
 // Comprehensive Master list gathered from official layout printouts
@@ -162,7 +162,7 @@ const PROJECT_SCHEMES = [
   "WISE KIRAN Women in Space and Allied Sciences Leadership Program (WiSLP)", "WISE SCPE", "WISE-SCOPE", "Women Scientist Scheme - A", 
   "Women Technology Park", "Women's Instinct for Developing and Ushering in Scientific Heights & Innovation", "WTC", "WTI", 
   "Year of Awareness on Science and Health (YASH)", "Young Scientist Scheme", 
-  "{ Critical and Emerging Technology: Quantum Technologies and Artificial Intelligence for Transforming Lives}"
+  "{ Critical and Emerging Technology: Quantum Technologies and Artificial Intelligence for Transforming Lives}", "Others"
 ].sort();
 
 const ENDORSEMENT_FORMATS = ["CSRC", "DST", "CMRG", "ANRF", "New Format"];
