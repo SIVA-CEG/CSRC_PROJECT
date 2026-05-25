@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./ReappropriationPage.css";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 /* ─── Static Data ──────────────────────────────────────────── */
 const FUNDING_AGENCIES = [
@@ -365,25 +367,77 @@ export default function ReappropriationPage({ onNavigate }) {
   const removeRow = (i) => setReapRows(reapRows.filter((_, idx) => idx !== i));
   const setRow    = (i, k, v) => { const r = [...reapRows]; r[i] = { ...r[i], [k]: v }; setReapRows(r); };
 
-  /* Report */
-  const handlePreview = () => {
-    const html = generateReport({ agency: effectiveAgency, projectName, installment, heads, reapRows, headType, projectData });
-    const w = window.open("", "_blank");
-    w.document.write(html);
-    w.document.close();
-    setTimeout(() => w.focus(), 300);
-  };
+  const createPdf = async (mode) => {
+  const html = generateReport({
+    agency: effectiveAgency,
+    projectName,
+    installment,
+    heads,
+    reapRows,
+    headType,
+    projectData
+  });
 
-  const handleDownload = () => {
-    const html = generateReport({ agency: effectiveAgency, projectName, installment, heads, reapRows, headType, projectData });
-    const blob = new Blob([html], { type: "text/html" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href = url;
-    a.download = `reappropriation_${effectiveAgency.slice(0, 20).replace(/\s/g, "_")}_inst${installment}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  temp.style.position = "fixed";
+  temp.style.left = "-9999px";
+  temp.style.top = "0";
+  temp.style.width = "210mm";
+  document.body.appendChild(temp);
+
+  const page = temp.querySelector(".page");
+
+  const canvas = await html2canvas(page, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff"
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = 210;
+  const pdfHeight = 297;
+
+  const imgWidth = pdfWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  heightLeft -= pdfHeight;
+
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+  }
+
+  document.body.removeChild(temp);
+
+  const fileName = `reappropriation_${effectiveAgency
+    .slice(0, 20)
+    .replace(/\s/g, "_")}_inst${installment}.pdf`;
+
+  if (mode === "preview") {
+    const pdfBlob = pdf.output("blob");
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url, "_blank");
+  } else {
+    pdf.save(fileName);
+  }
+};
+
+const handlePreview = () => {
+  createPdf("preview");
+};
+
+const handleDownload = () => {
+  createPdf("download");
+};
 
   /* Step indicator */
   const STEPS = ["Project Info", "Head Distribution", "Re-appropriation", "Preview & Report"];

@@ -10,7 +10,6 @@ import EndorsementsPage     from './pages/endorsements/EndorsementsPage';
 import EndorsementsList     from './pages/endorsements/EndorsementsList';
 import NewEndorsementPage   from './pages/endorsements/new/NewEndorsementPage';   // ← NEW
 import ProjectsPage         from './pages/projects/ProjectsPage';
-import ProposalsList        from './pages/projects/ProposalsList';
 import SanctionedList       from './pages/projects/SanctionedList';
 import CTDTPage             from './pages/projects/ctdt/CTDTPage';
 import ProjectStaffPage     from './pages/projects/projectstaff/ProjectStaffPage';

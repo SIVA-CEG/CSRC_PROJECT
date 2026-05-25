@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './SanctionedList.css';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // ─── Data ────────────────────────────────────────────────
 const sanctionedData = [
@@ -523,6 +525,21 @@ const sampleInstallments = [
 ];
 
 const SanctionedProjectDetails = ({ project, onBack }) => {
+  const [projectUploads, setProjectUploads] = useState({
+    fundingAgencyLetter: null,
+    csrcApprovalLetter: null,
+  });
+
+  const [installmentUploads, setInstallmentUploads] = useState({});
+
+  const handleProjectUpload = (key, file) => {
+    setProjectUploads(prev => ({ ...prev, [key]: file || null }));
+  };
+
+  const handleInstallmentUpload = (idx, file) => {
+    setInstallmentUploads(prev => ({ ...prev, [idx]: file || null }));
+  };
+
   return (
     <div className="sl-tab-content">
       <div className="sanctioned-detail-card">
@@ -546,11 +563,30 @@ const SanctionedProjectDetails = ({ project, onBack }) => {
           <div><span>Department</span><strong>Department of Mechanical Engineering</strong></div>
         </div>
 
-        {sampleInstallments.map((inst, idx) => (
+        <div className="sanctioned-upload-options">
+          <label className="sanctioned-upload-box">
+            <span>Upload Letter from Funding Agency</span>
+            <strong>{projectUploads.fundingAgencyLetter ? projectUploads.fundingAgencyLetter.name : 'Not Uploaded'}</strong>
+            <input type="file" onChange={e => handleProjectUpload('fundingAgencyLetter', e.target.files[0])} />
+          </label>
+
+          <label className="sanctioned-upload-box">
+            <span>Upload Approval Letter from CSRC</span>
+            <strong>{projectUploads.csrcApprovalLetter ? projectUploads.csrcApprovalLetter.name : 'Not Uploaded'}</strong>
+            <input type="file" onChange={e => handleProjectUpload('csrcApprovalLetter', e.target.files[0])} />
+          </label>
+        </div>
+
+        {sampleInstallments.map((inst, idx) => {
+          const isSanctionRefUploaded = !!installmentUploads[idx];
+
+          return (
           <div className="sanctioned-inst-card" key={idx}>
             <div className="sanctioned-inst-header">
               <h3>{inst.label}</h3>
-              <span>{inst.sanctionRefStatus}</span>
+              <span className={isSanctionRefUploaded ? 'uploaded' : 'not-uploaded'}>
+                {isSanctionRefUploaded ? 'Uploaded' : 'Not Uploaded'}
+              </span>
             </div>
 
             <div className="sanctioned-detail-grid small">
@@ -559,7 +595,13 @@ const SanctionedProjectDetails = ({ project, onBack }) => {
               <div><span>Installment No.</span><strong>{inst.installmentNo}</strong></div>
               <div><span>Sanction Type</span><strong>{inst.sanctionType}</strong></div>
               <div><span>CTDT</span><strong>{inst.ctdt}</strong></div>
-              <div><span>Sanction Ref</span><strong>{inst.sanctionRefStatus}</strong></div>
+              <div>
+                <span>Sanction Ref</span>
+                <label className="sanctioned-inline-upload">
+                  <strong>{isSanctionRefUploaded ? installmentUploads[idx].name : 'Upload'}</strong>
+                  <input type="file" onChange={e => handleInstallmentUpload(idx, e.target.files[0])} />
+                </label>
+              </div>
             </div>
 
             <div className="table-scroll-wrap">
@@ -613,7 +655,8 @@ const SanctionedProjectDetails = ({ project, onBack }) => {
               </table>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -748,23 +791,67 @@ refNo: '', refDate: '',
 
   const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  const handlePreview = (inst) => {
-    const html = generateReport(form, inst);
-    const win = window.open('', '_blank');
-    win.document.write(html);
-    win.document.close();
-  };
+const createPdf = async (inst, mode) => {
+  const html = generateReport(form, inst);
 
-  const handleDownload = (inst) => {
-    const html = generateReport(form, inst);
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `CSRC_Request_${inst.label.replace(/\s/g, '_')}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  temp.style.position = 'fixed';
+  temp.style.left = '-9999px';
+  temp.style.top = '0';
+  temp.style.width = '210mm';
+  document.body.appendChild(temp);
+
+  const page = temp.querySelector('.page');
+
+  const canvas = await html2canvas(page, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff'
+  });
+
+  const imgData = canvas.toDataURL('image/png');
+
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const pdfWidth = 210;
+  const pdfHeight = 297;
+
+  const imgWidth = pdfWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  heightLeft -= pdfHeight;
+
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+  }
+
+  document.body.removeChild(temp);
+
+  const fileName = `CSRC_Request_${inst.label.replace(/\s/g, '_')}.pdf`;
+
+  if (mode === 'preview') {
+    const pdfBlob = pdf.output('blob');
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url, '_blank');
+  } else {
+    pdf.save(fileName);
+  }
+};
+
+const handlePreview = (inst) => {
+  createPdf(inst, 'preview');
+};
+
+const handleDownload = (inst) => {
+  createPdf(inst, 'download');
+};
 
   const handleSubmit = () => {
     setSubmitted(true);

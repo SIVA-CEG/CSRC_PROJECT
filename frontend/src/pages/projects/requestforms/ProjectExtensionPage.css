@@ -348,8 +348,67 @@
 }
 .pe-input:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129,140,248,0.12); }
 .pe-input::placeholder { color: rgba(255,255,255,0.2); }
-.pe-textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+.pe-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
 .pe-mt8 { margin-top: 8px; }
+
+/* ── Date Picker ───────────────────────────────────────────── */
+.pe-date-picker-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pe-date-picker-icon {
+  position: absolute;
+  left: 12px;
+  width: 15px; height: 15px;
+  color: rgba(255,255,255,0.35);
+  pointer-events: none;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.pe-date-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 10px 14px 10px 38px;
+  font-size: 13px;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  min-height: 42px;
+}
+.pe-date-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129,140,248,0.12);
+}
+/* Style the date picker in webkit browsers */
+.pe-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) sepia(1) saturate(2) hue-rotate(200deg);
+  cursor: pointer;
+  opacity: 0.7;
+}
+.pe-date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+/* Firefox */
+.pe-date-input::-moz-calendar-picker-indicator {
+  filter: invert(0.6);
+}
+
+.pe-date-hint {
+  font-size: 11px;
+  color: rgba(255,255,255,0.28);
+  margin-top: 2px;
+}
+.pe-date-hint strong {
+  color: rgba(255,255,255,0.45);
+}
 
 /* ── Date Display ──────────────────────────────────────────── */
 .pe-date-display {
@@ -384,7 +443,7 @@
 }
 .pe-file-upload:hover { border-color: rgba(129,140,248,0.5); background: rgba(129,140,248,0.07); }
 .pe-file-upload.has-file { border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.05); }
-.pe-file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.pe-file-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; z-index: 1; }
 
 .pe-file-icon {
   margin: 0 auto 10px;
@@ -429,46 +488,6 @@
   display: flex; flex-wrap: wrap; gap: 8px;
   font-size: 12px; color: rgba(255,255,255,0.38);
 }
-
-/* ── Searchable Select ─────────────────────────────────────── */
-.pe-ss { position: relative; width: 100%; }
-.pe-ss-trigger {
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 10px 14px; font-size: 13px;
-  cursor: pointer; min-height: 42px; gap: 8px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.pe-ss-trigger:hover { border-color: rgba(255,255,255,0.2); }
-.pe-ss-trigger.open { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129,140,248,0.12); }
-.pe-ss-val { color: #fff; flex: 1; }
-.pe-ss-ph  { color: rgba(255,255,255,0.22); flex: 1; }
-.pe-ss-chevron { width: 14px; height: 14px; color: rgba(255,255,255,0.3); flex-shrink: 0; }
-
-.pe-ss-drop {
-  position: fixed;
-  background: #1e2535;
-  border: 1px solid rgba(129,140,248,0.2);
-  border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.7);
-  z-index: 9999;
-  max-height: 260px; overflow-y: auto;
-  min-width: 180px;
-}
-.pe-ss-search {
-  display: block; width: 100%; padding: 10px 14px;
-  background: rgba(255,255,255,0.05);
-  border: none; border-bottom: 1px solid rgba(255,255,255,0.07);
-  color: #fff; font-size: 13px; font-family: 'DM Sans', sans-serif;
-  outline: none; box-sizing: border-box;
-  border-radius: 12px 12px 0 0;
-}
-.pe-ss-search::placeholder { color: rgba(255,255,255,0.25); }
-.pe-ss-opt { padding: 10px 14px; font-size: 13px; color: rgba(255,255,255,0.7); cursor: pointer; transition: background 0.15s; }
-.pe-ss-opt:hover { background: rgba(255,255,255,0.06); color: #fff; }
-.pe-ss-opt.active { background: rgba(129,140,248,0.15); color: #818cf8; }
 
 /* ── Timeline Visual ───────────────────────────────────────── */
 .pe-timeline-visual {
@@ -542,18 +561,6 @@
 .pe-summary-grid span { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px; }
 .pe-summary-grid strong { font-size: 13px; color: #fff; font-weight: 500; }
 .pe-summary-grid strong.pe-highlight { color: #818cf8; }
-
-/* ── Justification Box ─────────────────────────────────────── */
-.pe-justification-box {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.6);
-  line-height: 1.7;
-  white-space: pre-wrap;
-}
 
 /* ── Decision Box ──────────────────────────────────────────── */
 .pe-decision-box {
@@ -664,45 +671,11 @@
 @media (max-width: 480px) {
   .pe-summary-grid { grid-template-columns: 1fr; }
 }
+
 .pe-page,
 .pe-animate,
 .pe-card,
 .pe-field,
 .pe-field-row {
   overflow: visible !important;
-}
-
-.pe-card:has(.pe-ss-trigger.open) {
-  position: relative;
-  z-index: 5000;
-}
-
-.pe-field:has(.pe-ss-trigger.open) {
-  position: relative;
-  z-index: 6000;
-}
-
-.pe-ss {
-  position: relative;
-  z-index: 10;
-}
-
-.pe-ss-drop {
-  position: absolute !important;
-  top: calc(100% + 6px) !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: auto !important;
-  width: 100% !important;
-  z-index: 99999 !important;
-  max-height: 220px;
-}
-
-.pe-file-upload input {
-  z-index: 1;
-}
-
-.pe-ss-drop,
-.pe-ss-drop * {
-  pointer-events: auto;
 }

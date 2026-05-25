@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./StaffSalaryClaimsPage.css";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 /* ─── Sample Data ──────────────────────────────────────────── */
 const STAFF_LIST = [
@@ -458,23 +460,55 @@ export default function StaffSalaryClaimsPage() {
     const staff = getStaff(selectedClaim.staffId);
     const html = generateClaimPDF(selectedClaim, staff);
 
-    const handleDownload = () => {
-      const blob = new Blob([html], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `claim_${staff.name.replace(/\s/g, "_")}_${selectedClaim.salaryFrom.replace(/-/g, "")}.html`;
-      a.click();
-      URL.revokeObjectURL(url);
-    };
+    const createPdf = async (mode) => {
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  temp.style.position = "fixed";
+  temp.style.left = "-9999px";
+  temp.style.top = "0";
+  temp.style.width = "210mm";
+  document.body.appendChild(temp);
 
-    const handlePrint = () => {
-      const w = window.open("", "_blank");
-      w.document.write(html);
-      w.document.close();
-      w.focus();
-      setTimeout(() => w.print(), 500);
-    };
+  const pages = temp.querySelectorAll(".page");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = 210;
+  const pdfHeight = 297;
+
+  for (let i = 0; i < pages.length; i++) {
+    const canvas = await html2canvas(pages[i], {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    if (i > 0) pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, Math.min(imgHeight, pdfHeight));
+  }
+
+  document.body.removeChild(temp);
+
+  const fileName = `claim_${staff.name.replace(/\s/g, "_")}_${selectedClaim.salaryFrom.replace(/-/g, "")}.pdf`;
+
+  if (mode === "preview") {
+    const pdfBlob = pdf.output("blob");
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url, "_blank");
+  } else {
+    pdf.save(fileName);
+  }
+};
+
+const handlePreviewPdf = () => {
+  createPdf("preview");
+};
+
+const handleDownloadPdf = () => {
+  createPdf("download");
+};
 
     return (
       <div className="ssc-page">
@@ -483,8 +517,8 @@ export default function StaffSalaryClaimsPage() {
           <div className="ssc-breadcrumb"><span className="ssc-bc-link">Master</span> / Staff Salary Claims / Report</div>
         </div>
         <div className="ssc-report-actions">
-          <button className="ssc-btn ssc-btn-primary" onClick={handlePrint}>🖨 Print / View PDF</button>
-          <button className="ssc-btn ssc-btn-outline" onClick={handleDownload}>⬇ Download HTML</button>
+          <button className="ssc-btn ssc-btn-primary" onClick={handlePreviewPdf}>👁 Preview PDF</button>
+<button className="ssc-btn ssc-btn-outline" onClick={handleDownloadPdf}>⬇ Download PDF</button>
           <button className="ssc-btn ssc-btn-back" onClick={() => setView("list")}>← Back</button>
         </div>
         <div className="ssc-report-preview">

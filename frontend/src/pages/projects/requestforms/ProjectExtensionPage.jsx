@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./ProjectExtensionPage.css";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 /* ─── Dummy project data ─────────────────────────────────── */
 const DUMMY_PROJECTS = [
@@ -53,27 +55,6 @@ const DUMMY_PROJECTS = [
   },
 ];
 
-const EXTENSION_REASONS = [
-  "Delay in procurement of equipment",
-  "COVID-19 / Pandemic impact",
-  "Manpower shortage / JRF/SRF position vacant",
-  "Delay in receipt of funds from agency",
-  "Experimental/Field work disruptions",
-  "Revised scope of work",
-  "Publication and report preparation",
-  "Administrative/Institutional delays",
-  "Other (specify manually)",
-];
-
-const DURATION_OPTIONS = [
-  "3 Months",
-  "6 Months",
-  "9 Months",
-  "12 Months",
-  "18 Months",
-  "24 Months",
-];
-
 /* ─── Helpers ─────────────────────────────────────────────── */
 const today = () =>
   new Date().toLocaleDateString("en-IN", {
@@ -82,73 +63,57 @@ const today = () =>
     year: "numeric",
   });
 
-const addMonths = (dateStr, months) => {
-  if (!dateStr || !months) return "";
+// Parse dd-mm-yyyy to Date object
+const parseDMY = (dateStr) => {
+  if (!dateStr) return null;
   const parts = dateStr.split("-");
-  if (parts.length !== 3) return "";
-  const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-  d.setMonth(d.getMonth() + parseInt(months));
-  return d.toLocaleDateString("en-IN", {
+  if (parts.length !== 3) return null;
+  return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+};
+
+// Format Date to dd-mm-yyyy
+const formatDMY = (date) => {
+  if (!date) return "";
+  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const y = date.getFullYear();
+  return `${d}-${m}-${y}`;
+};
+
+// Format Date to "DD Month YYYY" (long)
+const formatLong = (date) => {
+  if (!date) return "";
+  return date.toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "long",
     year: "numeric",
   });
 };
 
-const parseMonths = (durStr) => {
-  if (!durStr) return 0;
-  const m = durStr.match(/(\d+)/);
-  return m ? parseInt(m[1]) : 0;
+// Convert dd-mm-yyyy to yyyy-mm-dd for input[type=date]
+const toInputDate = (dmyStr) => {
+  if (!dmyStr) return "";
+  const parts = dmyStr.split("-");
+  if (parts.length !== 3) return "";
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
 };
 
-/* ─── SearchableSelect ────────────────────────────────────── */
-function SearchableSelect({ options, value, onChange, placeholder = "--Select--" }) {
-  const [open, setOpen] = useState(false);
-  const [q, setQ] = useState("");
-  const [dropStyle, setDropStyle] = useState({});
-  const triggerRef = useRef();
-  const dropRef = useRef();
-
-  React.useEffect(() => {
-    const h = (e) => {
-      if (
-        triggerRef.current && !triggerRef.current.contains(e.target) &&
-        dropRef.current && !dropRef.current.contains(e.target)
-      ) setOpen(false);
-    };
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, []);
-
-  const handleOpen = () => {
-  setOpen((prev) => !prev);
+// Compute human-readable duration between two dates
+const durationBetween = (startStr, endDate) => {
+  const start = parseDMY(startStr);
+  if (!start || !endDate) return "";
+  let months =
+    (endDate.getFullYear() - start.getFullYear()) * 12 +
+    (endDate.getMonth() - start.getMonth());
+  if (endDate.getDate() < start.getDate()) months -= 1;
+  if (months <= 0) return "";
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  const parts = [];
+  if (years > 0) parts.push(`${years} Year${years > 1 ? "s" : ""}`);
+  if (rem > 0) parts.push(`${rem} Month${rem > 1 ? "s" : ""}`);
+  return "+" + parts.join(" ");
 };
-
-  const filtered = options.filter((o) => o.toLowerCase().includes(q.toLowerCase()));
-
-  return (
-    <div className="pe-ss" ref={triggerRef}>
-      <div className={`pe-ss-trigger ${open ? "open" : ""}`} onClick={handleOpen}>
-        <span className={value ? "pe-ss-val" : "pe-ss-ph"}>{value || placeholder}</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="pe-ss-chevron">
-          <polyline points={open ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
-        </svg>
-      </div>
-      {open && (
-        <div className="pe-ss-drop" ref={dropRef} style={dropStyle}>
-          <input className="pe-ss-search" placeholder="Search..." value={q}
-            onChange={(e) => setQ(e.target.value)} autoFocus />
-          <div className={`pe-ss-opt ${!value ? "active" : ""}`}
-            onClick={() => { onChange(""); setOpen(false); setQ(""); }}>-- Select --</div>
-          {filtered.map((o) => (
-            <div key={o} className={`pe-ss-opt ${value === o ? "active" : ""}`}
-              onClick={() => { onChange(o); setOpen(false); setQ(""); }}>{o}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 /* ─── Status Badge ────────────────────────────────────────── */
 function StatusBadge({ status }) {
@@ -161,8 +126,7 @@ function StatusBadge({ status }) {
 }
 
 /* ─── Report Generator ────────────────────────────────────── */
-function generateReport({ project, extensionDuration, reason, reasonCustom, justification, revisedEndDate }) {
-  const effectiveReason = reason === "Other (specify manually)" ? reasonCustom : reason;
+function generateReport({ project, revisedEndDate, revisedEndDateLong, extensionLabel, reason }) {
   return `<!DOCTYPE html><html><head><meta charset="utf-8">
 <title>Project Extension Request</title>
 <style>
@@ -181,7 +145,6 @@ p{margin:10px 0;text-align:justify;line-height:1.75;font-size:12px;}
 .sig-box{text-align:center;width:40%;}
 .sig-line{border-top:1px solid #000;padding-top:6px;font-size:11.5px;}
 .to-block{margin-top:36px;font-size:12px;line-height:2;}
-.highlight{background:#fffbe6;padding:2px 6px;border-radius:2px;}
 .print-btn{position:fixed;top:10px;right:10px;padding:9px 20px;background:#1a237e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;z-index:9999;letter-spacing:.3px;}
 @media print{.print-btn{display:none;}}
 </style></head>
@@ -201,23 +164,20 @@ p{margin:10px 0;text-align:justify;line-height:1.75;font-size:12px;}
   <tr><td>Date of Sanction</td><td>: ${project.sanctionedDate}</td></tr>
   <tr><td>Original Project Duration</td><td>: ${project.duration}</td></tr>
   <tr><td>Original End Date</td><td>: ${project.originalEndDate}</td></tr>
-  <tr><td>Extension Requested</td><td>: <strong>${extensionDuration}</strong></td></tr>
-  <tr><td>Proposed Revised End Date</td><td>: <strong>${revisedEndDate}</strong></td></tr>
+  <tr><td>Extension Period</td><td>: <strong>${extensionLabel}</strong></td></tr>
+  <tr><td>Proposed Revised End Date</td><td>: <strong>${revisedEndDateLong}</strong></td></tr>
   <tr><td>Date of Request</td><td>: ${today()}</td></tr>
 </table>
 
 <p style="margin-top:20px;">
   The Principal Investigator respectfully requests the Director, Centre for Sponsored Research and Consultancy,
   Anna University, Chennai – 600 025, to kindly consider and accord sanction for a <strong>no-cost extension</strong>
-  of the above-mentioned project by a period of <strong>${extensionDuration}</strong>, thereby extending the
-  project completion date from <strong>${project.originalEndDate}</strong> to <strong>${revisedEndDate}</strong>.
+  of the above-mentioned project, thereby extending the project completion date from
+  <strong>${project.originalEndDate}</strong> to <strong>${revisedEndDateLong}</strong>.
 </p>
 
-<h3 style="margin-top:22px;font-size:12px;text-align:left;">Reason for Extension</h3>
-<p>${effectiveReason}</p>
-
-<h3 style="margin-top:18px;font-size:12px;text-align:left;">Justification / Details</h3>
-<p>${justification || "As per the attached project extension request letter from the funding agency."}</p>
+${reason ? `<h3 style="margin-top:22px;font-size:12px;text-align:left;">Reason for Extension</h3>
+<p>${reason}</p>` : ""}
 
 <p style="margin-top:20px;">
   It is certified that:
@@ -260,10 +220,8 @@ export default function ProjectExtensionPage({ onNavigate }) {
   const [searchQ, setSearchQ] = useState("");
 
   // Step 2 fields
-  const [extensionDuration, setExtensionDuration] = useState("");
+  const [revisedEndDateInput, setRevisedEndDateInput] = useState(""); // yyyy-mm-dd for input
   const [reason, setReason] = useState("");
-  const [reasonCustom, setReasonCustom] = useState("");
-  const [justification, setJustification] = useState("");
   const [requestLetter, setRequestLetter] = useState(null);
 
   // Step 3 — approval status (simulated)
@@ -281,14 +239,25 @@ export default function ProjectExtensionPage({ onNavigate }) {
       p.agency.toLowerCase().includes(searchQ.toLowerCase())
   );
 
-  const revisedEndDate = selectedProject
-    ? addMonths(
-        selectedProject.originalEndDate.replace(/(\d{2})-(\d{2})-(\d{4})/, "$1-$2-$3"),
-        parseMonths(extensionDuration)
-      )
+  // Compute revised end date objects from input
+  const revisedEndDateObj = revisedEndDateInput ? new Date(revisedEndDateInput) : null;
+  const revisedEndDateDMY = revisedEndDateObj ? formatDMY(revisedEndDateObj) : "";
+  const revisedEndDateLong = revisedEndDateObj ? formatLong(revisedEndDateObj) : "";
+
+  // Compute extension label (e.g. "+6 Months") between original end and revised end
+  const extensionLabel = selectedProject && revisedEndDateObj
+    ? durationBetween(selectedProject.originalEndDate, revisedEndDateObj)
     : "";
 
-  const effectiveReason = reason === "Other (specify manually)" ? reasonCustom : reason;
+  // Min date for date picker = day after original end date
+  const minDateForPicker = selectedProject
+    ? (() => {
+        const d = parseDMY(selectedProject.originalEndDate);
+        if (!d) return "";
+        d.setDate(d.getDate() + 1);
+        return d.toISOString().split("T")[0];
+      })()
+    : "";
 
   const goStep2 = () => {
     if (!selectedProject) return alert("Please select a project.");
@@ -296,30 +265,79 @@ export default function ProjectExtensionPage({ onNavigate }) {
   };
 
   const goStep3 = () => {
-    if (!extensionDuration) return alert("Please select extension duration.");
-    if (!reason) return alert("Please select a reason for extension.");
-    if (reason === "Other (specify manually)" && !reasonCustom.trim())
-      return alert("Please specify the reason.");
+    if (!revisedEndDateInput) return alert("Please select a revised end date.");
+    if (!revisedEndDateObj || (minDateForPicker && revisedEndDateInput < minDateForPicker))
+      return alert("Revised end date must be after the original end date.");
     setStep(3);
   };
 
-  const handlePreview = () => {
-    const html = generateReport({ project: selectedProject, extensionDuration, reason, reasonCustom, justification, revisedEndDate });
-    const w = window.open("", "_blank");
-    w.document.write(html);
-    w.document.close();
-  };
+  const createPdf = async (mode) => {
+  const html = generateReport({
+    project: selectedProject,
+    revisedEndDate: revisedEndDateDMY,
+    revisedEndDateLong,
+    extensionLabel,
+    reason,
+  });
 
-  const handleDownload = () => {
-    const html = generateReport({ project: selectedProject, extensionDuration, reason, reasonCustom, justification, revisedEndDate });
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `extension_${selectedProject.id}_${extensionDuration.replace(/\s/g, "")}.html`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  temp.style.position = "fixed";
+  temp.style.left = "-9999px";
+  temp.style.top = "0";
+  temp.style.width = "210mm";
+  document.body.appendChild(temp);
+
+  const page = temp.querySelector(".page");
+
+  const canvas = await html2canvas(page, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff",
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = 210;
+  const pdfHeight = 297;
+
+  const imgWidth = pdfWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  heightLeft -= pdfHeight;
+
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+  }
+
+  document.body.removeChild(temp);
+
+  const fileName = `extension_${selectedProject.id}_${revisedEndDateDMY.replace(/\//g, "-")}.pdf`;
+
+  if (mode === "preview") {
+    const pdfBlob = pdf.output("blob");
+    const url = URL.createObjectURL(pdfBlob);
+    window.open(url, "_blank");
+  } else {
+    pdf.save(fileName);
+  }
+};
+
+const handlePreview = () => {
+  createPdf("preview");
+};
+
+const handleDownload = () => {
+  createPdf("download");
+};
 
   const projectApproval = selectedProject ? approvalStatus[selectedProject.id] : null;
 
@@ -480,53 +498,57 @@ export default function ProjectExtensionPage({ onNavigate }) {
               Extension Details
             </div>
 
+            {/* Date Picker Row */}
             <div className="pe-field-row">
               <div className="pe-field">
-                <label>Extension Duration</label>
-                <SearchableSelect
-                  options={DURATION_OPTIONS}
-                  value={extensionDuration}
-                  onChange={setExtensionDuration}
-                  placeholder="Select duration..."
-                />
+                <label>Revised End Date</label>
+                <div className="pe-date-picker-wrap">
+                  <svg className="pe-date-picker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                  </svg>
+                  <input
+                    type="date"
+                    className="pe-date-input"
+                    value={revisedEndDateInput}
+                    min={minDateForPicker}
+                    onChange={(e) => setRevisedEndDateInput(e.target.value)}
+                  />
+                </div>
+                {selectedProject && (
+                  <div className="pe-date-hint">
+                    Original end date: <strong>{selectedProject.originalEndDate}</strong>
+                  </div>
+                )}
               </div>
+
               <div className="pe-field pe-field-info">
-                <label>Proposed Revised End Date</label>
+                <label>Extension Period</label>
                 <div className="pe-date-display">
-                  {extensionDuration
-                    ? <><span className="pe-date-val">{revisedEndDate}</span><span className="pe-date-pill">+{extensionDuration}</span></>
-                    : <span className="pe-date-placeholder">Select duration to calculate</span>
-                  }
+                  {revisedEndDateInput && extensionLabel ? (
+                    <>
+                      <span className="pe-date-val">{revisedEndDateLong}</span>
+                      <span className="pe-date-pill">{extensionLabel}</span>
+                    </>
+                  ) : revisedEndDateInput ? (
+                    <span className="pe-date-val">{revisedEndDateLong}</span>
+                  ) : (
+                    <span className="pe-date-placeholder">Select revised end date to calculate</span>
+                  )}
                 </div>
               </div>
             </div>
 
+            {/* Reason — simple optional textarea */}
             <div className="pe-field">
-              <label>Reason for Extension</label>
-              <SearchableSelect
-                options={EXTENSION_REASONS}
-                value={reason}
-                onChange={setReason}
-                placeholder="Select reason..."
-              />
-              {reason === "Other (specify manually)" && (
-                <input
-                  className="pe-input pe-mt8"
-                  placeholder="Specify the reason..."
-                  value={reasonCustom}
-                  onChange={(e) => setReasonCustom(e.target.value)}
-                />
-              )}
-            </div>
-
-            <div className="pe-field">
-              <label>Detailed Justification</label>
+              <label>
+                Reason for Extension <span className="pe-optional">(Optional)</span>
+              </label>
               <textarea
                 className="pe-input pe-textarea"
-                rows={5}
-                placeholder="Provide a detailed justification for the extension request. Include work completed so far, pending activities, and expected outcomes..."
-                value={justification}
-                onChange={(e) => setJustification(e.target.value)}
+                rows={4}
+                placeholder="Briefly describe the reason for requesting this extension..."
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
               />
             </div>
 
@@ -595,11 +617,11 @@ export default function ProjectExtensionPage({ onNavigate }) {
               </div>
               <div className="pe-tl-arrow ext">
                 <div className="pe-tl-bar ext-bar" />
-                <div className="pe-tl-dur ext-dur">+{extensionDuration}</div>
+                <div className="pe-tl-dur ext-dur">{extensionLabel}</div>
               </div>
               <div className="pe-tl-block revised">
                 <div className="pe-tl-label">Revised End</div>
-                <div className="pe-tl-date">{revisedEndDate}</div>
+                <div className="pe-tl-date">{revisedEndDateDMY}</div>
               </div>
             </div>
 
@@ -610,18 +632,11 @@ export default function ProjectExtensionPage({ onNavigate }) {
               <div><span>Principal Investigator</span><strong>{selectedProject.pi}</strong></div>
               <div><span>Department</span><strong>{selectedProject.department.split(",")[0]}</strong></div>
               <div><span>Original End Date</span><strong>{selectedProject.originalEndDate}</strong></div>
-              <div><span>Extension Requested</span><strong>{extensionDuration}</strong></div>
-              <div><span>Revised End Date</span><strong className="pe-highlight">{revisedEndDate}</strong></div>
-              <div><span>Reason</span><strong>{effectiveReason}</strong></div>
+              <div><span>Extension Period</span><strong>{extensionLabel || "—"}</strong></div>
+              <div><span>Revised End Date</span><strong className="pe-highlight">{revisedEndDateDMY}</strong></div>
+              <div><span>Reason</span><strong>{reason || "Not specified"}</strong></div>
               <div><span>Request Letter</span><strong>{requestLetter ? requestLetter.name : "Not attached"}</strong></div>
             </div>
-
-            {justification && (
-              <>
-                <div className="pe-card-subtitle">Justification</div>
-                <div className="pe-justification-box">{justification}</div>
-              </>
-            )}
 
             {/* Approval Status if exists */}
             {projectApproval && (
