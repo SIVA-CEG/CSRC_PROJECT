@@ -9,7 +9,6 @@ const PROJECTS = [
   { id: 'P3', code: '1234/CSRC-2/2025', name: 'Smart Manufacturing Project' },
 ];
 
-// Faculty/PI data with department info
 const FACULTY = [
   {
     id: 'F1', name: 'Dr. S.Balasivanandha Prabu', role: 'Principal Investigator',
@@ -37,7 +36,6 @@ const FACULTY = [
   },
 ];
 
-// Co-PI data
 const CO_PI = {
   'P1': { name: 'Dr. K.Kottilingam', role: 'Co-Principal Investigator', dept: 'Assistant Professor\nDepartment of Computer Technology\nMIT Campus, Anna University.' },
   'P2': { name: 'Dr. K.Kottilingam', role: 'Co-Principal Investigator', dept: 'Assistant Professor\nDepartment of Computer Technology\nMIT Campus, Anna University.' },
@@ -57,10 +55,9 @@ const INIT_CONTRACTS = [
   { id: 31, projectId: 'P2', facultyId: 'F2', staffName: 'Ms PRIYA A', designation: 'Project Assistant', contractFrom: '01-03-2023', contractTo: '28-02-2024', joinDueDate: '01-03-2023', status: 'VERIFIED', extn: 'New', proceedingNo: 'MIT/ELEC/PA/01', proceedingDate: '01-03-2023', tenureFrom: '01-03-2023', tenureTo: '28-02-2024', fixedSalary: 25000, hra: 0, documents: [], extensions: [] },
 ];
 
-const emptyContract = { staffName: '', appointmentOrderNo: '', appointmentOrderDate: '', contractFrom: '', contractTo: '', joinDueDate: '', fixedSalary: 0, hra: 0, minutesFile: null };
+const emptyContract = { staffName: '', appointmentOrderNo: '', appointmentOrderDate: '', contractFrom: '', contractTo: '', joinDueDate: '', fixedSalary: 0, hra: 0, minutesFile: null, advertisementFile: null };
 const emptyExtension = { staffName: '', extnOrderNo: '', extnOrderDate: '', extnFrom: '', extnTo: '', rejoinDueDate: '', fixedSalary: 0, hra: 0, appraisalFile: null };
 
-// ── Terms and Conditions ─────────────────────────────────
 const TERMS_AND_CONDITIONS = [
   'The appointment is on a purely temporary basis for the period of six months from the date of joining and is liable to be terminated at any time without notice and without assigning any reason.',
   'The appointment shall not confer any right or privilege for a regular appointment in the University.',
@@ -73,7 +70,6 @@ const TERMS_AND_CONDITIONS = [
   'On the expiry of the contract of efflux of time, or earlier, determined as aforesaid, the appointee shall handover all materials, records, documents in his/her possession/custody to such person / officer of the University nominated.',
 ];
 
-// ── Utility: format date ─────────────────────────────────
 const fmtDate = (d) => {
   if (!d) return '';
   if (d.includes('-') && d.length === 10 && d[4] === '-') {
@@ -106,7 +102,6 @@ const numToWords = (num) => {
   return convert(num);
 };
 
-// ── Anna University Logo ────────────────────────────────
 const AULogo = ({ size = 70 }) => (
   <div style={{
     width: size, height: size, borderRadius: '5%',
@@ -118,7 +113,6 @@ const AULogo = ({ size = 70 }) => (
   </div>
 );
 
-// ── Terms & Conditions Page ──────────────────────────────
 const TermsPage = ({ faculty, project }) => (
   <div className="ps-report-sheet" style={{ marginTop: 5 }}>
     <div className="ps-report-header">
@@ -164,7 +158,7 @@ const AppointmentReport = ({ data, type, projectId, facultyId, onBack }) => {
 
   const handleDownloadPDF = async () => {
     const element = reportRef.current;
-    if (!element) { console.log("Report not found"); return; }
+    if (!element) return;
     try {
       await html2pdf().from(element).set({
         filename: "Appointment_Letter.pdf",
@@ -193,7 +187,6 @@ const AppointmentReport = ({ data, type, projectId, facultyId, onBack }) => {
         </div>
       </div>
       <div ref={reportRef}>
-        {/* PAGE 1 — Letter */}
         <div className="ps-report-sheet">
           <div className="ps-report-header">
             <AULogo size={70} />
@@ -272,7 +265,6 @@ const AppointmentReport = ({ data, type, projectId, facultyId, onBack }) => {
             )}
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginTop: "1px", gap: "20px" }}>
-            {/* LEFT SIDE */}
             <div style={{ flex: 1, textAlign: "left", fontSize: 14, color: "#000", lineHeight: 1.8 }}>
               <div><strong>Encl:</strong> Terms and Conditions</div>
               <div style={{ marginTop: 1 }}>
@@ -300,7 +292,6 @@ const AppointmentReport = ({ data, type, projectId, facultyId, onBack }) => {
                 </div>
               )}
             </div>
-            {/* RIGHT SIDE */}
             <div style={{ width: "320px", textAlign: "right", flexShrink: 0 }}>
               <div><strong>{faculty.name}</strong></div>
               <div>{faculty.role}</div>
@@ -309,7 +300,6 @@ const AppointmentReport = ({ data, type, projectId, facultyId, onBack }) => {
             </div>
           </div>
         </div>
-        {/* PAGE 2 — Terms & Conditions */}
         <TermsPage faculty={faculty} project={project} />
       </div>
     </>
@@ -425,8 +415,262 @@ const TenureEdit = ({ contract, onSave, onBack }) => {
   );
 };
 
+// ── Upload Button Helper ─────────────────────────────────
+const UploadBtn = ({ id, label, fileName, onUpload, accept = ".pdf,.doc,.docx,.jpg,.png" }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <input type="file" id={id} style={{ display: 'none' }} onChange={onUpload} accept={accept} />
+    <label htmlFor={id} className="ps-upload-label" style={{ cursor: 'pointer', whiteSpace: 'nowrap' }}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 13, height: 13 }}>
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      {label}
+    </label>
+    {fileName && (
+      <span style={{ fontSize: 11, color: '#34d399', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>✓ {fileName}</span>
+    )}
+  </div>
+);
+
+// ── Submitted Appointments List — standalone card ────────
+const SubmittedAppointmentsList = ({ items, onPreview }) => {
+  const [open, setOpen] = useState(true);
+  const [uploads, setUploads] = useState({});
+
+  if (!items || items.length === 0) return null;
+
+  const handleUpload = (itemId, key, file) => {
+    setUploads(prev => ({ ...prev, [itemId]: { ...(prev[itemId] || {}), [key]: file?.name || '' } }));
+  };
+
+  const pendingCount = items.filter(item => !uploads[item.id]?.appointmentLetter || !uploads[item.id]?.joiningLetter).length;
+
+  return (
+    <div style={{ marginTop: 32 }}>
+      {/* Outer card — matches ps-sub-card visual language */}
+      <div style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(251,146,60,0.25)',
+        borderRadius: 18,
+        overflow: 'hidden',
+        position: 'relative',
+      }}>
+        {/* Left accent bar */}
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: 'linear-gradient(180deg, #fb923c 0%, rgba(251,146,60,0.1) 100%)', borderRadius: '3px 0 0 3px' }} />
+
+        {/* Card header */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            background: 'transparent', border: 'none', padding: '18px 22px 18px 26px',
+            cursor: 'pointer', borderBottom: open ? '1px solid rgba(251,146,60,0.12)' : 'none',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(251,146,60,0.12)', border: '1px solid rgba(251,146,60,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2" style={{ width: 18, height: 18 }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
+                Pending Uploads — New Appointments
+              </div>
+              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>
+                {items.length} order{items.length !== 1 ? 's' : ''} submitted
+                {pendingCount > 0 && <span style={{ marginLeft: 8, color: '#fb923c' }}>· {pendingCount} awaiting upload{pendingCount !== 1 ? 's' : ''}</span>}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {pendingCount > 0 && (
+              <span style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.3)', fontFamily: 'DM Sans, sans-serif', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>
+                {pendingCount} pending
+              </span>
+            )}
+            {pendingCount === 0 && (
+              <span style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399', border: '1px solid rgba(52,211,153,0.25)', fontFamily: 'DM Sans, sans-serif', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>
+                ✓ All uploaded
+              </span>
+            )}
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2" style={{ width: 16, height: 16, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}>
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </button>
+
+        {/* Collapsible table body */}
+        {open && (
+          <div style={{ overflowX: 'auto', padding: '0 0 4px 0' }}>
+            <table className="ps-table" style={{ margin: 0 }}>
+              <thead>
+                <tr>
+                  <th className="ps-sl-num">Sl.</th>
+                  <th>Staff Name</th>
+                  <th>Order No</th>
+                  <th>Contract From</th>
+                  <th>Contract To</th>
+                  <th>Salary</th>
+                  <th>Report</th>
+                  <th>Appointment Letter</th>
+                  <th>Joining Letter</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, i) => (
+                  <tr key={item.id}>
+                    <td className="ps-sl-num">{i + 1}</td>
+                    <td className="ps-name-cell">{item.staffName || '—'}</td>
+                    <td style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>{item.appointmentOrderNo || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.contractFrom) || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.contractTo) || '—'}</td>
+                    <td style={{ color: 'rgba(255,255,255,0.7)' }}>₹{parseInt(item.fixedSalary || 0).toLocaleString('en-IN')}</td>
+                    <td>
+                      <button onClick={() => onPreview(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 12px', fontSize: 12, borderRadius: 8, whiteSpace: 'nowrap', background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.22)', color: '#00b4ff', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif' }}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 12, height: 12 }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Preview
+                      </button>
+                    </td>
+                    <td><UploadBtn id={`appt-letter-${item.id}`} label="Appt. Letter" fileName={uploads[item.id]?.appointmentLetter || ''} onUpload={e => handleUpload(item.id, 'appointmentLetter', e.target.files[0])} /></td>
+                    <td><UploadBtn id={`joining-letter-${item.id}`} label="Joining Letter" fileName={uploads[item.id]?.joiningLetter || ''} onUpload={e => handleUpload(item.id, 'joiningLetter', e.target.files[0])} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Bottom glow bar — matches ps-card-glow-bar */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #fb923c, rgba(251,146,60,0.1))', borderRadius: '0 0 18px 18px' }} />
+      </div>
+    </div>
+  );
+};
+
+// ── Submitted Extensions List — standalone card ──────────
+const SubmittedExtensionsList = ({ items, onPreview }) => {
+  const [open, setOpen] = useState(true);
+  const [uploads, setUploads] = useState({});
+
+  if (!items || items.length === 0) return null;
+
+  const handleUpload = (itemId, key, file) => {
+    setUploads(prev => ({ ...prev, [itemId]: { ...(prev[itemId] || {}), [key]: file?.name || '' } }));
+  };
+
+  const pendingCount = items.filter(item => !uploads[item.id]?.extensionLetter || !uploads[item.id]?.rejoiningLetter).length;
+
+  return (
+    <div style={{ marginTop: 32 }}>
+      {/* Outer card */}
+      <div style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(167,139,250,0.25)',
+        borderRadius: 18,
+        overflow: 'hidden',
+        position: 'relative',
+      }}>
+        {/* Left accent bar */}
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 3, background: 'linear-gradient(180deg, #a78bfa 0%, rgba(167,139,250,0.1) 100%)', borderRadius: '3px 0 0 3px' }} />
+
+        {/* Card header */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            background: 'transparent', border: 'none', padding: '18px 22px 18px 26px',
+            cursor: 'pointer', borderBottom: open ? '1px solid rgba(167,139,250,0.12)' : 'none',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2" style={{ width: 18, height: 18 }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
+                Pending Uploads — Extensions
+              </div>
+              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>
+                {items.length} extension{items.length !== 1 ? 's' : ''} submitted
+                {pendingCount > 0 && <span style={{ marginLeft: 8, color: '#a78bfa' }}>· {pendingCount} awaiting upload{pendingCount !== 1 ? 's' : ''}</span>}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {pendingCount > 0 && (
+              <span style={{ background: 'rgba(167,139,250,0.15)', color: '#a78bfa', border: '1px solid rgba(167,139,250,0.3)', fontFamily: 'DM Sans, sans-serif', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>
+                {pendingCount} pending
+              </span>
+            )}
+            {pendingCount === 0 && (
+              <span style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399', border: '1px solid rgba(52,211,153,0.25)', fontFamily: 'DM Sans, sans-serif', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>
+                ✓ All uploaded
+              </span>
+            )}
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2" style={{ width: 16, height: 16, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}>
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </button>
+
+        {/* Collapsible table body */}
+        {open && (
+          <div style={{ overflowX: 'auto', padding: '0 0 4px 0' }}>
+            <table className="ps-table" style={{ margin: 0 }}>
+              <thead>
+                <tr>
+                  <th className="ps-sl-num">Sl.</th>
+                  <th>Staff Name</th>
+                  <th>Order No</th>
+                  <th>Extn From</th>
+                  <th>Extn To</th>
+                  <th>Salary</th>
+                  <th>Report</th>
+                  <th>Extension Letter</th>
+                  <th>Rejoining Letter</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, i) => (
+                  <tr key={item.id}>
+                    <td className="ps-sl-num">{i + 1}</td>
+                    <td className="ps-name-cell">{item.staffName || '—'}</td>
+                    <td style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>{item.extnOrderNo || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.extnFrom) || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.extnTo) || '—'}</td>
+                    <td style={{ color: 'rgba(255,255,255,0.7)' }}>₹{parseInt(item.fixedSalary || 0).toLocaleString('en-IN')}</td>
+                    <td>
+                      <button onClick={() => onPreview(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 12px', fontSize: 12, borderRadius: 8, whiteSpace: 'nowrap', background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.22)', color: '#00b4ff', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif' }}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 12, height: 12 }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Preview
+                      </button>
+                    </td>
+                    <td><UploadBtn id={`extn-letter-${item.id}`} label="Extn. Letter" fileName={uploads[item.id]?.extensionLetter || ''} onUpload={e => handleUpload(item.id, 'extensionLetter', e.target.files[0])} /></td>
+                    <td><UploadBtn id={`rejoin-letter-${item.id}`} label="Rejoining Letter" fileName={uploads[item.id]?.rejoiningLetter || ''} onUpload={e => handleUpload(item.id, 'rejoiningLetter', e.target.files[0])} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Bottom glow bar */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #a78bfa, rgba(167,139,250,0.1))', borderRadius: '0 0 18px 18px' }} />
+      </div>
+    </div>
+  );
+};
+
 // ── Extension Form ───────────────────────────────────────
-// CHANGED: removed STAFF_NAMES_FOR_PROJECT + staffName dropdown; staffName is auto-populated from contract prop
+// CHANGED: "Generate Extension Letter" → "Submit"
 const ExtensionForm = ({ contract, projectId, facultyId, onSave, onBack }) => {
   const [form, setForm] = useState({ ...emptyExtension, staffName: contract?.staffName || '', designation: contract?.designation || '' });
   const [appraisalFileName, setAppraisalFileName] = useState('');
@@ -451,8 +695,6 @@ const ExtensionForm = ({ contract, projectId, facultyId, onSave, onBack }) => {
       </div>
       <div className="ps-form-panel">
         <div className="ps-form-section-label">Staff tenure extension details adding....</div>
-
-        {/* CHANGED: 2-col grid, no staff name field */}
         <div className="ps-form-grid" style={{ gridTemplateColumns: '1fr 180px' }}>
           <div className="ps-field">
             <label>Extn Order No<span className="req">*</span></label>
@@ -463,7 +705,6 @@ const ExtensionForm = ({ contract, projectId, facultyId, onSave, onBack }) => {
             <input className="ps-input" type="date" value={form.extnOrderDate} onChange={e => upd('extnOrderDate', e.target.value)} />
           </div>
         </div>
-
         <div className="ps-form-grid" style={{ gridTemplateColumns: '160px 160px 160px' }}>
           <div className="ps-field">
             <label>Extn Period From<span className="req">*</span></label>
@@ -478,7 +719,6 @@ const ExtensionForm = ({ contract, projectId, facultyId, onSave, onBack }) => {
             <input className="ps-input" type="date" value={form.rejoinDueDate} onChange={e => upd('rejoinDueDate', e.target.value)} />
           </div>
         </div>
-
         <div className="ps-form-grid" style={{ gridTemplateColumns: '160px 160px 1fr' }}>
           <div className="ps-field">
             <label>Fixed Salary<span className="req">*</span></label>
@@ -488,63 +728,23 @@ const ExtensionForm = ({ contract, projectId, facultyId, onSave, onBack }) => {
             <label>HRA<span className="req">*</span></label>
             <input className="ps-input" type="number" value={form.hra} onChange={e => upd('hra', e.target.value)} />
           </div>
-          {/* CHANGED: file input moved outside flex div so label sits cleanly above upload button */}
-          <div
-  className="ps-field"
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    marginTop: "30px"
-  }}
->
-  <label
-    style={{
-      minWidth: "180px",
-      marginBottom: 0
-    }}
-  >
-    Performance Appraisal
-  </label>
-
-  <input
-    type="file"
-    id="appraisal-upload"
-    style={{ display: "none" }}
-    onChange={handleAppraisalUpload}
-    accept=".pdf,.doc,.docx,.jpg,.png"
-  />
-
-  <label htmlFor="appraisal-upload" className="ps-upload-label">
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      style={{ width: 14, height: 14 }}
-    >
-      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
-    Upload Appraisal
-  </label>
-
-  {appraisalFileName && (
-    <span
-      style={{
-        fontSize: 12,
-        color: "#34d399",
-      }}
-    >
-      ✓ {appraisalFileName}
-    </span>
-  )}
-</div>
+          <div className="ps-field" style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "30px" }}>
+            <label style={{ minWidth: "180px", marginBottom: 0 }}>Performance Appraisal</label>
+            <input type="file" id="appraisal-upload" style={{ display: "none" }} onChange={handleAppraisalUpload} accept=".pdf,.doc,.docx,.jpg,.png" />
+            <label htmlFor="appraisal-upload" className="ps-upload-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 14, height: 14 }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Upload Appraisal
+            </label>
+            {appraisalFileName && <span style={{ fontSize: 12, color: "#34d399" }}>✓ {appraisalFileName}</span>}
+          </div>
         </div>
-
         <div className="ps-form-actions">
-          <button className="ps-btn-primary orange" onClick={() => onSave(form)}>Generate Extension Letter</button>
+          {/* CHANGED: was "Generate Extension Letter", now "Submit" */}
+          <button className="ps-btn-primary orange" onClick={() => onSave(form)}>Submit</button>
           <button className="ps-btn-secondary" onClick={onBack}>Back</button>
         </div>
       </div>
@@ -553,10 +753,11 @@ const ExtensionForm = ({ contract, projectId, facultyId, onSave, onBack }) => {
 };
 
 // ── New Contract Form ─────────────────────────────────────
-// CHANGED: removed staffName input field; staffName is auto-populated from prop
+// CHANGED: added Advertisement upload, replaced "Generate Appointment Letter" with "Submit"
 const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave, onBack }) => {
   const [form, setForm] = useState({ ...emptyContract, staffName: staffName || '' });
   const [minutesFileName, setMinutesFileName] = useState('');
+  const [advertisementFileName, setAdvertisementFileName] = useState('');
   const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const project = PROJECTS.find(p => p.id === projectId);
   const faculty = FACULTY.find(f => f.id === facultyId) || FACULTY.find(f => f.projectId === projectId);
@@ -564,6 +765,11 @@ const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave,
   const handleMinutesUpload = (e) => {
     const file = e.target.files[0];
     if (file) { setMinutesFileName(file.name); upd('minutesFile', file); }
+  };
+
+  const handleAdvertisementUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) { setAdvertisementFileName(file.name); upd('advertisementFile', file); }
   };
 
   return (
@@ -591,8 +797,6 @@ const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave,
           </div>
         )}
         <div className="ps-form-section-label">Staff tenure details adding....</div>
-
-        {/* CHANGED: 2-col grid, no staff name field */}
         <div className="ps-form-grid" style={{ gridTemplateColumns: '1fr 180px' }}>
           <div className="ps-field">
             <label>Appointment Order No<span className="req">*</span></label>
@@ -603,7 +807,6 @@ const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave,
             <input className="ps-input" type="date" value={form.appointmentOrderDate} onChange={e => upd('appointmentOrderDate', e.target.value)} />
           </div>
         </div>
-
         <div className="ps-form-grid" style={{ gridTemplateColumns: '160px 160px 160px' }}>
           <div className="ps-field">
             <label>Contract Period From<span className="req">*</span></label>
@@ -618,8 +821,7 @@ const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave,
             <input className="ps-input" type="date" value={form.joinDueDate} onChange={e => upd('joinDueDate', e.target.value)} />
           </div>
         </div>
-
-        <div className="ps-form-grid" style={{ gridTemplateColumns: '160px 160px 1fr' }}>
+        <div className="ps-form-grid" style={{ gridTemplateColumns: '160px 160px' }}>
           <div className="ps-field">
             <label>Fixed Salary<span className="req">*</span></label>
             <input className="ps-input" type="number" value={form.fixedSalary} onChange={e => upd('fixedSalary', e.target.value)} />
@@ -628,67 +830,52 @@ const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave,
             <label>HRA<span className="req">*</span></label>
             <input className="ps-input" type="number" value={form.hra} onChange={e => upd('hra', e.target.value)} />
           </div>
-          {/* CHANGED: file input moved outside flex div so label sits cleanly above upload button */}
-          <div
-  className="ps-field"
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    marginTop: "30px"
-  }}
->
-  <label
-    style={{
-      minWidth: "220px",
-      marginBottom: 0
-    }}
-  >
-    MINUTES OF THE MEETING
-  </label>
+        </div>
 
-  <input
-    type="file"
-    id="minutes-upload"
-    style={{ display: "none" }}
-    onChange={handleMinutesUpload}
-    accept=".pdf,.doc,.docx,.jpg,.png"
-  />
+        {/* CHANGED: Two upload buttons side by side — Minutes of Meeting + Advertisement */}
+        <div className="ps-form-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: 20, marginTop: 8 }}>
+          {/* Minutes of Meeting */}
+          <div className="ps-field" style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "8px" }}>
+            <label style={{ minWidth: "200px", marginBottom: 0 }}>MINUTES OF THE MEETING</label>
+            <input type="file" id="minutes-upload" style={{ display: "none" }} onChange={handleMinutesUpload} accept=".pdf,.doc,.docx,.jpg,.png" />
+            <label htmlFor="minutes-upload" className="ps-upload-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 14, height: 14 }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Upload Minutes
+            </label>
+            {minutesFileName && (
+              <span style={{ fontSize: 12, color: "#34d399", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px" }}>
+                ✓ {minutesFileName}
+              </span>
+            )}
+          </div>
 
-  <label htmlFor="minutes-upload" className="ps-upload-label">
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      style={{ width: 14, height: 14 }}
-    >
-      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" y1="3" x2="12" y2="15" />
-    </svg>
-    Upload Minutes
-  </label>
-
-  {minutesFileName && (
-    <span
-      style={{
-        fontSize: 12,
-        color: "#34d399",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-        maxWidth: "200px"
-      }}
-    >
-      ✓ {minutesFileName}
-    </span>
-  )}
-</div>
+          {/* CHANGED: NEW — Advertisement upload */}
+          <div className="ps-field" style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "8px" }}>
+            <label style={{ minWidth: "140px", marginBottom: 0 }}>ADVERTISEMENT</label>
+            <input type="file" id="advertisement-upload" style={{ display: "none" }} onChange={handleAdvertisementUpload} accept=".pdf,.doc,.docx,.jpg,.png" />
+            <label htmlFor="advertisement-upload" className="ps-upload-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 14, height: 14 }}>
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Upload Advt.
+            </label>
+            {advertisementFileName && (
+              <span style={{ fontSize: 12, color: "#34d399", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px" }}>
+                ✓ {advertisementFileName}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="ps-form-actions">
-          <button className="ps-btn-primary orange" onClick={() => onSave({ ...form, facultyId })}>Generate Appointment Letter</button>
+          {/* CHANGED: was "Generate Appointment Letter", now "Submit" */}
+          <button className="ps-btn-primary orange" onClick={() => onSave({ ...form, facultyId })}>Submit</button>
           <button className="ps-btn-secondary" onClick={onBack}>Back</button>
         </div>
       </div>
@@ -720,8 +907,6 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
           <input className="ps-input" style={{ paddingLeft: 32, width: 200 }} placeholder="Search staff name..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
         </div>
       </div>
-
-      {/* Faculty Cards */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 11, fontWeight: 700, letterSpacing: '1.1px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           Faculty / Principal Investigators
@@ -742,11 +927,7 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
                   <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>{faculty.role} · {faculty.dept.replace('DEPARTMENT OF ', '')}</div>
                 </div>
               </div>
-              <button
-                className="ps-btn-primary orange"
-                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 18px', fontSize: 13 }}
-                onClick={() => onAddAppointment(faculty)}
-              >
+              <button className="ps-btn-primary orange" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 18px', fontSize: 13 }} onClick={() => onAddAppointment(faculty)}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: 14, height: 14 }}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Add Appointment
               </button>
@@ -754,8 +935,6 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
           ))}
         </div>
       </div>
-
-      {/* Contracts table */}
       <div className="ps-table-card">
         {total === 0 ? (
           <div style={{ textAlign: 'center', padding: '48px 20px', color: 'rgba(255,255,255,0.25)', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
@@ -829,7 +1008,7 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
   );
 };
 
-// ── Entry Cards (New Appointment / Extension) ────────────
+// ── Entry Cards ──────────────────────────────────────────
 const EntryCards = ({ onNew, onExtension }) => (
   <>
     <div className="ps-inner-header">
@@ -838,38 +1017,186 @@ const EntryCards = ({ onNew, onExtension }) => (
         <div className="ps-inner-sub">Master / Staff Appointment Orders</div>
       </div>
     </div>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 700 }}>
-      <div className="ps-sub-card" style={{ '--sc': '#fb923c', '--sg': 'rgba(251,146,60,0.15)' }} onClick={onNew}>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, 1fr)",
+        gap: 20,
+        maxWidth: 700,
+      }}
+    >
+      {/* New Appointment */}
+      <div
+        className="ps-sub-card"
+        style={{
+          "--sc": "#fb923c",
+          "--sg": "rgba(251,146,60,0.15)",
+        }}
+        onClick={onNew}
+      >
         <div className="ps-card-top">
-          <div className="ps-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
-          <div className="ps-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div className="ps-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="12" y1="18" x2="12" y2="12" />
+              <line x1="9" y1="15" x2="15" y2="15" />
+            </svg>
+          </div>
         </div>
+
         <div className="ps-card-body">
           <div className="ps-card-title">New Appointment</div>
-          <div className="ps-card-desc">Issue a fresh contract appointment letter for a new project staff member. Generates an official appointment order.</div>
+          <div className="ps-card-desc">
+            Create new staff appointments and manage pending uploads.
+          </div>
         </div>
-        <div className="ps-card-glow-bar"/>
+
+        <div className="ps-card-glow-bar" />
       </div>
-      <div className="ps-sub-card" style={{ '--sc': '#a78bfa', '--sg': 'rgba(167,139,250,0.15)' }} onClick={onExtension}>
+
+      {/* Extension */}
+      <div
+        className="ps-sub-card"
+        style={{
+          "--sc": "#a78bfa",
+          "--sg": "rgba(167,139,250,0.15)",
+        }}
+        onClick={onExtension}
+      >
         <div className="ps-card-top">
-          <div className="ps-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></div>
-          <div className="ps-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div className="ps-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="13 17 18 12 13 7" />
+              <polyline points="6 17 11 12 6 7" />
+            </svg>
+          </div>
         </div>
+
         <div className="ps-card-body">
           <div className="ps-card-title">Appointment Extension</div>
-          <div className="ps-card-desc">Extend an existing staff member's contract period. Browse by project and generate an official extension letter.</div>
+          <div className="ps-card-desc">
+            Create staff extensions and manage pending uploads.
+          </div>
         </div>
-        <div className="ps-card-glow-bar"/>
+
+        <div className="ps-card-glow-bar" />
       </div>
     </div>
   </>
 );
 
-// ── New Appointment Flow (project select → faculty list → form) ──
-const NewAppointmentFlow = ({ onSaveWithProject, onBack }) => {
+
+const NewAppointmentMenu = ({
+  onAddNew,
+  onPendingUploads,
+  onBack,
+}) => (
+  <>
+    <div className="ps-inner-header">
+      <div className="ps-inner-title-wrap">
+        <div className="ps-inner-title">New Appointment</div>
+        <div className="ps-inner-sub">
+          Choose an action
+        </div>
+      </div>
+
+      <button className="ps-back-btn" onClick={onBack}>
+        Back
+      </button>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2,1fr)",
+        gap: 20,
+        maxWidth: 700,
+      }}
+    >
+      <div className="ps-sub-card" onClick={onAddNew}>
+        <div className="ps-card-body">
+          <div className="ps-card-title">Add New Appointment</div>
+          <div className="ps-card-desc">
+            Create a fresh appointment order.
+          </div>
+        </div>
+      </div>
+
+      <div className="ps-sub-card" onClick={onPendingUploads}>
+        <div className="ps-card-body">
+          <div className="ps-card-title">Pending Uploads</div>
+          <div className="ps-card-desc">
+            Upload appointment and joining letters.
+          </div>
+        </div>
+      </div>
+    </div>
+  </>
+);
+
+
+
+const ExtensionMenu = ({
+  onAddExtension,
+  onPendingUploads,
+  onBack,
+}) => (
+  <>
+    <div className="ps-inner-header">
+      <div className="ps-inner-title-wrap">
+        <div className="ps-inner-title">Appointment Extension</div>
+        <div className="ps-inner-sub">
+          Choose an action
+        </div>
+      </div>
+
+      <button className="ps-back-btn" onClick={onBack}>
+        Back
+      </button>
+    </div>
+
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2,1fr)",
+        gap: 20,
+        maxWidth: 700,
+      }}
+    >
+      <div className="ps-sub-card" onClick={onAddExtension}>
+        <div className="ps-card-body">
+          <div className="ps-card-title">Add Extension</div>
+          <div className="ps-card-desc">
+            Create a new extension order.
+          </div>
+        </div>
+      </div>
+
+      <div className="ps-sub-card" onClick={onPendingUploads}>
+        <div className="ps-card-body">
+          <div className="ps-card-title">Pending Uploads</div>
+          <div className="ps-card-desc">
+            Upload extension and rejoining letters.
+          </div>
+        </div>
+      </div>
+    </div>
+  </>
+);
+
+
+
+// ── New Appointment Flow ─────────────────────────────────
+// CHANGED: added submittedContracts list shown below project selector
+const NewAppointmentFlow = ({ onBack, onPreviewReport }) => {
   const [step, setStep] = useState('project');
   const [selectedProject, setSelectedProject] = useState('');
   const [selectedFaculty, setSelectedFaculty] = useState(null);
+  // CHANGED: state to hold all submitted contracts for the list
+  const [submittedContracts, setSubmittedContracts] = useState([]);
+  
 
   if (step === 'form' && selectedFaculty) {
     return (
@@ -877,7 +1204,19 @@ const NewAppointmentFlow = ({ onSaveWithProject, onBack }) => {
         projectId={selectedProject}
         facultyId={selectedFaculty.id}
         staffName=""
-        onSave={(form) => onSaveWithProject(form, selectedProject, selectedFaculty.id)}
+        onSave={(form) => {
+          const newC = {
+            ...form,
+            id: Date.now(),
+            projectId: selectedProject,
+            facultyId: selectedFaculty.id,
+            designation: 'Junior Research Fellow',
+            status: 'VERIFIED',
+          };
+          // CHANGED: add to submitted list and go back to project step (not report)
+          setSubmittedContracts(prev => [newC, ...prev]);
+          setStep('project');
+        }}
         onBack={() => setStep('faculty')}
       />
     );
@@ -903,7 +1242,7 @@ const NewAppointmentFlow = ({ onSaveWithProject, onBack }) => {
             <div key={faculty.id} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 14, padding: '18px 22px', flexWrap: 'wrap', gap: 12, transition: 'all 0.2s',
+              borderRadius: 14, padding: '18px 22px', flexWrap: 'wrap', gap: 12,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(251,146,60,0.12)', border: '1px solid rgba(251,146,60,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -930,6 +1269,7 @@ const NewAppointmentFlow = ({ onSaveWithProject, onBack }) => {
     );
   }
 
+  // CHANGED: project selection step now also shows the submitted list below
   return (
     <>
       <div className="ps-inner-header">
@@ -957,13 +1297,58 @@ const NewAppointmentFlow = ({ onSaveWithProject, onBack }) => {
           </button>
         </div>
       </div>
+
+      {/* CHANGED: Submitted appointments list shown below project selector */}
     </>
   );
 };
 
 // ── Extension Project View ───────────────────────────────
-const ExtensionProjectView = ({ contracts, onExtn, onBack }) => {
+// CHANGED: added submittedExtensions state and list shown below the contracts table
+const ExtensionProjectView = ({
+  contracts,
+  onBack,
+  onPreviewReport,
+  submittedExtensions,
+  setSubmittedExtensions
+}) => {
   const [selectedProject, setSelectedProject] = useState('');
+  const [showExtnForm, setShowExtnForm] = useState(false);
+  const [targetContract, setTargetContract] = useState(null);
+  // CHANGED: submitted extensions list state
+
+  const handleExtn = (c) => {
+    setTargetContract(c);
+    setShowExtnForm(true);
+  };
+
+  if (showExtnForm && targetContract) {
+    return (
+      <ExtensionForm
+        contract={targetContract}
+        projectId={targetContract.projectId || selectedProject}
+        facultyId={targetContract.facultyId}
+        onSave={(form) => {
+          const newExt = {
+            ...form,
+            id: Date.now(),
+            staffName: targetContract.staffName,
+            designation: targetContract.designation,
+            projectId: targetContract.projectId || selectedProject,
+            facultyId: targetContract.facultyId,
+          };
+          // CHANGED: add to submitted list, go back to project view
+          setSubmittedExtensions(prev => [newExt, ...prev]);
+
+setShowExtnForm(false);
+setView('entry');
+setScreen('pending-extension');
+        }}
+        onBack={() => setShowExtnForm(false)}
+      />
+    );
+  }
+
   return (
     <>
       <div className="ps-inner-header">
@@ -1014,7 +1399,7 @@ const ExtensionProjectView = ({ contracts, onExtn, onBack }) => {
                       <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{c.contractTo}</td>
                       <td><span className={`ps-badge ${c.status === 'VERIFIED' ? 'verified' : 'pending'}`}><span className="ps-badge-dot"/>{c.status}</span></td>
                       <td>
-                        <button className="ps-icon-btn ext" title="Add Extension" onClick={() => onExtn(c, selectedProject)}>
+                        <button className="ps-icon-btn ext" title="Add Extension" onClick={() => handleExtn(c)}>
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
                         </button>
                       </td>
@@ -1030,6 +1415,8 @@ const ExtensionProjectView = ({ contracts, onExtn, onBack }) => {
           <div style={{ color: 'rgba(255,255,255,0.2)', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>Please select a project to view staff contracts.</div>
         </div>
       )}
+
+      {/* CHANGED: Submitted extensions list shown below the contracts table */}
     </>
   );
 };
@@ -1044,64 +1431,137 @@ const AppointmentOrders = ({ onBack }) => {
   const [reportProjectId, setReportProjectId] = useState('');
   const [reportFacultyId, setReportFacultyId] = useState('');
   const [listProjectId, setListProjectId] = useState('');
+  // CHANGED: track where to return after viewing a report from the submitted list
+  const [reportReturnView, setReportReturnView] = useState('entry');
+  const [screen, setScreen] = useState('home');
+  const [submittedAppointments, setSubmittedAppointments] = useState([]);
+const [submittedExtensions, setSubmittedExtensions] = useState([
+  {
+    id: 1001,
+    projectId: "P001",
+    facultyId: "F001",
+    staffName: "Dr. Siva Kumar",
+    designation: "Project Associate",
+    revisedEndDate: "31-12-2026",
+    reason: "Additional experimental validation required",
+    requestStatus: "Under Review",
+    submittedDate: "04-06-2026"
+  },
+  {
+    id: 1002,
+    projectId: "P002",
+    facultyId: "F002",
+    staffName: "Dr. Priya",
+    designation: "Research Assistant",
+    revisedEndDate: "30-09-2026",
+    reason: "Project deliverables pending",
+    requestStatus: "Approved",
+    submittedDate: "03-06-2026"
+  }
+]);
+
+  // CHANGED: handler called by both NewAppointmentFlow and ExtensionProjectView when Preview is clicked
+  const handlePreviewReport = (data, type, pid, fid, returnView) => {
+    setReportData(data);
+    setReportType(type);
+    setReportProjectId(pid);
+    setReportFacultyId(fid || '');
+    setReportReturnView(returnView || (type === 'new' ? 'new-flow' : 'extn-flow'));
+    setView('report');
+  };
+
+  
 
   return (
     <div className="ps-inner">
       <div style={{ marginBottom: 20 }}>
-        <button className="ps-back-btn" onClick={view === 'entry' ? onBack : () => setView('entry')}>
+        <button
+  className="ps-back-btn"
+  onClick={() => {
+    if (view !== 'entry') {
+      setView('entry');
+      setScreen('home');
+    } else if (screen !== 'home') {
+      setScreen('home');
+    } else {
+      onBack();
+    }
+  }}
+>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
           {view === 'entry' ? 'Project Staff' : 'Appointment Orders'}
         </button>
       </div>
 
-      {view === 'entry' && (
-        <EntryCards onNew={() => setView('new-flow')} onExtension={() => setView('extn-flow')} />
-      )}
+      {view === 'entry' && screen === 'home' && (
+  <EntryCards
+    onNew={() => setScreen('new-menu')}
+    onExtension={() => setScreen('extension-menu')}
+  />
+)}
+{view === 'entry' && screen === 'new-menu' && (
+  <NewAppointmentMenu
+    onAddNew={() => setView('new-flow')}
+    onPendingUploads={() => setScreen('pending-new')}
+    onBack={() => setScreen('home')}
+  />
+)}
 
+{view === 'entry' && screen === 'extension-menu' && (
+  <ExtensionMenu
+    onAddExtension={() => setView('extn-flow')}
+    onPendingUploads={() => setScreen('pending-extension')}
+    onBack={() => setScreen('home')}
+  />
+)}
+
+
+{view === 'entry' && screen === 'pending-new' && (
+  <SubmittedAppointmentsList
+    items={contracts.filter(c => c.extn === 'New')}
+    onPreview={(item) => {
+      setReportData(item);
+      setReportType('new');
+      setReportProjectId(item.projectId);
+      setReportFacultyId(item.facultyId);
+      setView('report');
+    }}
+  />
+)}
+
+
+{view === 'entry' && screen === 'pending-extension' && (
+  <SubmittedExtensionsList
+    items={submittedExtensions}
+    onPreview={(item) => {
+      setReportData(item);
+      setReportType('extension');
+      setReportProjectId(item.projectId);
+      setReportFacultyId(item.facultyId);
+      setView('report');
+    }}
+  />
+)}
+
+      {/* CHANGED: NewAppointmentFlow now manages its own submitted list and calls onPreviewReport */}
       {view === 'new-flow' && (
         <NewAppointmentFlow
           onBack={() => setView('entry')}
-          onSaveWithProject={(form, pid, fid) => {
-            const newC = {
-              ...form, id: Date.now(), projectId: pid, facultyId: fid,
-              designation: 'Junior Research Fellow',
-              status: 'VERIFIED', extn: 'New', documents: [], extensions: [],
-              proceedingNo: form.appointmentOrderNo, proceedingDate: form.appointmentOrderDate,
-              tenureFrom: form.contractFrom, tenureTo: form.contractTo,
-            };
-            setContracts(prev => [newC, ...prev]);
-            setReportData({ ...newC, staffName: newC.staffName });
-            setReportType('new');
-            setReportProjectId(pid);
-            setReportFacultyId(fid);
-            setView('report');
-          }}
+          onPreviewReport={(data, type, pid, fid) => handlePreviewReport(data, type, pid, fid, 'new-flow')}
         />
       )}
 
+      {/* CHANGED: ExtensionProjectView now manages its own submitted list and calls onPreviewReport */}
       {view === 'extn-flow' && (
         <ExtensionProjectView
-          contracts={contracts}
-          onBack={() => setView('entry')}
-          onExtn={(c, pid) => { setTarget(c); setListProjectId(pid || c.projectId); setView('extn-form'); }}
-        />
-      )}
-
-      {view === 'extn-form' && target && (
-        <ExtensionForm
-          contract={target}
-          projectId={target.projectId || listProjectId}
-          facultyId={target.facultyId}
-          onSave={(form) => {
-            setContracts(prev => prev.map(c => c.id === target.id ? { ...c, extensions: [...(c.extensions || []), form] } : c));
-            setReportData({ ...form, designation: target?.designation });
-            setReportType('extn');
-            setReportProjectId(target?.projectId || listProjectId);
-            setReportFacultyId(target?.facultyId || '');
-            setView('report');
-          }}
-          onBack={() => setView('extn-flow')}
-        />
+  contracts={contracts}
+  submittedExtensions={submittedExtensions}
+  setSubmittedExtensions={setSubmittedExtensions}
+  onBack={() => setView('entry')}
+  onPreviewReport={(data, type, pid, fid) =>
+    handlePreviewReport(data, type, pid, fid, 'extn-flow')
+  }
+/>
       )}
 
       {view === 'report' && reportData && (
@@ -1110,7 +1570,7 @@ const AppointmentOrders = ({ onBack }) => {
           type={reportType}
           projectId={reportProjectId}
           facultyId={reportFacultyId}
-          onBack={() => setView('entry')}
+          onBack={() => setView(reportReturnView)}
         />
       )}
 
@@ -1121,7 +1581,7 @@ const AppointmentOrders = ({ onBack }) => {
           onAddAppointment={(faculty) => { setReportFacultyId(faculty.id); setView('new-flow'); }}
           onDocs={c => { setTarget(c); setView('docs'); }}
           onAction={c => { setTarget(c); setView('action'); }}
-          onExtn={c => { setTarget(c); setView('extn-form'); }}
+          onExtn={c => { setTarget(c); setListProjectId(c.projectId); setView('extn-flow'); }}
         />
       )}
       {view === 'docs' && target && (
@@ -1141,4 +1601,4 @@ const AppointmentOrders = ({ onBack }) => {
   );
 };
 
-export default AppointmentOrders;  
+export default AppointmentOrders;

@@ -5,24 +5,24 @@ export default function ReappropriationDashboard({ onNavigate }) {
   return (
     <div className="rad-page">
       <div className="rad-header">
-        <h1>Re-appropriation Dashboard</h1>
+        <h2>Re-appropriation Dashboard</h2>
         <p>Manage re-appropriation requests and track history</p>
       </div>
 
       <div
   className="ped-card"
-  onClick={() => onNavigate("project-extension")}
+  onClick={() => onNavigate("project-reappropriation-request")}
 >
-  <h3>New Project Extension</h3>
-  <p>Create a new extension request</p>
+  <h3>New Project Reappropriation</h3>
+  <p>Create a new re-appropriation request</p>
 </div>
 
 <div
   className="ped-card"
-  onClick={() => onNavigate("project-extension-history")}
+  onClick={() => onNavigate("reappropriationhistory")}
 >
-  <h3>Project Extension History</h3>
-  <p>View submitted extension requests</p>
+  <h3>Project Reappropriation History</h3>
+  <p>View submitted re-appropriation requests</p>
 </div>
     </div>
   );

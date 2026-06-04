@@ -23,6 +23,7 @@ import TestingPage          from './pages/testing/TestingPage';
 import TrainingPage         from './pages/training/TrainingPage';
 import WorkshopsPage        from './pages/workshops/WorkshopsPage';
 import ReappropriationDashboard from './pages/projects/requestforms/ReappropriationDashboard';
+import ReappropriationPage from './pages/projects/requestforms/ReappropriationPage';
 import ReappropriationHistory from './pages/projects/requestforms/ReappropriationHistory';
 import ProjectExtensionDashboard from './pages/projects/requestforms/ProjectExtensionDashboard';
 import ProjectExtensionHistory from './pages/projects/requestforms/ProjectExtensionHistory';
@@ -52,6 +53,9 @@ function App() {
 
       case 'reappropriationdashboard':
   return <ReappropriationDashboard onNavigate={navigate} />;
+
+  case 'project-reappropriation-request':
+  return <ReappropriationPage onNavigate={navigate} />;
 
 case 'reappropriationhistory':
   return <ReappropriationHistory onNavigate={navigate} />;
