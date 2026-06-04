@@ -22,6 +22,11 @@ import ConsultanciesPage    from './pages/consultancies/ConsultanciesPage';
 import TestingPage          from './pages/testing/TestingPage';
 import TrainingPage         from './pages/training/TrainingPage';
 import WorkshopsPage        from './pages/workshops/WorkshopsPage';
+import ReappropriationDashboard from './pages/projects/requestforms/ReappropriationDashboard';
+import ReappropriationHistory from './pages/projects/requestforms/ReappropriationHistory';
+import ProjectExtensionDashboard from './pages/projects/requestforms/ProjectExtensionDashboard';
+import ProjectExtensionHistory from './pages/projects/requestforms/ProjectExtensionHistory';
+import ProjectExtensionPage from './pages/projects/requestforms/ProjectExtensionPage';
 
 function App() {
   const [page, setPage] = useState('home');
@@ -44,6 +49,22 @@ function App() {
       case 'ctdt':              return <CTDTPage             onNavigate={navigate} />;
       case 'projectstaff':      return <ProjectStaffPage    onNavigate={navigate} />;
       case 'requestforms':      return <RequestFormsPage    onNavigate={navigate} />;
+
+      case 'reappropriationdashboard':
+  return <ReappropriationDashboard onNavigate={navigate} />;
+
+case 'reappropriationhistory':
+  return <ReappropriationHistory onNavigate={navigate} />;
+
+  case 'project-extension-dashboard':
+  return <ProjectExtensionDashboard onNavigate={navigate} />;
+
+case 'project-extension':
+  return <ProjectExtensionPage onNavigate={navigate} />;
+
+case 'project-extension-history':
+  return <ProjectExtensionHistory onNavigate={navigate} />;
+
       case 'paymentclaims':     return <PaymentClaimsPage   onNavigate={navigate} />;
       case 'zbaslip':           return <ZBASlipPage          onNavigate={navigate} />;
       case 'tsaslip':           return <TSASlipPage          onNavigate={navigate} />;

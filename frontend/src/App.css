@@ -26,3 +26,10 @@ html, body, #root {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 180, 255, 0.5);
 }
+@media print {
+  .ps-report-sheet {
+    box-shadow: none !important;
+    background: #ffffff !important;
+    opacity: 1 !important;
+  }
+}

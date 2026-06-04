@@ -223,14 +223,16 @@ export default function ProjectExtensionPage({ onNavigate }) {
   const [revisedEndDateInput, setRevisedEndDateInput] = useState(""); // yyyy-mm-dd for input
   const [reason, setReason] = useState("");
   const [requestLetter, setRequestLetter] = useState(null);
+  const [requestStatus] = useState("Under Review");
 
   // Step 3 — approval status (simulated)
-  const [approvalStatus] = useState({
-    "P001": { status: "approved", date: "12-05-2024", remarks: "Extension approved as per funding agency request. Project to be completed by revised end date." },
-    "P003": { status: "declined", date: "03-04-2024", remarks: "Insufficient justification provided. Please resubmit with detailed work completion status and agency letter." },
-  });
 
-  const STEPS = ["Select Project", "Extension Details", "Review & Submit"];
+  const STEPS = [
+  "Select Project",
+  "Extension Details",
+  "Review & Submit",
+  "Status"
+];
 
   const filteredProjects = DUMMY_PROJECTS.filter(
     (p) =>
@@ -339,7 +341,6 @@ const handleDownload = () => {
   createPdf("download");
 };
 
-  const projectApproval = selectedProject ? approvalStatus[selectedProject.id] : null;
 
   return (
     <div className="pe-page">
@@ -395,7 +396,6 @@ const handleDownload = () => {
             {/* Project Cards */}
             <div className="pe-project-list">
               {filteredProjects.map((p) => {
-                const approval = approvalStatus[p.id];
                 return (
                   <div
                     key={p.id}
@@ -406,11 +406,6 @@ const handleDownload = () => {
                       <div className="pe-project-id">{p.id}</div>
                       <div className="pe-project-badges">
                         <StatusBadge status={p.status} />
-                        {approval && (
-                          <span className={`pe-approval-pill ${approval.status}`}>
-                            {approval.status === "approved" ? "✓ Approved" : "✗ Declined"}
-                          </span>
-                        )}
                       </div>
                     </div>
                     <div className="pe-project-title">{p.title}</div>
@@ -446,26 +441,6 @@ const handleDownload = () => {
             </div>
           </div>
 
-          {/* Approval Status Panel (if project has prior result) */}
-          {selectedProject && approvalStatus[selectedProject.id] && (
-            <div className={`pe-card pe-approval-banner ${approvalStatus[selectedProject.id].status}`}>
-              <div className="pe-approval-banner-icon">
-                {approvalStatus[selectedProject.id].status === "approved" ? (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                )}
-              </div>
-              <div className="pe-approval-banner-body">
-                <div className="pe-approval-banner-title">
-                  Extension {approvalStatus[selectedProject.id].status === "approved" ? "Approved" : "Declined"} — {approvalStatus[selectedProject.id].date}
-                </div>
-                <div className="pe-approval-banner-remarks">
-                  {approvalStatus[selectedProject.id].remarks}
-                </div>
-              </div>
-            </div>
-          )}
 
           <div className="pe-actions">
             <button className="pe-btn pe-btn-primary" onClick={goStep2} disabled={!selectedProject}>
@@ -638,52 +613,76 @@ const handleDownload = () => {
               <div><span>Request Letter</span><strong>{requestLetter ? requestLetter.name : "Not attached"}</strong></div>
             </div>
 
-            {/* Approval Status if exists */}
-            {projectApproval && (
-              <>
-                <div className="pe-card-subtitle">Director's Decision</div>
-                <div className={`pe-decision-box ${projectApproval.status}`}>
-                  <div className="pe-decision-header">
-                    <div className={`pe-decision-icon ${projectApproval.status}`}>
-                      {projectApproval.status === "approved" ? (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                      ) : (
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                      )}
-                    </div>
-                    <div>
-                      <div className="pe-decision-title">
-                        {projectApproval.status === "approved" ? "Extension Approved" : "Extension Declined"}
-                      </div>
-                      <div className="pe-decision-date">Dated: {projectApproval.date}</div>
-                    </div>
-                  </div>
-                  <div className="pe-decision-remarks">{projectApproval.remarks}</div>
-                </div>
-              </>
-            )}
 
-            {!projectApproval && (
-              <div className="pe-pending-note">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                This request will be submitted to the CSRC Director for review. You will be notified upon decision.
-              </div>
-            )}
           </div>
 
           <div className="pe-report-actions">
-            <button className="pe-btn pe-btn-preview" onClick={handlePreview}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              Preview Letter
-            </button>
-            <button className="pe-btn pe-btn-download" onClick={handleDownload}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Letter
-            </button>
-            <button className="pe-btn pe-btn-ghost" onClick={() => setStep(2)}>← Back</button>
-          </div>
+  <button
+    className="pe-btn pe-btn-primary"
+    onClick={() => setStep(4)}
+  >
+    Submit Request
+  </button>
+
+  <button
+    className="pe-btn pe-btn-ghost"
+    onClick={() => setStep(2)}
+  >
+    ← Back
+  </button>
+</div>
         </div>
       )}
+
+      
+
+
+      {step === 4 && (
+  <div className="pe-animate">
+    <div className="pe-card">
+      <div className="pe-card-title">
+        Request Status
+      </div>
+
+      <div
+        style={{
+          textAlign: "center",
+          padding: "40px 20px"
+        }}
+      >
+        <h2 style={{ color: "#f59e0b" }}>
+          {requestStatus}
+        </h2>
+
+        <p style={{ marginTop: 10 }}>
+          Your project extension request has been submitted and is under review.
+        </p>
+
+        <div
+          className="pe-report-actions"
+          style={{
+            justifyContent: "center",
+            marginTop: 25
+          }}
+        >
+          <button
+            className="pe-btn pe-btn-preview"
+            onClick={handlePreview}
+          >
+            Preview Letter
+          </button>
+
+          <button
+            className="pe-btn pe-btn-download"
+            onClick={handleDownload}
+          >
+            Download Letter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

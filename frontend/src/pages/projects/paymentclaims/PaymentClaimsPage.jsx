@@ -16,25 +16,23 @@ export default function PaymentClaimsPage() {
 
   return (
     <div className="pc-layout">
-      <aside className="pc-sidebar">
-        <div className="pc-sidebar-header">
-          <span className="pc-edit-icon">✏️</span>
-          <span>Payment Claims</span>
-          <span className="pc-chevron">▾</span>
-        </div>
-        <ul className="pc-nav">
-          {TABS.map((tab) => (
-            <li
-              key={tab.key}
-              className={`pc-nav-item ${activeTab === tab.key ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.key)}
-            >
-              <span className="pc-radio">{activeTab === tab.key ? "◉" : "○"}</span>
-              {tab.label}
-            </li>
-          ))}
-        </ul>
-      </aside>
+      <div className="pc-navbar">
+  <div className="pc-navbar-title">
+    <span>💰 Payment Claims</span>
+  </div>
+
+  <div className="pc-tabs">
+    {TABS.map((tab) => (
+      <button
+        key={tab.key}
+        className={`pc-tab ${activeTab === tab.key ? "active" : ""}`}
+        onClick={() => setActiveTab(tab.key)}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+</div>
 
       <main className="pc-main">
         {activeTab === "beneficiaries" && <BeneficiariesPage />}

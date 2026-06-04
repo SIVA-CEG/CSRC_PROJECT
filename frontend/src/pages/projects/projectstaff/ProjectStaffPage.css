@@ -65,6 +65,15 @@
 .ps-card-glow-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--sc); border-radius: 0 0 20px 20px; transform: scaleX(0); transition: transform 0.3s ease; }
 .ps-sub-card:hover .ps-card-glow-bar { transform: scaleX(1); }
 
+/* ── Project Selector Bar ── */
+.ps-project-selector-bar {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 14px 20px; margin-bottom: 24px;
+}
+.ps-project-selector-inner {
+  display: flex; align-items: center; gap: 12px;
+}
+
 /* ── Shared inner-page layout ── */
 .ps-inner { animation: ps-rise 0.4s cubic-bezier(.22,.68,0,1.2) both; }
 .ps-inner-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 14px; }
@@ -149,6 +158,7 @@
   font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.18s;
 }
 .ps-page-btn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
+.ps-page-btn:disabled { opacity: 0.35; cursor: default; }
 
 /* ── Form panel ── */
 .ps-form-panel {
@@ -161,12 +171,7 @@
   padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .ps-form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
-.ps-form-grid-4 { grid-template-columns: repeat(4, 1fr); }
-.ps-form-grid-3 { grid-template-columns: repeat(3, 1fr); }
-.ps-form-grid-2 { grid-template-columns: repeat(2, 1fr); }
 .ps-field { display: flex; flex-direction: column; gap: 7px; }
-.ps-field.span2 { grid-column: span 2; }
-.ps-field.span3 { grid-column: span 3; }
 .ps-field label {
   font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
   letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255,255,255,0.35);
@@ -176,13 +181,14 @@
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
   border-radius: 10px; padding: 11px 14px; color: rgba(255,255,255,0.85);
   font-family: 'DM Sans', sans-serif; font-size: 13.5px; outline: none;
-  transition: all 0.2s; width: 100%;
+  transition: all 0.2s; width: 100%; box-sizing: border-box;
 }
 .ps-input::placeholder { color: rgba(255,255,255,0.2); }
 .ps-input:focus, .ps-select:focus {
   border-color: rgba(0,180,255,0.45); background: rgba(0,180,255,0.05);
   box-shadow: 0 0 0 3px rgba(0,180,255,0.08);
 }
+.ps-input:disabled { opacity: 0.4; cursor: default; }
 .ps-select option { background: #12121e; color: #fff; }
 
 .ps-form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
@@ -193,6 +199,7 @@
   box-shadow: 0 4px 16px rgba(0,180,255,0.3);
 }
 .ps-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,180,255,0.45); }
+.ps-btn-primary:disabled { opacity: 0.4; cursor: default; transform: none; }
 .ps-btn-primary.orange { background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: 0 4px 16px rgba(251,146,60,0.3); }
 .ps-btn-primary.orange:hover { box-shadow: 0 8px 24px rgba(251,146,60,0.45); }
 .ps-btn-primary.pink { background: linear-gradient(135deg, #f472b6, #db2777); box-shadow: 0 4px 16px rgba(244,114,182,0.3); }
@@ -223,7 +230,7 @@
 .ps-info-tag.info    { background: rgba(0,180,255,0.1);  color: #00b4ff; }
 .ps-info-tag.warn    { background: rgba(251,191,36,0.1); color: #fbbf24; }
 
-/* Tab bar (for appointment orders sub-tabs) */
+/* Tab bar */
 .ps-tab-bar { display: flex; gap: 4px; margin-bottom: 22px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 5px; }
 .ps-tab {
   flex: 1; padding: 9px 16px; border-radius: 9px; border: none; cursor: pointer;
@@ -233,7 +240,260 @@
 .ps-tab.active { background: rgba(255,255,255,0.08); color: #fff; }
 .ps-tab:hover:not(.active) { color: rgba(255,255,255,0.7); }
 
+/* ── Report Sheet ── */
+.ps-report-sheet {
+  background: #fff; color: #111; border-radius: 12px;
+  padding: 48px 56px; max-width: 780px;
+  font-family: 'Times New Roman', Georgia, serif; font-size: 14px; line-height: 1.7;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  animation: ps-rise 0.4s ease;
+}
+.ps-report-header {
+  display: flex; align-items: flex-start; gap: 20px;
+  border-bottom: 2px solid #222; padding-bottom: 16px; margin-bottom: 20px;
+}
+.ps-report-logo { flex-shrink: 0; }
+.ps-report-logo-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #1a1a4e; color: #fff; display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 1px;
+}
+.ps-report-org { flex: 1; text-align: center; }
+.ps-report-dept { font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.ps-report-inst { font-size: 13px; color: #333; }
+.ps-report-from { 
+  margin-bottom: 16px; 
+  text-align: left; /* Forces the internal content to align left */
+  display: flex;     /* Optional: if you want more control over child elements */
+  flex-direction: column;
+}
+.ps-report-from-name { 
+  font-weight: 700; 
+  font-size: 15px; 
+  display: block;    /* Ensures it takes full width of the parent */
+}
+.ps-report-from-title { 
+  font-size: 13px; 
+  color: #444; 
+  display: block;    /* Ensures it stays on a new line below the name */
+}
+.ps-report-meta-row {
+  display: flex; justify-content: space-between; gap: 20px;
+  font-size: 13px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.ps-report-meta-label { font-weight: 600; }
+.ps-report-meta-val { color: #222; }
+
+.ps-report-body p { margin: 0 0 14px 0; text-align: justify; }
+.ps-report-tenure-box {
+  background: #f8f8f8; border: 1px solid #ddd; border-radius: 8px;
+  padding: 14px 20px; margin: 16px 0 20px;
+}
+.ps-report-tenure-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ps-report-tenure-table td { padding: 4px 10px; color: #333; }
+.ps-report-tenure-table td:first-child { font-weight: 600; width: 180px; }
+.ps-report-signature-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 0;
+  padding-top: 4px;
+  border-top: 1px solid #ddd;
+
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.ps-report-sig-left { flex: 1; }
+.ps-report-sig-right { flex: 1; text-align: right; }
+.ps-report-sig-line { height: 36px; border-bottom: 1px solid #999; margin-bottom: 6px; }
+
+/* Print styles */
+@media print {
+  .no-print { display: none !important; }
+  .ps-report-sheet { box-shadow: none; border-radius: 0; padding: 20px 30px; }
+  body { background: #fff; }
+}
+
 @media (max-width: 768px) {
   .ps-sub-cards-grid { grid-template-columns: 1fr; }
-  .ps-form-grid-4, .ps-form-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .ps-report-sheet { padding: 24px 20px; }
+  .ps-report-signature-row { flex-direction: column; }
+}
+/* ── Upload Label ── */
+.ps-upload-label {
+  display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px;
+  border-radius: 10px; border: 1px dashed rgba(52,211,153,0.35);
+  background: rgba(52,211,153,0.06); color: #34d399;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.ps-upload-label:hover { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.55); }
+
+
+
+/* ── Professional Report Sheet ── */
+.ps-report-sheet {
+  background: #fff; 
+  color: #000; 
+  border-radius: 0;
+  padding: 50px 70px; 
+  max-width: 800px;
+  font-family: 'Times New Roman', serif; 
+  font-size: 14px; 
+  line-height: 1.5;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  margin: 0 auto;
+}
+
+.ps-report-header {
+  display: flex; 
+  align-items: center; 
+  gap: 20px;
+  border-bottom: 2px solid #000; 
+  padding-bottom: 20px; 
+  margin-bottom: 30px;
+}
+
+.ps-report-org { 
+  flex: 1; 
+  text-align: center; 
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ps-report-dept { font-size: 16px; margin-bottom: 5px; }
+.ps-report-inst { font-size: 14px; }
+
+/* The "From" block (Aligned Left as requested) */
+.ps-report-from { 
+  margin-bottom: 25px; 
+  text-align: left;
+  display: block;
+}
+.ps-report-from-name { font-weight: 700; font-size: 14px; }
+.ps-report-from-title { font-size: 14px; margin-top: 2px; }
+
+/* Meta data (Letter No/Date) */
+.ps-report-meta-row {
+  display: flex; 
+  justify-content: space-between; 
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Subject Line */
+.ps-report-subject {
+  margin-bottom: 25px;
+  text-align: justify;
+}
+
+/* Body Text */
+.ps-report-body p { 
+  margin-bottom: 15px; 
+  text-align: justify; 
+}
+
+/* Signature Rows */
+.ps-report-signature-row {
+  display: flex; 
+  justify-content: space-between; 
+  margin-top: 50px;
+}
+.ps-report-sig-right { text-align: right; }
+.ps-report-sig-line { 
+  width: 200px; 
+  border-bottom: 1px solid #000; 
+  margin-bottom: 10px; 
+  margin-left: auto; /* Aligns signature line to the right */
+}
+/*
+@media print {
+  .ps-report-page-break {
+    page-break-after: always;
+  }
+}*/
+.ps-report-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 18px;
+}
+
+.ps-report-org {
+  flex: 1;
+  text-align: center;
+}
+
+.ps-report-dept {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+
+.ps-report-inst {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.ps-report-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 28mm 22mm;
+  background: white;
+  color: black;
+  font-family: "Times New Roman", serif;
+  font-size: 14px;
+  line-height: 1.8;
+}
+/* Ensure the container is fully solid and high-contrast for PDF generation */
+.ps-report-sheet {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  /* Ensure the sheet height is manageable */
+  page-break-after: always; 
+}
+
+/* Specifically target the second page if it's shifted */
+.ps-report-sheet:last-of-type {
+  page-break-after: avoid;
+}
+.ps-report-sheet {
+  /* Ensure consistent sizing across all browsers */
+  width: 210mm;
+  min-height: 297mm;
+  padding: 20mm; /* Use fixed mm instead of % or px */
+  margin: 0 auto;
+  background: #ffffff !important;
+  box-sizing: border-box; /* Crucial for padding to not break layout */
+}
+/* Reset potential layout offsets */
+.ps-report-sheet, .ps-report-sheet * {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* If the content is shifting, try this to force a hard reset */
+.ps-report-sheet {
+  display: block !important; /* Switch from flex to block for rendering */
+  position: relative !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+/* Remove the existing page-break and margin rules for .ps-report-sheet */
+.ps-report-sheet {
+  width: 210mm;
+  /* Keep min-height, but remove page-break-after */
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-sizing: border-box;
+  padding: 20mm;
+  margin: 0 auto;
+  box-shadow: none !important;
+  filter: none !important;
 }

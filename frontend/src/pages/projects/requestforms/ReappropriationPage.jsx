@@ -317,6 +317,7 @@ export default function ReappropriationPage({ onNavigate }) {
   const [headType, setHeadType]   = useState(""); // nonRecurring | recurring
   const [reapRows, setReapRows]   = useState([{ from: "", to: "", amount: "" }]);
   const [requestLetter, setRequestLetter] = useState(null);
+  const [requestStatus, setRequestStatus] = useState("Under Review");
 
   // Use dummy project data
   const projectData = DUMMY_PROJECTS.default;
@@ -440,7 +441,13 @@ const handleDownload = () => {
 };
 
   /* Step indicator */
-  const STEPS = ["Project Info", "Head Distribution", "Re-appropriation", "Preview & Report"];
+  const STEPS = [
+  "Project Info",
+  "Head Distribution",
+  "Re-appropriation",
+  "Submit Request",
+  "Status"
+];
 
   return (
     <div className="ra-page">
@@ -774,18 +781,116 @@ const handleDownload = () => {
           </div>
 
           <div className="ra-report-actions">
-            <button className="ra-btn ra-btn-preview" onClick={handlePreview}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              Preview Report
-            </button>
-            <button className="ra-btn ra-btn-download" onClick={handleDownload}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Report
-            </button>
-            <button className="ra-btn ra-btn-ghost" onClick={() => setStep(3)}>← Back</button>
-          </div>
+  <button
+    className="ra-btn ra-btn-primary"
+    onClick={() => setStep(5)}
+  >
+    Submit Request
+  </button>
+
+  <button
+    className="ra-btn ra-btn-ghost"
+    onClick={() => setStep(3)}
+  >
+    ← Back
+  </button>
+</div>
         </div>
       )}
+
+
+      {/* ── STEP 5: STATUS ── */}
+{step === 5 && (
+  <div className="ra-animate">
+    <div className="ra-card">
+      <div className="ra-card-title">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        >
+          <path d="M9 11l3 3L22 4" />
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+        </svg>
+        Request Status
+      </div>
+
+      <div
+        style={{
+          textAlign: "center",
+          padding: "40px 20px"
+        }}
+      >
+        {requestStatus === "Under Review" ? (
+          <>
+            <h2 style={{ color: "#f59e0b" }}>
+              Under Review
+            </h2>
+
+            <p style={{ marginTop: 10 }}>
+              Your re-appropriation request has been submitted and is under review.
+            </p>
+
+            <div
+              className="ra-report-actions"
+              style={{
+                justifyContent: "center",
+                marginTop: 25
+              }}
+            >
+              <button
+                className="ra-btn ra-btn-preview"
+                onClick={handlePreview}
+              >
+                Preview Report
+              </button>
+
+              <button
+                className="ra-btn ra-btn-download"
+                onClick={handleDownload}
+              >
+                Download Report
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 style={{ color: "#22c55e" }}>
+              Approved
+            </h2>
+
+            <p style={{ marginTop: 10 }}>
+              Your re-appropriation request has been approved.
+            </p>
+
+            <div
+              className="ra-report-actions"
+              style={{
+                justifyContent: "center",
+                marginTop: 25
+              }}
+            >
+              <button
+                className="ra-btn ra-btn-preview"
+                onClick={handlePreview}
+              >
+                Preview Report
+              </button>
+
+              <button
+                className="ra-btn ra-btn-download"
+                onClick={handleDownload}
+              >
+                Download Report
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

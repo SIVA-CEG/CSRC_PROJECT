@@ -1,0 +1,52 @@
+.rad-page {
+  max-width: 1400px;
+  margin: auto;
+}
+
+.rad-header {
+  margin-bottom: 30px;
+}
+
+.rad-header h1 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.rad-header p {
+  color: rgba(255,255,255,0.6);
+}
+
+.rad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+  gap: 24px;
+}
+
+.rad-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 40px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.rad-card:hover {
+  transform: translateY(-5px);
+  border-color: #38bdf8;
+  box-shadow: 0 0 30px rgba(56,189,248,0.15);
+}
+
+.rad-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.rad-card h3 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.rad-card p {
+  color: rgba(255,255,255,0.6);
+}

@@ -1,0 +1,49 @@
+.ped-page {
+  max-width: 1400px;
+  margin: auto;
+}
+
+.ped-header {
+  margin-bottom: 30px;
+}
+
+.ped-header h1 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.ped-header p {
+  color: rgba(255,255,255,0.6);
+}
+
+.ped-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+  gap: 24px;
+}
+
+.ped-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ped-card:hover {
+  transform: translateY(-5px);
+  border-color: #818cf8;
+  box-shadow: 0 0 30px rgba(129,140,248,0.15);
+}
+
+.ped-card h3 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.ped-card p {
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+}

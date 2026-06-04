@@ -1,0 +1,66 @@
+.rah-page {
+  max-width: 1400px;
+  margin: auto;
+}
+
+.rah-header {
+  margin-bottom: 25px;
+}
+
+.rah-header h1 {
+  color: white;
+  margin-bottom: 6px;
+}
+
+.rah-header p {
+  color: rgba(255,255,255,0.6);
+}
+
+.rah-table-wrapper {
+  background: rgba(255,255,255,0.04);
+  border-radius: 18px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.rah-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rah-table th {
+  text-align: left;
+  padding: 14px;
+  color: #38bdf8;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.rah-table td {
+  padding: 14px;
+  color: rgba(255,255,255,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.rah-pending {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.rah-completed {
+  color: #22c55e;
+  font-weight: 600;
+}
+.rah-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rah-actions .ra-btn {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+.rah-date {
+  white-space: nowrap;
+  min-width: 110px;
+}

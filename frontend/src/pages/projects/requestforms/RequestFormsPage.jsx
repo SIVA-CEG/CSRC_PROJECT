@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import './RequestFormsPage.css';
 import ReappropriationPage from './ReappropriationPage';
 import ProjectExtensionPage from './ProjectExtensionPage';
+import ReappropriationDashboard from './ReappropriationDashboard';
+import ReappropriationHistory from './ReappropriationHistory';
+import ProjectExtensionDashboard from './ProjectExtensionDashboard';
+import ProjectExtensionHistory from './ProjectExtensionHistory';
+
 
 const reqCards = [
   {
@@ -86,26 +91,101 @@ const ReqCard = ({ title, desc, color, glow, icon, onClick }) => (
 const RequestFormsPage = ({ onNavigate }) => {
   const [subPage, setSubPage] = useState(null);
 
-  if (subPage === 'reappropriation') {
-    return <ReappropriationPage onNavigate={(target) => {
-      if (target === 'requestforms') setSubPage(null);
-      else if (onNavigate) onNavigate(target);
-    }} />;
-  }
-  if (subPage === 'project-extension') {
-  return <ProjectExtensionPage onNavigate={(t) => { if (t === 'requestforms') setSubPage(null); else onNavigate?.(t); }} />;
+  if (subPage === 'reappropriation-dashboard') {
+  return (
+    <ReappropriationDashboard
+      onNavigate={(target) => {
+        if (target === 'requestforms') {
+          setSubPage(null);
+        } else if (target === 'reappropriation') {
+          setSubPage('reappropriation');
+        } else if (target === 'reappropriationhistory') {
+          setSubPage('reappropriationhistory');
+        } else {
+          onNavigate?.(target);
+        }
+      }}
+    />
+  );
+}
+
+if (subPage === 'reappropriation') {
+  return (
+    <ReappropriationPage
+      onNavigate={(target) => {
+        if (target === 'requestforms') setSubPage(null);
+        else onNavigate?.(target);
+      }}
+    />
+  );
+}
+
+if (subPage === 'reappropriationhistory') {
+  return (
+    <ReappropriationHistory
+      onNavigate={(target) => {
+        if (target === 'requestforms') setSubPage(null);
+        else onNavigate?.(target);
+      }}
+    />
+  );
+}
+  if (subPage === 'project-extension-dashboard') {
+  return (
+    <ProjectExtensionDashboard
+      onNavigate={(target) => {
+        if (target === 'requestforms') {
+          setSubPage(null);
+        } else if (target === 'project-extension') {
+          setSubPage('project-extension');
+        } else if (target === 'project-extension-history') {
+          setSubPage('project-extension-history');
+        } else {
+          onNavigate?.(target);
+        }
+      }}
+    />
+  );
+}
+
+if (subPage === 'project-extension') {
+  return (
+    <ProjectExtensionPage
+      onNavigate={(target) => {
+        if (target === 'requestforms') {
+          setSubPage(null);
+        } else {
+          onNavigate?.(target);
+        }
+      }}
+    />
+  );
+}
+
+if (subPage === 'project-extension-history') {
+  return (
+    <ProjectExtensionHistory
+      onNavigate={(target) => {
+        if (target === 'requestforms') {
+          setSubPage(null);
+        } else {
+          onNavigate?.(target);
+        }
+      }}
+    />
+  );
 }
 
   const handleCardClick = (id) => {
   if (id === 'reappropriation') {
-    setSubPage('reappropriation');
-    return;
-  }
+  setSubPage('reappropriation-dashboard');
+  return;
+}
 
   if (id === 'project-extension') {
-    setSubPage('project-extension');
-    return;
-  }
+  setSubPage('project-extension-dashboard');
+  return;
+}
 
   alert(`${reqCards.find(c => c.id === id)?.title} — Coming Soon`);
 };
