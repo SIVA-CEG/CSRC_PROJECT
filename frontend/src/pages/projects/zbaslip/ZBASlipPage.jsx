@@ -614,16 +614,34 @@ const PROJECTS = [
     id: "ZBA001",
     title: "AI Based Research Project",
     pi: "Dr. Kumar",
+    piDesignation: "Associate Professor",
     department: "IT",
+    departmentFull: "Department of Information Technology",
+    campus: "CEG Campus",
     sanctionedAmount: 500000,
+    scheme: "CMRG",
+    projectNo: "CMRG2023IT04001",
+    csrcProcNo: "4717/CSRC-2/TNPFTS/2024",
+    csrcProcDate: "05.12.2024",
+    budgetAllotment: 500000,
+    amountIncurredSoFar: 120000,
     equipment: ["High Performance GPU Server", "Deep Learning Workstation", "Network Switch"],
   },
   {
     id: "ZBA002",
     title: "IoT Smart Monitoring System",
     pi: "Dr. Priya",
+    piDesignation: "Professor",
     department: "CSE",
+    departmentFull: "Department of Computer Science and Engineering",
+    campus: "CEG Campus",
     sanctionedAmount: 350000,
+    scheme: "SERB",
+    projectNo: "SERB2023CSE04002",
+    csrcProcNo: "4800/CSRC-2/TNPFTS/2024",
+    csrcProcDate: "10.01.2025",
+    budgetAllotment: 350000,
+    amountIncurredSoFar: 80000,
     equipment: ["Raspberry Pi Cluster", "Arduino Sensors Kit", "Industrial Router"],
   },
 ];
@@ -728,8 +746,9 @@ function generateManpowerPDF(claim, staff) {
     return `<tr><td>${i+1}</td><td>${r.from}</td><td>${r.upto}</td><td>${r.cl}</td><td>${r.lop}</td><td>0</td><td>${fmtAmt(net)}/-</td></tr>`;
   }).join("");
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Salary Claim - ${staff.name}</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"Times New Roman",serif;font-size:11px;background:#fff;color:#000;}
-.page{width:210mm;min-height:297mm;padding:18mm 20mm;page-break-after:always;position:relative;}.page:last-child{page-break-after:avoid;}
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"Times New Roman",serif;font-size:11px;background:#f0f0f0;color:#000;margin:0;padding:24px 0;}
+.page{width:210mm;min-height:297mm;padding:18mm 20mm;page-break-after:always;position:relative;background:#fff;margin:0 auto 24px auto;box-shadow:0 2px 12px rgba(0,0,0,0.15);}.page:last-child{page-break-after:avoid;margin-bottom:0;}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;margin:0;}}
 h3{font-size:12px;text-align:center;font-weight:bold;}h4{font-size:11px;text-align:center;font-weight:bold;}
 table{width:100%;border-collapse:collapse;margin:10px 0;}table,th,td{border:1px solid #000;}th,td{padding:4px 8px;}
 th{background:#f0f0f0;font-weight:bold;}.center{text-align:center;}.right{text-align:right;}.bold{font-weight:bold;}
@@ -853,6 +872,253 @@ footer{margin-top:32px;font-size:11px;color:#999;border-top:1px solid #eee;paddi
 </body></html>`;
 }
 
+
+
+/* ─── Consumables Proceedings PDF ── */
+function generateConsumablesPDF(formData, project) {
+  const td = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit", month: "2-digit", year: "numeric"
+  }).replace(/\//g, ".");
+
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(formData.amount));
+  const amountIncludingThis = project.amountIncurredSoFar + Number(formData.amount);
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Consumables Proceedings – ${project.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Times New Roman",serif;font-size:18px;background:#f0f0f0;color:#000;padding:30px 0;}
+.page{width:210mm;min-height:297mm;padding:22mm 22mm 22mm 22mm;background:#fff;margin:0 auto 30px auto;
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);position:relative;}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;margin:0;}
+  .print-btn{display:none;}}
+
+.print-btn{position:fixed;top:12px;right:12px;padding:8px 18px;background:#1565c0;color:#fff;
+  border:none;border-radius:4px;cursor:pointer;font-size:13px;font-family:sans-serif;z-index:9999;}
+
+/* Header */
+.hdr-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:none;
+  padding-bottom:0;
+  margin-bottom:4px;
+}
+.hdr-logo{width:80px;height:80px;flex-shrink:0;}
+.hdr-text{text-align:center;flex:1;}
+.hdr-text .dept{font-size:16px;font-weight:bold;letter-spacing:0.6px;}
+.hdr-text .college{font-size:16px;font-weight:bold;}
+.hdr-text .univ{font-size:16px;font-weight:bold;}
+
+.meta-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-top:4px;
+  margin-bottom:8px;
+  padding-bottom:4px;
+  border-bottom:2px solid #000;
+  font-size:18px;
+}
+.meta-row strong{font-size:18px;}
+
+.proc-line{display:flex;justify-content:space-between;margin:5px 0;font-size:18px;}
+
+.section-gap{margin-top:18px;}
+
+.sub-ref-table{width:100%;border-collapse:collapse;margin:5px 0;}
+.sub-ref-table td{padding:3px 0;vertical-align:top;font-size:18px;}
+.sub-ref-table td:first-child{width:50px;font-weight:bold;}
+
+.stars{text-align:center;margin:3px 0;font-size:13px;font-weight:bold;}
+
+p.para{text-align:justify;line-height:1.6;margin:8px 0;font-size:18px;}
+p.para.indent{text-indent:20px;}
+
+.committed-section{
+    width:80%;
+    margin:10px auto;
+    font-family:"Times New Roman", serif;
+    font-size:18px;
+}
+
+.commit-header{
+    display:grid;
+    grid-template-columns:20px 1fr 180px;
+    margin-bottom:8px;
+}
+
+.committed-title{
+    text-align:center;
+    font-weight:bold;
+}
+
+.commit-row{
+    display:grid;
+    grid-template-columns:20px 1fr 180px;
+    margin:8px 0;
+    align-items:start;
+}
+
+.commit-amount{
+    text-align:center;
+}
+.bullet-row{display:flex;align-items:flex-start;margin:8px 0;}
+.bullet{margin-right:10px;font-size:22px;}
+.bullet-label{flex:0 0 260px;font-size:15px;}
+.bullet-dots{flex:1;border-bottom:1px dotted #555;margin:0 8px;min-width:60px;height:14px;}
+
+.sanction-reg{font-size:18px;margin:12px 0;}
+.sanction-reg .reg-line{display:flex;gap:8px;flex-wrap:wrap;}
+.sanction-reg .underline-box{display:inline-block;border-bottom:1px solid #000;min-width:60px;}
+
+.hod-sig{text-align:right;font-weight:bold;font-size:15px;margin-top:45px;margin-bottom:8px;}
+
+.to-section{font-size:18px;line-height:1.4;}
+.copy-section{font-size:18px;margin-top:12px;}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+<div class="page">
+
+<!-- HEADER -->
+  <div class="hdr-wrap">
+    <img class="hdr-logo" src="src/assets/anna-university-logo.png" alt="AU Logo" />
+    <div class="hdr-text">
+      <div class="dept">DEPARTMENT OF ${project.departmentFull.replace("Department of","").trim().toUpperCase()}</div>
+      <div class="college">COLLEGE OF ENGINEERING, GUINDY</div>
+      <div class="univ">ANNA UNIVERSITY, CHENNAI – 25</div>
+    </div>
+  </div>
+
+  <!-- Meta row: Professor & Head | Phone -->
+  <div class="meta-row">
+    <strong>Professor &amp; Head</strong>
+    <span>Phone: 2235 7744</span>
+  </div>
+
+  <!-- Proceeding No and Date -->
+  <div class="proc-line">
+    <span>Proceeding No. ${formData.proceedingNo}</span>
+    <span>Date: ${td}</span>
+  </div>
+
+  <div class="section-gap"></div>
+
+  <!-- Sub / Ref -->
+  <table class="sub-ref-table">
+    <tr>
+      <td>Sub:</td>
+      <td>${project.departmentFull.replace("Department of","").trim()} – ${formData.divisionLabel || "R&AC"} – ${project.scheme} - Purchase of Consumables – Sanction Accorded – Reg.</td>
+    </tr>
+    <tr>
+      <td>Ref:</td>
+      <td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td>
+    </tr>
+  </table>
+
+  <div class="stars">*****</div>
+
+  <!-- Para 1: Project background -->
+  <p class="para indent">
+    The ${formData.sanctioningAuthority || "Director of Technical Education (DoTE), Chennai"} has sanctioned a project titled
+    "<strong>${project.title}</strong>" at a total cost of Rs.${Number(project.sanctionedAmount).toLocaleString("en-IN")}/-
+    under ${project.scheme} Scheme – Project No. ${project.projectNo} to
+    <strong>${project.pi}, ${project.piDesignation}</strong>, ${project.departmentFull}, ${project.campus}, Anna University, Chennai.
+  </p>
+
+  <!-- Para 2: Sanction of expenditure -->
+  <p class="para indent">
+    Sanction is hereby accorded to incur an expenditure not exceeding a sum of
+    <strong>Rs. ${Number(formData.amount).toLocaleString("en-IN")} /-
+    (Rupees ${toIndianWords(Number(formData.amount))})</strong> to
+    <strong>M/s. ${formData.vendorName}</strong>,
+    ${formData.vendorAddress}
+    towards the purchase of ${formData.itemDescription || "chemicals"} in connection with the project work.
+  </p>
+
+  <!-- Payment line -->
+  <p class="para" style="text-align:center;">
+    The Payment may be made to <strong><u>M/s. ${formData.vendorName} ${formData.vendorCity ? "– " + formData.vendorCity : ""}</u></strong>
+  </p>
+
+  <!-- Expenditure debitability -->
+  <p class="para indent">
+    The expenditure is debitable under the Head of Account "M. H. No.${formData.mhNo || "16.1.17"} –
+    ${formData.sanctioningAuthority || "Directorate of Technical Education (DoTE), Chennai"},
+    Project – "<strong>${project.title}</strong>" -
+    Recurring - Consumables for the year ${formData.financialYear || "2025 – 26"}.
+  </p>
+
+<div class="committed-section">
+
+  <div class="commit-header">
+    <span></span>
+    <span></span>
+    <span class="committed-title">Committed</span>
+  </div>
+
+  <div class="commit-row">
+    <span class="bullet">•</span>
+    <span class="commit-label">Budget Allotment in BE/RE</span>
+    <span class="commit-amount">
+      Rs. ${Number(project.budgetAllotment).toLocaleString("en-IN")}/-
+    </span>
+  </div>
+
+  <div class="commit-row">
+    <span class="bullet">•</span>
+    <span class="commit-label">
+      Amount incurred so far<br>
+      (Including this proceeding)
+    </span>
+    <span class="commit-amount">
+      Rs. ${Number(amountIncludingThis).toLocaleString("en-IN")}/-
+    </span>
+  </div>
+
+  <div class="commit-row">
+    <span class="bullet"></span>
+    <span class="commit-label">
+      Balance amount available
+    </span>
+    <span class="commit-amount">
+      Rs. ${Number(balance).toLocaleString("en-IN")}/-
+    </span>
+  </div>
+
+</div>
+
+  <!-- Sanction Register line -->
+  <p class="sanction-reg">
+    The sanction amount has been entered in Sanction Register Vide Page No.
+    <span class="underline-box">&nbsp;${formData.sanctionPageNo || "______"}&nbsp;</span>
+    &nbsp; Sl. No. <span class="underline-box">&nbsp;${formData.sanctionSlNo || "______"}&nbsp;</span>
+    &nbsp; Vol. &nbsp;&nbsp;&nbsp; for the year ${formData.financialYear || "2025 - 26"}.
+  </p>
+
+  <!-- HOD Signature -->
+  <div class="hod-sig">HOD (${project.department.toUpperCase()})</div>
+
+  <!-- To section -->
+  <div class="to-section">
+    <div>To</div>
+    <div>${project.pi},</div>
+    <div>${project.piDesignation},</div>
+    <div>${formData.divisionLabel ? formData.divisionLabel + " Division," : ""}</div>
+    <div>${project.departmentFull},</div>
+    <div>Chennai – 600 025</div>
+  </div>
+
+  <div class="copy-section">Copy to: Bill</div>
+
+</div>
+</body></html>`;
+}
+
+
+
+
 /* ═══════════════════════════════════════════════════════════════════
    SUB COMPONENTS
 ═══════════════════════════════════════════════════════════════════ */
@@ -891,8 +1157,7 @@ function ManpowerPage({ onBack }) {
   };
 
   if (view === "list") return (
-    <div className="ssc-page">
-      <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
+<div className="ssc-page">
       <div className="ssc-header">
         <h2>Staff Salary Claims — Manpower</h2>
         <div className="ssc-breadcrumb"><span className="ssc-bc-link">ZBA</span> › Recurring › Manpower</div>
@@ -926,10 +1191,13 @@ function ManpowerPage({ onBack }) {
         </div>
       </div>
       <div className="ssc-list-footer">
-        <div className="ssc-pagination">
-          <button>First</button><button>Prev</button>
-          <span>{claims.length} records</span>
-          <button>Next</button><button>Last</button>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <button className="ssc-btn ssc-btn-back" onClick={onBack}>← Back</button>
+          <div className="ssc-pagination">
+            <button>First</button><button>Prev</button>
+            <span>{claims.length} records</span>
+            <button>Next</button><button>Last</button>
+          </div>
         </div>
         <button className="ssc-btn ssc-btn-new" onClick={() => { setNewStaff(null); setNewRows([{ from: "", upto: "", cl: "", lop: "" }]); setView("new"); }}>+ New Salary Claim</button>
       </div>
@@ -1167,6 +1435,447 @@ const OTHER_EXPENSES_FIELDS = [
 /* ═══════════════════════════════════════════════════════════════════
    MAIN COMPONENT
 ═══════════════════════════════════════════════════════════════════ */
+/* ── Consumables Claim Page ── */
+function ConsumablesPage({ project, onSubmit, onBack }) {
+  const [data, setData] = useState({
+    proceedingNo: "",
+    amount: "",
+    vendorName: "",
+    vendorAddress: "",
+    vendorCity: "",
+    itemDescription: "chemicals",
+    divisionLabel: "",
+    sanctioningAuthority: "Director of Technical Education (DoTE), Chennai",
+    mhNo: "16.1.17",
+    financialYear: "2025 – 26",
+    sanctionPageNo: "",
+    sanctionSlNo: "",
+  });
+  const [preview, setPreview] = useState(false);
+  const [previewHTML, setPreviewHTML] = useState(null);
+
+  const set = (k, v) => setData(p => ({ ...p, [k]: v }));
+
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(data.amount || 0));
+
+  const handlePreview = () => {
+    if (!data.proceedingNo || !data.amount || !data.vendorName) {
+      alert("Please fill Proceeding No., Amount, and Vendor Name.");
+      return;
+    }
+    setPreviewHTML(generateConsumablesPDF(data, project));
+    setPreview(true);
+  };
+
+  const handleDownload = async () => {
+    if (!data.proceedingNo || !data.amount || !data.vendorName) {
+      alert("Please fill required fields first.");
+      return;
+    }
+    const html = generateConsumablesPDF(data, project);
+
+    // Render into a hidden iframe so full HTML/CSS is processed correctly
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(html);
+    iframe.contentDocument.close();
+
+    await new Promise(r => setTimeout(r, 800)); // wait for fonts/layout
+
+    const page = iframe.contentDocument.querySelector(".page");
+    const canvas = await html2canvas(page, {
+      scale: 2, useCORS: true, backgroundColor: "#ffffff",
+      windowWidth: 794, windowHeight: 1123,
+    });
+    document.body.removeChild(iframe);
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pw = 210;
+    const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pw, Math.min(ph, 297));
+    pdf.save(`Consumables_Proceedings_${project.id}.pdf`);
+  };
+
+const handleSubmit = () => {
+    if (!data.proceedingNo || !data.amount || !data.vendorName) {
+      alert("Please fill all required fields.");
+      return;
+    }
+    const reportHTML = generateConsumablesPDF(data, project);
+    onSubmit({ ...data, _reportHTML: reportHTML }, "Consumables & Accessories");
+  };
+
+  // CSS for this light-theme form
+  const formCSS = `
+    .cons-page { padding: 0; }
+    .cons-header { margin-bottom: 24px; }
+    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: rgba(255,255,255,0.92); margin: 0 0 6px; }
+    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.45); margin: 0; }
+
+    .cons-section {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; overflow: hidden; margin-bottom: 18px;
+    }
+    .cons-section-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px;
+      background: rgba(56,189,248,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .cons-section-head .cs-badge {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(56,189,248,0.18); color: #38bdf8;
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
+      display: grid; place-items: center;
+    }
+    .cons-section-head h3 {
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+      color: rgba(255,255,255,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .cons-section-body { padding: 18px; }
+
+    .cons-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cons-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .cons-grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .cons-field { display: flex; flex-direction: column; gap: 7px; }
+    .cons-field label {
+      font-family: 'Syne', sans-serif; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(255,255,255,0.38);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .cons-field label .req { color: #f87171; font-size: 12px; }
+    .cons-field label .src-badge {
+      font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .src-fetch { background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.25); }
+    .src-enter { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+    .src-auto { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+
+    .cons-static {
+      background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 10px; padding: 10px 14px;
+      color: rgba(255,255,255,0.65); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      line-height: 1.5;
+    }
+    .cons-static strong { color: rgba(255,255,255,0.85); }
+
+    .balance-bar {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 16px 20px; margin-top: 4px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    }
+    .bal-item { text-align: center; }
+    .bal-item .bal-label {
+      font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(255,255,255,0.35); margin-bottom: 6px;
+    }
+    .bal-item .bal-val {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+    }
+    .bal-item .bal-val.green { color: #22c55e; }
+    .bal-item .bal-val.yellow { color: #fbbf24; }
+    .bal-item .bal-val.blue { color: #38bdf8; }
+    .bal-item .bal-val.red { color: #f87171; }
+
+    .cons-action-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .cons-action-left { display: flex; gap: 10px; }
+    .cons-preview-btn {
+      border: 1px solid rgba(56,189,248,0.35); background: rgba(56,189,248,0.1);
+      color: #38bdf8; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-preview-btn:hover { background: rgba(56,189,248,0.2); transform: translateY(-1px); }
+    .cons-download-btn {
+      border: 1px solid rgba(34,197,94,0.35); background: rgba(34,197,94,0.1);
+      color: #22c55e; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-download-btn:hover { background: rgba(34,197,94,0.2); transform: translateY(-1px); }
+    .cons-submit-btn {
+      border: none; border-radius: 12px; padding: 12px 28px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
+      cursor: pointer; font-size: 14px; transition: 0.2s;
+      box-shadow: 0 8px 22px rgba(34,197,94,0.25);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.35); }
+
+    /* Preview overlay */
+    .cons-preview-overlay {
+      position: fixed; inset: 0; z-index: 2000000;
+      background: rgba(0,0,0,0.88);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 14px 20px;
+    }
+    .cons-preview-box {
+      width: min(920px,96vw); height: calc(100vh - 28px);
+      background: #111827; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+    }
+    .cons-preview-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px; background: #0f172a;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+    .cons-preview-head span { color: rgba(255,255,255,0.7); font-family: 'DM Sans',sans-serif; font-size: 13px; }
+    .cons-preview-head div { display: flex; gap: 8px; }
+    .cons-preview-head button {
+      border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+      font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 700;
+    }
+    .cons-preview-head .btn-dl { background: #22c55e; color: #fff; }
+    .cons-preview-head .btn-cl { background: #ef4444; color: #fff; }
+.cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+    @media (max-width: 768px) {
+      .cons-grid-2, .cons-grid-3 { grid-template-columns: 1fr; }
+      .balance-bar { grid-template-columns: 1fr; }
+    }
+  `;
+
+  const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+
+  return (
+    <>
+      <style>{formCSS}</style>
+      <div className="slip-card cons-page" style={{ animation: "slideIn 0.3s ease" }}>
+        <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
+
+        <div className="cons-header">
+          <h2>🧪 Consumables & Accessories — Claim Entry</h2>
+          <p>Generate the official Department Proceedings for consumables purchase sanction</p>
+        </div>
+
+        {/* ── Section 1: Auto-fetched project details ── */}
+        <div className="cons-section">
+          <div className="cons-section-head">
+            <div className="cs-badge">1</div>
+            <h3>Project Details</h3>
+            <span style={{ marginLeft: "auto", fontSize: 11, color: "rgba(255,255,255,0.35)", fontFamily: "DM Sans, sans-serif" }}>
+              Auto-fetched from project profile
+            </span>
+          </div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{ gap: 14 }}>
+              <div className="cons-field">
+                <label>Project Title <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static"><strong>{project.title}</strong></div>
+              </div>
+              <div className="cons-field">
+                <label>Project No. <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static">{project.projectNo}</div>
+              </div>
+              <div className="cons-field">
+                <label>PI Name & Designation <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static"><strong>{project.pi}</strong>, {project.piDesignation}</div>
+              </div>
+              <div className="cons-field">
+                <label>Scheme <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static">{project.scheme}</div>
+              </div>
+              <div className="cons-field">
+                <label>Department <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static">{project.departmentFull}, {project.campus}</div>
+              </div>
+              <div className="cons-field">
+                <label>CSRC Proceedings Ref <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static">{project.csrcProcNo} dated {project.csrcProcDate}</div>
+              </div>
+              <div className="cons-field">
+                <label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label>
+                <div className="cons-static">Rs. {Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</div>
+              </div>
+              <div className="cons-field">
+                <label>Date <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">{td}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Section 2: Proceeding details (user entry) ── */}
+        <div className="cons-section">
+          <div className="cons-section-head">
+            <div className="cs-badge">2</div>
+            <h3>Proceeding Details</h3>
+            <span style={{ marginLeft: "auto", fontSize: 11, color: "rgba(255,255,255,0.35)", fontFamily: "DM Sans, sans-serif" }}>
+              To be entered by user
+            </span>
+          </div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{ gap: 16 }}>
+              <div className="cons-field">
+                <label>Proceeding No. <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. 08 / RAC /CMRG/ Consumables / 2025-26"
+                  value={data.proceedingNo} onChange={e => set("proceedingNo", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>Division / Lab Label <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. R&AC, Thermal, Materials..."
+                  value={data.divisionLabel} onChange={e => set("divisionLabel", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>Sanctioning Authority <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input"
+                  placeholder="e.g. Director of Technical Education (DoTE), Chennai"
+                  value={data.sanctioningAuthority} onChange={e => set("sanctioningAuthority", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>M.H. No. <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. 16.1.17"
+                  value={data.mhNo} onChange={e => set("mhNo", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>Financial Year <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. 2025 – 26"
+                  value={data.financialYear} onChange={e => set("financialYear", e.target.value)} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Section 3: Expenditure details ── */}
+        <div className="cons-section">
+          <div className="cons-section-head">
+            <div className="cs-badge" style={{ background: "rgba(167,139,250,0.18)", color: "#a78bfa" }}>3</div>
+            <h3>Expenditure Details</h3>
+          </div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{ gap: 16, marginBottom: 16 }}>
+              <div className="cons-field">
+                <label>Amount (₹) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label>
+                <input type="number" className="slip-input" placeholder="e.g. 18583"
+                  value={data.amount} onChange={e => set("amount", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>Item / Purchase Description <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. chemicals, lab consumables..."
+                  value={data.itemDescription} onChange={e => set("itemDescription", e.target.value)} />
+              </div>
+            </div>
+            {data.amount && Number(data.amount) > 0 && (
+              <div className="cons-field" style={{ marginBottom: 16 }}>
+                <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">
+                  Rupees <strong>{toIndianWords(Number(data.amount))}</strong>
+                </div>
+              </div>
+            )}
+
+            {/* Budget summary */}
+            <div className="balance-bar">
+              <div className="bal-item">
+                <div className="bal-label">Budget Allotment (BE/RE)</div>
+                <div className="bal-val blue">₹{Number(project.budgetAllotment).toLocaleString("en-IN")}</div>
+              </div>
+              <div className="bal-item">
+                <div className="bal-label">Incurred (incl. this)</div>
+                <div className="bal-val yellow">₹{(project.amountIncurredSoFar + Number(data.amount || 0)).toLocaleString("en-IN")}</div>
+              </div>
+              <div className="bal-item">
+                <div className="bal-label">Balance Available</div>
+                <div className={`bal-val ${balance >= 0 ? "green" : "red"}`}>
+                  ₹{Math.abs(balance).toLocaleString("en-IN")}{balance < 0 ? " (Over)" : ""}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Section 4: Vendor details ── */}
+        <div className="cons-section">
+          <div className="cons-section-head">
+            <div className="cs-badge" style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>4</div>
+            <h3>Vendor / Supplier Details</h3>
+          </div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{ gap: 16 }}>
+              <div className="cons-field">
+                <label>Vendor Name (M/s.) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. Sri Hari Scientific"
+                  value={data.vendorName} onChange={e => set("vendorName", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>Vendor City / PIN <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="e.g. Chennai – 600100"
+                  value={data.vendorCity} onChange={e => set("vendorCity", e.target.value)} />
+              </div>
+              <div className="cons-field" style={{ gridColumn: "1 / -1" }}>
+                <label>Vendor Full Address <span className="src-badge src-enter">Enter</span></label>
+                <textarea className="slip-input" rows={2}
+                  placeholder="No.1 Aadhimoolam Nagar, Palandiamman Koil Street, Pallikaranai, Chennai - 600100"
+                  value={data.vendorAddress} onChange={e => set("vendorAddress", e.target.value)}
+                  style={{ resize: "vertical" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Section 5: Sanction register ── */}
+        <div className="cons-section">
+          <div className="cons-section-head">
+            <div className="cs-badge" style={{ background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>5</div>
+            <h3>Sanction Register Entry</h3>
+          </div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{ gap: 16 }}>
+              <div className="cons-field">
+                <label>Vide Page No. <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="Page number in sanction register"
+                  value={data.sanctionPageNo} onChange={e => set("sanctionPageNo", e.target.value)} />
+              </div>
+              <div className="cons-field">
+                <label>Sl. No. <span className="src-badge src-enter">Enter</span></label>
+                <input type="text" className="slip-input" placeholder="Serial number"
+                  value={data.sanctionSlNo} onChange={e => set("sanctionSlNo", e.target.value)} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Action row ── */}
+        <div className="cons-action-row">
+          <div className="cons-action-left">
+            <button className="cons-preview-btn" onClick={handlePreview}>👁 Preview Report</button>
+            <button className="cons-download-btn" onClick={handleDownload}>⬇ Download PDF</button>
+          </div>
+          <button className="cons-submit-btn" onClick={handleSubmit}>✓ Submit Claim →</button>
+        </div>
+      </div>
+
+      {/* Preview modal */}
+      {preview && previewHTML && (
+        <div className="cons-preview-overlay" onClick={e => { if (e.target === e.currentTarget) setPreview(false); }}>
+          <div className="cons-preview-box">
+            <div className="cons-preview-head">
+              <span>📄 Consumables Proceedings — {project.id}</span>
+              <div>
+                <button className="btn-dl" onClick={handleDownload}>⬇ Download</button>
+                <button className="btn-cl" onClick={() => setPreview(false)}>✕ Close</button>
+              </div>
+            </div>
+            <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Consumables Proceedings" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
 export default function ZBASlipPage() {
   /* ── navigation state ── */
   // screen: "projects" | "headType" | "nonRecurring" | "recurring" | "recurringHead" | "underReview" | "settledBills" | "manpower"
@@ -1235,13 +1944,15 @@ export default function ZBASlipPage() {
   };
 
   /* ─── Recurring dummy submit ─── */
-  const handleRecurringSubmit = (data, headName) => {
+const handleRecurringSubmit = (data, headName) => {
     const id = Date.now();
     const amount = Number(data.amount || data.totalCost || data.fare || 0);
+    const reportHTML = data._reportHTML || 
+      `<html><body style="font-family:sans-serif;padding:32px"><h2>${headName} Claim</h2><p>Project: ${selectedProject.title}</p><p>Amount: ₹${amount.toLocaleString("en-IN")}</p><p>Date: ${today()}</p></body></html>`;
     pushClaim(selectedProject.id, {
       id, type: "Recurring", head: headName,
       amount, date: today(), status: "review",
-      reportHTML: `<html><body style="font-family:sans-serif;padding:32px"><h2>${headName} Claim</h2><p>Project: ${selectedProject.title}</p><p>Amount: ₹${amount.toLocaleString("en-IN")}</p><p>Date: ${today()}</p></body></html>`,
+      reportHTML,
       fileURL: null, fileName: null,
     });
     showSuccessFor();
@@ -1428,14 +2139,22 @@ export default function ZBASlipPage() {
   );
 
   /* ── Recurring Head Detail ── */
-  const renderRecurringHead = () => {
+const renderRecurringHead = () => {
     const headCfg = RECURRING_HEADS.find(h => h.key === recurringHead);
     if (recurringHead === "manpower") {
       return <ManpowerPage onBack={() => setScreen("recurring")} />;
     }
+    if (recurringHead === "consumables") {
+      return (
+        <ConsumablesPage
+          project={selectedProject}
+          onSubmit={handleRecurringSubmit}
+          onBack={() => setScreen("recurring")}
+        />
+      );
+    }
     let fields = [];
-    if (recurringHead === "consumables") fields = CONSUMABLES_FIELDS;
-    else if (recurringHead === "travel") fields = TRAVEL_FIELDS;
+    if (recurringHead === "travel") fields = TRAVEL_FIELDS;
     else if (recurringHead === "contingency") fields = CONTINGENCY_FIELDS;
     else if (recurringHead === "otherExpenses") fields = OTHER_EXPENSES_FIELDS;
 
@@ -1585,20 +2304,18 @@ export default function ZBASlipPage() {
     );
   };
 
-  /* ═══════ MAIN RETURN ═══════ */
-  return (
-    <>
-      <style>{css}</style>
-      <div className="slip-page">
-        {/* Always show projects table at top */}
-        {renderProjects()}
-
-        {/* Contextual screens */}
-        {screen === "headType" && renderHeadType()}
-        {screen === "nonRecurring" && renderNonRecurring()}
-        {screen === "recurring" && renderRecurring()}
-        {screen === "recurringHead" && renderRecurringHead()}
-        {screen === "underReview" && renderUnderReview()}
+// ═══════ MAIN RETURN ═══════
+return (
+  <>
+    <style>{css}</style>
+    <div className="slip-page">
+      {/* Show only the active screen — never stack */}
+      {screen === "projects" && renderProjects()}
+      {screen === "headType" && renderHeadType()}
+      {screen === "nonRecurring" && renderNonRecurring()}
+      {screen === "recurring" && renderRecurring()}
+      {screen === "recurringHead" && renderRecurringHead()}
+      {screen === "underReview" && renderUnderReview()}
 
         {/* Settled Bills Modal */}
         {settledProject && renderSettledModal()}

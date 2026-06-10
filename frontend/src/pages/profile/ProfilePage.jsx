@@ -232,12 +232,6 @@ const ProfilePage = () => {
               docState={docState}
               onUpload={handleUpload}
             />
-            <DocRow
-              label="Bank Authorization Letter"
-              fileKey="bankLetter"
-              docState={docState}
-              onUpload={handleUpload}
-            />
           </div>
         </SectionCard>
 
