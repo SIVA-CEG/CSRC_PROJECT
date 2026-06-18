@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './SanctionedList.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { assembleReportData } from './CSRCProceedingsReport';
 
 // ─── Data ────────────────────────────────────────────────
 const sanctionedData = [
@@ -853,23 +854,77 @@ const handleDownload = (inst) => {
   createPdf(inst, 'download');
 };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    onSubmit({ form, submittedAt: new Date().toLocaleDateString('en-IN') });
+const handleSubmit = () => {
+  setSubmitted(true);
+
+  const profileData = {
+    name:          localStorage.getItem('piName')        || 'Dr. S. Balasivanandha Prabu',
+    designation:   localStorage.getItem('piDesignation') || 'Professor',
+    department:    localStorage.getItem('piDept')        || 'Department of Mechanical Engineering',
+    campus:        localStorage.getItem('piCampus')      || 'CEG Campus',
+    accountNumber: localStorage.getItem('bankAccount')   || 'SBN00006463',
+    ifscCode:      localStorage.getItem('ifscCode')      || 'SBIN0006756',
+    bankBranch:    localStorage.getItem('bankBranch')    || 'Anna University',
   };
 
-  if (submitted) return (
-    <div className="sl-submitted-banner">
-      <div className="sl-submitted-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
-        </svg>
-      </div>
-      <h3>Request Submitted!</h3>
-      <p>Your request has been forwarded to the CSRC Director. Monitor progress in the Approval Status tab.</p>
-      <button className="sl-back-btn" onClick={() => setSubmitted(false)}>Submit Another Request</button>
-    </div>
-  );
+  const endorsementData = JSON.parse(localStorage.getItem('csrc_endorsement') || '{}');
+
+  const previousInstallments = [];
+  const reportsByInstallment = form.installments.map((inst, idx) => {
+    const reportData = assembleReportData(
+      profileData,
+      endorsementData,
+      { ...form, installments: [inst] },
+      0,
+      previousInstallments.slice(),
+    );
+    previousInstallments.push({
+      label:       inst.label,
+      heads:       reportData.heads,
+      releasedDate: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
+    });
+    return reportData;
+  });
+
+  const submission = {
+    form,
+    submittedAt:          new Date().toLocaleDateString('en-IN'),
+    reportsByInstallment,
+  };
+
+  // ── Write to localStorage so CSRC_OFFICE FreshSanction can read it ──
+  try {
+    const existing = JSON.parse(localStorage.getItem('csrc_fresh_active') || '[]');
+    const newItem = {
+      id:            Date.now(),
+      refNo:         form.refNo || `REQ-${Date.now()}`,
+      title:         form.projectTitle,
+      fundingAgency: form.fundingAgency,
+      cost:          form.totalSanctioned,
+      period:        form.period || '',
+      pi: {
+        name:       form.piName,
+        department: form.piDept,
+        campus:     form.piCampus,
+      },
+      installments: form.installments.map((inst, i) => ({
+        installmentNo: i + 1,
+        amount:        inst.nonRecurringTotal || '',
+      })),
+      reportsByInstallment,
+      submittedAt:     submission.submittedAt,
+      currentHolder:   null,
+      transferHistory: [],
+      signatures:      {},
+      assignedScheme:  null,
+      assignedAccount: null,
+      accountCode:     null,
+    };
+    localStorage.setItem('csrc_fresh_active', JSON.stringify([...existing, newItem]));
+  } catch (_) {}
+
+  onSubmit(submission);
+};
 
   return (
     <div className="sl-request-form">

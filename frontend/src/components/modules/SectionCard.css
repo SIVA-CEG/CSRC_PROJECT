@@ -1,8 +1,8 @@
 .section-card {
   position: relative;
   width: 100%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 20px;
   padding: 36px 30px;
   cursor: pointer;
@@ -11,9 +11,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
   min-height: 200px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.05),
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 /* Glow border on hover */
@@ -22,7 +27,7 @@
   position: absolute;
   inset: 0;
   border-radius: 20px;
-  padding: 1px;
+  padding: 1.5px;
   background: linear-gradient(135deg, var(--card-color), transparent 60%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -48,11 +53,13 @@
 
 .section-card:hover {
   transform: translateY(-8px) scale(1.02);
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 1);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px var(--card-glow);
+    0 20px 60px rgba(0, 0, 0, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 0 40px var(--card-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .section-card:hover::before {
@@ -60,14 +67,14 @@
 }
 
 .section-card:hover::after {
-  opacity: 0.07;
+  opacity: 0.05;
 }
 
 .section-card:active {
   transform: translateY(-4px) scale(1.01);
 }
 
-/* Icon container */
+/* ── Icon container ── */
 .card-icon-wrap {
   position: relative;
   z-index: 1;
@@ -80,11 +87,12 @@
   justify-content: center;
   transition: all 0.4s ease;
   flex-shrink: 0;
+  box-shadow: 0 4px 14px var(--card-glow);
 }
 
 .section-card:hover .card-icon-wrap {
   transform: scale(1.1) rotate(-4deg);
-  box-shadow: 0 8px 24px var(--card-glow);
+  box-shadow: 0 10px 28px var(--card-glow);
 }
 
 .card-icon-wrap svg {
@@ -94,7 +102,7 @@
   transition: all 0.3s ease;
 }
 
-/* Card text */
+/* ── Card text ── */
 .card-content {
   position: relative;
   z-index: 1;
@@ -105,7 +113,7 @@
   font-family: 'Rajdhani', sans-serif;
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: #1a2240;
   letter-spacing: 1px;
   margin-bottom: 8px;
   transition: color 0.3s ease;
@@ -117,14 +125,14 @@
 
 .card-desc {
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(0, 0, 0, 0.48);
   line-height: 1.6;
   max-width: 280px;
 }
 
-/* Card count tag */
+/* ── Card count tag ── */
 .card-tag {
   position: relative;
   z-index: 1;
@@ -137,10 +145,11 @@
   background: var(--card-icon-bg);
   padding: 4px 12px;
   border-radius: 20px;
-  opacity: 0.85;
+  opacity: 0.9;
+  box-shadow: 0 2px 8px var(--card-glow);
 }
 
-/* Arrow */
+/* ── Arrow ── */
 .card-arrow {
   position: absolute;
   z-index: 1;
@@ -156,6 +165,7 @@
   opacity: 0;
   transform: translateX(-8px);
   transition: all 0.35s ease;
+  box-shadow: 0 4px 14px var(--card-glow);
 }
 
 .card-arrow svg {
@@ -169,7 +179,7 @@
   transform: translateX(0);
 }
 
-/* Shimmer effect on hover */
+/* ── Shimmer effect on hover ── */
 .card-shimmer {
   position: absolute;
   top: 0;
@@ -179,7 +189,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.45),
     transparent
   );
   transform: skewX(-20deg);
@@ -190,3 +200,32 @@
 .section-card:hover .card-shimmer {
   left: 160%;
 }
+
+/*
+  ── Color variable examples (set per-card via style or modifier class) ──
+
+  Blue card:
+    --card-color: #0077e6;
+    --card-glow: rgba(0, 140, 255, 0.18);
+    --card-icon-bg: rgba(0, 140, 255, 0.1);
+
+  Orange card:
+    --card-color: #f5820a;
+    --card-glow: rgba(245, 130, 10, 0.18);
+    --card-icon-bg: rgba(245, 130, 10, 0.1);
+
+  Green card:
+    --card-color: #00a86b;
+    --card-glow: rgba(0, 168, 107, 0.18);
+    --card-icon-bg: rgba(0, 168, 107, 0.1);
+
+  Red card:
+    --card-color: #e63946;
+    --card-glow: rgba(230, 57, 70, 0.18);
+    --card-icon-bg: rgba(230, 57, 70, 0.1);
+
+  Purple card:
+    --card-color: #7c3aed;
+    --card-glow: rgba(124, 58, 237, 0.18);
+    --card-icon-bg: rgba(124, 58, 237, 0.1);
+*/

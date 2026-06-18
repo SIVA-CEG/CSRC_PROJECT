@@ -1,3 +1,7 @@
+/* ══════════════════════════════════════════════════════════
+   PED — Project Extension Dashboard
+══════════════════════════════════════════════════════════ */
+
 .ped-page {
   max-width: 1400px;
   margin: auto;
@@ -8,42 +12,122 @@
 }
 
 .ped-header h1 {
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 8px;
+
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .ped-header p {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted);
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
 }
+
+/* ─────────────────────────────────────
+   Grid
+───────────────────────────────────── */
 
 .ped-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
 }
 
+/* ─────────────────────────────────────
+   Cards
+───────────────────────────────────── */
+
 .ped-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 20px;
+  position: relative;
+
+  background: var(--bg-surface);
+
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+
   padding: 40px;
+
   cursor: pointer;
-  transition: all 0.3s ease;
+
+  transition: all 0.3s cubic-bezier(.22,.68,0,1.2);
+
+  box-shadow: var(--shadow-xs);
+
+  overflow: hidden;
+}
+
+.ped-card::before {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2.5px;
+
+  background: var(--indigo);
+
+  opacity: 0;
+
+  transition: opacity 0.3s;
+
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
 
 .ped-card:hover {
   transform: translateY(-5px);
-  border-color: #818cf8;
-  box-shadow: 0 0 30px rgba(129,140,248,0.15);
+
+  border-color: var(--indigo);
+
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 3px var(--indigo-mid);
+}
+
+.ped-card:hover::before {
+  opacity: 1;
 }
 
 .ped-card h3 {
-  color: white;
+  color: var(--text-primary);
+
   margin-bottom: 10px;
+
+  font-family: 'Rajdhani', sans-serif;
   font-size: 22px;
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
 }
 
 .ped-card p {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted);
+
+  font-family: 'DM Sans', sans-serif;
   font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─────────────────────────────────────
+   Responsive
+───────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .ped-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ped-card {
+    padding: 28px;
+  }
+
+  .ped-card h3 {
+    font-size: 20px;
+  }
 }

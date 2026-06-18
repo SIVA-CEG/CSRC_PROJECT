@@ -7,24 +7,23 @@
 html, body, #root {
   width: 100%;
   min-height: 100vh;
-  background: rgb(8, 12, 26);
-  color: white;
+  background: linear-gradient(160deg, #eef4ff 0%, #f5f8ff 50%, #fafbff 100%);
+  color: #111827;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.03);
+  background: rgba(0, 100, 220, 0.04);  /* was dark */
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 180, 255, 0.3);
+  background: rgba(0, 140, 255, 0.25);  /* same blue, lighter feel */
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 180, 255, 0.5);
+  background: rgba(0, 140, 255, 0.45);
 }
 @media print {
   .ps-report-sheet {

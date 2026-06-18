@@ -1,3 +1,7 @@
+/* ══════════════════════════════════════════════════════════
+   PEH — Project Extension History
+══════════════════════════════════════════════════════════ */
+
 .peh-page {
   max-width: 1400px;
   margin: auto;
@@ -8,21 +12,41 @@
 }
 
 .peh-header h2 {
-  color: white;
+  color: var(--text-primary);
   margin-bottom: 6px;
+
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .peh-header p {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-muted);
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
+/* ─────────────────────────────────────
+   Table Wrapper
+───────────────────────────────────── */
+
 .peh-table-wrapper {
-  background: rgba(255,255,255,0.04);
-  border-radius: 18px;
+  background: var(--bg-surface);
+
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+
   padding: 20px;
   overflow-x: auto;
-  border: 1px solid rgba(255,255,255,0.06);
+
+  box-shadow: var(--shadow-sm);
 }
+
+/* ─────────────────────────────────────
+   Table
+───────────────────────────────────── */
 
 .peh-table {
   width: 100%;
@@ -32,18 +56,48 @@
 
 .peh-table th {
   text-align: left;
+
   padding: 14px;
-  color: #818cf8;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+
+  color: var(--indigo);
+
+  background: var(--bg-surface-2);
+
+  border-bottom: 1px solid var(--border-subtle);
+
   white-space: nowrap;
+
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .peh-table td {
   padding: 14px;
-  color: rgba(255,255,255,0.8);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+
+  color: var(--text-secondary);
+
+  border-bottom: 1px solid var(--border-subtle);
+
   vertical-align: middle;
+
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
 }
+
+.peh-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.peh-table tbody tr:hover {
+  background: var(--violet-lt);
+}
+
+/* ─────────────────────────────────────
+   Status / Dates
+───────────────────────────────────── */
 
 .peh-date {
   white-space: nowrap;
@@ -51,14 +105,18 @@
 }
 
 .peh-pending {
-  color: #f59e0b;
+  color: var(--amber);
   font-weight: 600;
 }
 
 .peh-completed {
-  color: #22c55e;
+  color: var(--green);
   font-weight: 600;
 }
+
+/* ─────────────────────────────────────
+   Actions
+───────────────────────────────────── */
 
 .peh-actions {
   display: flex;
@@ -71,22 +129,69 @@
   font-size: 12px;
 }
 
-.peh-actions .pe-btn-preview {
-  background: rgba(167,139,250,0.15);
-  border: 1px solid rgba(167,139,250,0.3);
-  color: #a78bfa;
-}
+/* Preview Button */
 
-.peh-actions .pe-btn-download {
-  background: rgba(52,211,153,0.13);
-  border: 1px solid rgba(52,211,153,0.3);
-  color: #34d399;
+.peh-actions .pe-btn-preview {
+  background: var(--violet-lt);
+
+  border: 1.5px solid
+    color-mix(
+      in srgb,
+      var(--violet) 28%,
+      transparent
+    );
+
+  color: var(--violet);
+
+  transition: all 0.2s ease;
 }
 
 .peh-actions .pe-btn-preview:hover {
-  background: rgba(167,139,250,0.25);
+  background: var(--violet);
+  color: #fff;
+
+  box-shadow: var(--shadow-sm);
+}
+
+/* Download Button */
+
+.peh-actions .pe-btn-download {
+  background: var(--green-lt);
+
+  border: 1.5px solid
+    color-mix(
+      in srgb,
+      var(--green) 28%,
+      transparent
+    );
+
+  color: var(--green);
+
+  transition: all 0.2s ease;
 }
 
 .peh-actions .pe-btn-download:hover {
-  background: rgba(52,211,153,0.22);
+  background: var(--green);
+  color: #fff;
+
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─────────────────────────────────────
+   Responsive
+───────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .peh-table-wrapper {
+    padding: 16px;
+  }
+
+  .peh-actions {
+    flex-direction: column;
+  }
+
+  .peh-actions .pe-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -10,27 +10,27 @@
 .page-breadcrumb {
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(20,30,70,0.38);
   margin-bottom: 8px;
 }
-.page-breadcrumb span { color: #00b4ff; }
+.page-breadcrumb span { color: #0077e6; }
 
 .page-title {
   font-family: 'Rajdhani', sans-serif;
   font-size: 28px;
   font-weight: 700;
-  color: #fff;
+  color: #111827;
   letter-spacing: 1px;
 }
 
 .page-subtitle {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
-  color: rgba(255,255,255,0.35);
+  color: rgba(20,30,70,0.42);
   margin-top: 6px;
 }
 
-/* Choice cards */
+/* ── Choice cards ── */
 .choice-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -40,8 +40,8 @@
 
 .choice-card {
   position: relative;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   border-radius: 20px;
   padding: 36px 28px;
   cursor: pointer;
@@ -50,13 +50,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,1);
 }
 
 .choice-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 2px;
+  height: 2.5px;
   background: var(--card-color);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -64,13 +69,18 @@
 
 .choice-card:hover {
   transform: translateY(-6px);
-  background: rgba(255,255,255,0.055);
-  border-color: rgba(255,255,255,0.15);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 30px var(--card-glow);
+  background: rgba(255,255,255,0.92);
+  border-color: rgba(255,255,255,1);
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.09),
+    0 6px 16px rgba(0,0,0,0.05),
+    0 0 30px var(--card-glow),
+    inset 0 1px 0 rgba(255,255,255,1);
 }
 
 .choice-card:hover::before { opacity: 1; }
 
+/* ── Choice icon ── */
 .choice-icon {
   width: 56px;
   height: 56px;
@@ -80,9 +90,13 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  box-shadow: 0 4px 14px var(--card-glow);
 }
 
-.choice-card:hover .choice-icon { transform: scale(1.08) rotate(-4deg); }
+.choice-card:hover .choice-icon {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 8px 22px var(--card-glow);
+}
 
 .choice-icon svg {
   width: 26px;
@@ -90,11 +104,12 @@
   color: var(--card-color);
 }
 
+/* ── Choice text ── */
 .choice-title {
   font-family: 'Rajdhani', sans-serif;
   font-size: 20px;
   font-weight: 700;
-  color: #fff;
+  color: #111827;
   letter-spacing: 0.5px;
   transition: color 0.2s ease;
 }
@@ -104,10 +119,11 @@
 .choice-desc {
   font-family: 'DM Sans', sans-serif;
   font-size: 13px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(20,30,70,0.45);
   line-height: 1.6;
 }
 
+/* ── Choice arrow ── */
 .choice-arrow {
   margin-top: auto;
   display: flex;
@@ -125,6 +141,18 @@
 
 .choice-arrow svg { width: 14px; height: 14px; }
 .choice-card:hover .choice-arrow { opacity: 1; transform: translateX(0); }
+
+/* ── Shimmer ── */
+.choice-shimmer {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+.choice-card:hover .choice-shimmer { left: 160%; }
 
 @media (max-width: 600px) {
   .choice-grid { grid-template-columns: 1fr; }

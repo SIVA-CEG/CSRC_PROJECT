@@ -29,6 +29,10 @@ import ProjectExtensionDashboard from './pages/projects/requestforms/ProjectExte
 import ProjectExtensionHistory from './pages/projects/requestforms/ProjectExtensionHistory';
 import ProjectExtensionPage from './pages/projects/requestforms/ProjectExtensionPage';
 
+
+import SEUC from './pages/projects/SEUC';
+import Reports from './pages/projects/Reports';   // ← NEW
+
 function App() {
   const [page, setPage] = useState('home');
 
@@ -45,7 +49,6 @@ function App() {
       case 'endorsements-list': return <EndorsementsList    onNavigate={navigate} />;
       case 'endorsements-new':  return <NewEndorsementPage  onNavigate={navigate} />;  // ← UPDATED
       case 'projects':          return <ProjectsPage        onNavigate={navigate} />;
-      case 'proposals':         return <ProposalsList       onNavigate={navigate} />;
       case 'sanctioned':        return <SanctionedList      onNavigate={navigate} />;
       case 'ctdt':              return <CTDTPage             onNavigate={navigate} />;
       case 'projectstaff':      return <ProjectStaffPage    onNavigate={navigate} />;
@@ -73,12 +76,14 @@ case 'project-extension-history':
       case 'zbaslip':           return <ZBASlipPage          onNavigate={navigate} />;
       case 'tsaslip':           return <TSASlipPage          onNavigate={navigate} />;
       case 'cmrgslip':          return <CMRGSlipPage         onNavigate={navigate} />;
+      case 'seuc':              return <SEUC                  onNavigate={navigate} />;
+      case 'reports':           return <Reports               onNavigate={navigate} />;  // ← NEW
       case 'consultancies':     return <ConsultanciesPage    onNavigate={navigate} />;
       case 'testing':           return <TestingPage />;
       case 'training':          return <TrainingPage />;
       case 'workshops':         return <WorkshopsPage />;
       default:                  return <ProfilePage />;
-    }
+    } 
   };
 
   return (

@@ -5,47 +5,55 @@ const navItems = [
   {
     id: 'profile',
     label: 'Profile',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
+    icon: '👨‍🔬',
   },
   {
     id: 'endorsements',
     label: 'Endorsements',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>,
+    icon: '🏅',
   },
   {
     id: 'projects',
     label: 'My Projects',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17.5 14v6M14.5 17h6" strokeLinecap="round"/></svg>,
+    icon: '📁',
     sub: [
-      { id: 'sanctioned',    label: 'Sanctioned Projects' },
-      { id: 'ctdt',          label: 'CTDT Proceedings' },
-      { id: 'projectstaff',  label: 'Project Staff' },
-      { id: 'requestforms',  label: 'Request Forms' },
+      { id: 'sanctioned', label: 'Sanctioned Projects' },
+      { id: 'ctdt', label: 'CTDT Proceedings' },
+      { id: 'projectstaff', label: 'Project Staff' },
+      { id: 'requestforms', label: 'Request Forms' },
       { id: 'paymentclaims', label: 'Payment Claims' },
-      { id: 'zbaslip',       label: 'ZBA Slip' },
-      { id: 'tsaslip',       label: 'TSA(H) Slip' },
-      { id: 'cmrgslip',      label: 'CMRG Slip' },
+      { id: 'zbaslip', label: 'ZBA Slip' },
+      { id: 'tsaslip', label: 'TSA(H) Slip' },
+      { id: 'cmrgslip', label: 'CMRG Slip' },
+      {
+  id: 'seuc',
+  label: 'SE - UC'
+},
+      {
+  id: 'reports',
+  label: 'Project Reports'
+},
     ],
   },
   {
     id: 'consultancies',
     label: 'Consultancies',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>,
+    icon: '💼',
   },
   {
     id: 'testing',
     label: 'Testing',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v11l-4 4h14l-4-4V3"/></svg>,
+    icon: '🧪',
   },
   {
     id: 'training',
     label: 'Training',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>,
+    icon: '🎓',
   },
   {
     id: 'workshops',
     label: 'Workshops',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>,
+    icon: '📅',
   },
 ];
 

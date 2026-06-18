@@ -13,77 +13,79 @@ const css = `
 @keyframes slipFade { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
 @keyframes modalPop { from{opacity:0;transform:scale(0.88) translateY(24px)} to{opacity:1;transform:scale(1) translateY(0)} }
 @keyframes overlayFade { from{opacity:0} to{opacity:1} }
-@keyframes checkPulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)} 70%{box-shadow:0 0 0 18px rgba(34,197,94,0)} 100%{box-shadow:0 0 0 0 rgba(34,197,94,0)} }
+@keyframes checkPulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,0.35)} 70%{box-shadow:0 0 0 18px rgba(34,197,94,0)} 100%{box-shadow:0 0 0 0 rgba(34,197,94,0)} }
 @keyframes slideIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
 
 /* ── Base Cards ── */
 .slip-table-card, .slip-card {
-  background: rgba(255,255,255,0.028);
-  border: 1px solid rgba(255,255,255,0.075);
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.95);
   border-radius: 20px;
   padding: 22px;
   margin-bottom: 24px;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1);
 }
 .slip-table-card h2, .slip-card h2 {
   font-family: 'Syne', sans-serif;
-  color: rgba(255,255,255,0.88);
+  color: rgba(20,30,70,0.86);
   font-size: 18px;
   margin: 0 0 20px;
 }
 .slip-table-wrap { overflow-x: auto; }
 .slip-table-card table { width:100%; border-collapse:collapse; min-width:750px; }
 .slip-table-card th {
-  background: rgba(56,189,248,0.08);
-  color: rgba(255,255,255,0.48);
+  background: rgba(2,132,199,0.07);
+  color: rgba(20,30,70,0.5);
   font-family: 'Syne', sans-serif;
   font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
   padding: 14px; text-align: left; white-space: nowrap;
 }
 .slip-table-card td {
-  border-bottom: 1px solid rgba(255,255,255,0.045);
-  padding: 14px; color: rgba(255,255,255,0.72);
+  border-bottom: 1px solid rgba(0,100,220,0.07);
+  padding: 14px; color: rgba(20,30,70,0.74);
   font-family: 'DM Sans', sans-serif; font-size: 13px; white-space: nowrap;
 }
-.slip-table-card tr:hover td { background: rgba(56,189,248,0.04); }
+.slip-table-card tr:hover td { background: rgba(2,132,199,0.045); }
 
 /* ── Inputs ── */
 .slip-input {
-  width: 100%; background: rgba(255,255,255,0.055);
-  border: 1px solid rgba(255,255,255,0.09);
+  width: 100%; background: rgba(0,100,220,0.04);
+  border: 1px solid rgba(0,100,220,0.12);
   border-radius: 12px; padding: 11px 14px;
-  color: rgba(255,255,255,0.86);
+  color: rgba(20,30,70,0.86);
   font-family: 'DM Sans', sans-serif; font-size: 14px;
   outline: none; transition: 0.2s; box-sizing: border-box;
 }
 .slip-input:focus {
-  border-color: rgba(56,189,248,0.65);
-  background: rgba(56,189,248,0.06);
-  box-shadow: 0 0 0 3px rgba(56,189,248,0.11);
+  border-color: rgba(2,132,199,0.55);
+  background: rgba(2,132,199,0.05);
+  box-shadow: 0 0 0 3px rgba(2,132,199,0.1);
 }
 .slip-input:disabled { opacity: 0.4; cursor: not-allowed; }
-.slip-input option { background: #111827; color: #fff; }
+.slip-input option { background: #fff; color: #111827; }
 
 /* ── Buttons ── */
 .slip-view-btn {
-  border: 1px solid rgba(167,139,250,0.3);
-  background: rgba(167,139,250,0.11);
-  color: #a78bfa; border-radius: 10px;
+  border: 1px solid rgba(124,58,237,0.25);
+  background: rgba(124,58,237,0.08);
+  color: #6d28d9; border-radius: 10px;
   padding: 8px 14px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
   transition: 0.2s; white-space: nowrap;
 }
-.slip-view-btn:hover { background: rgba(167,139,250,0.22); transform: scale(1.04); }
+.slip-view-btn:hover { background: rgba(124,58,237,0.16); transform: scale(1.04); }
 
 .settled-btn {
-  border: 1px solid rgba(251,191,36,0.3);
-  background: rgba(251,191,36,0.11);
-  color: #fbbf24; border-radius: 10px;
+  border: 1px solid rgba(217,119,6,0.28);
+  background: rgba(217,119,6,0.08);
+  color: #b45309; border-radius: 10px;
   padding: 8px 14px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
   transition: 0.2s; margin-left: 8px; white-space: nowrap;
 }
-.settled-btn:hover { background: rgba(251,191,36,0.22); transform: scale(1.04); }
+.settled-btn:hover { background: rgba(217,119,6,0.18); transform: scale(1.04); }
 
 /* ── Head Type Selection Cards ── */
 .head-type-grid {
@@ -103,63 +105,61 @@ const css = `
 .head-type-card:hover { transform: translateY(-4px); }
 .head-type-card:hover::before { opacity: 0.12; }
 .head-type-card.non-recurring {
-  background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(56,189,248,0.04));
-  border: 1px solid rgba(56,189,248,0.25);
+  background: linear-gradient(135deg, rgba(2,132,199,0.1), rgba(2,132,199,0.03));
+  border: 1px solid rgba(2,132,199,0.22);
 }
-.head-type-card.non-recurring:hover { border-color: rgba(56,189,248,0.55); box-shadow: 0 12px 36px rgba(56,189,248,0.15); }
+.head-type-card.non-recurring:hover { border-color: rgba(2,132,199,0.5); box-shadow: 0 12px 36px rgba(2,132,199,0.12); }
 .head-type-card.recurring {
-  background: linear-gradient(135deg, rgba(167,139,250,0.12), rgba(167,139,250,0.04));
-  border: 1px solid rgba(167,139,250,0.25);
+  background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(124,58,237,0.03));
+  border: 1px solid rgba(124,58,237,0.22);
 }
-.head-type-card.recurring:hover { border-color: rgba(167,139,250,0.55); box-shadow: 0 12px 36px rgba(167,139,250,0.15); }
+.head-type-card.recurring:hover { border-color: rgba(124,58,237,0.5); box-shadow: 0 12px 36px rgba(124,58,237,0.12); }
 .head-type-card .hc-icon { font-size: 40px; }
 .head-type-card .hc-title {
   font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
-  color: rgba(255,255,255,0.9);
+  color: rgba(20,30,70,0.9);
 }
 .head-type-card .hc-sub {
   font-family: 'DM Sans', sans-serif; font-size: 12px;
-  color: rgba(255,255,255,0.45); line-height: 1.5;
+  color: rgba(20,30,70,0.45); line-height: 1.5;
 }
 .head-type-card .hc-arr {
   font-size: 20px; margin-top: 4px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(20,30,70,0.3);
 }
 
 /* ── Breadcrumb nav ── */
 .claim-breadcrumb {
   display: flex; align-items: center; gap: 8px;
   font-family: 'DM Sans', sans-serif; font-size: 13px;
-  color: rgba(255,255,255,0.45); margin-bottom: 20px; flex-wrap: wrap;
+  color: rgba(20,30,70,0.45); margin-bottom: 20px; flex-wrap: wrap;
 }
 .claim-breadcrumb .bc-link {
-  color: #38bdf8; cursor: pointer;
+  color: #0284c7; cursor: pointer;
   text-decoration: underline; text-underline-offset: 3px;
 }
-.claim-breadcrumb .bc-sep { color: rgba(255,255,255,0.2); }
-.claim-breadcrumb .bc-cur { color: rgba(255,255,255,0.7); font-weight: 600; }
+.claim-breadcrumb .bc-sep { color: rgba(20,30,70,0.22); }
+.claim-breadcrumb .bc-cur { color: rgba(20,30,70,0.72); font-weight: 600; }
 
 /* ── Back button ── */
 .back-btn {
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.55); border-radius: 10px;
+  border: 1px solid rgba(0,100,220,0.13);
+  background: rgba(0,100,220,0.05);
+  color: rgba(20,30,70,0.58); border-radius: 10px;
   padding: 8px 16px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 13px;
   transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;
   margin-bottom: 18px;
 }
-.back-btn:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+.back-btn:hover { background: rgba(0,100,220,0.1); color: rgba(20,30,70,0.85); }
 
 /* ── Non-Recurring form ── */
-.nr-form-grid {
-  display: grid; gap: 18px;
-}
+.nr-form-grid { display:grid; gap:18px; }
 .nr-field { display: flex; flex-direction: column; gap: 7px; }
 .nr-field label {
   font-family: 'Syne', sans-serif; font-size: 11px;
   text-transform: uppercase; letter-spacing: 1px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(20,30,70,0.42);
 }
 .nr-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .nr-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
@@ -170,10 +170,10 @@ const css = `
   border: none; border-radius: 14px; padding: 13px 32px;
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
-  cursor: pointer; box-shadow: 0 10px 25px rgba(34,197,94,0.25);
+  cursor: pointer; box-shadow: 0 10px 25px rgba(34,197,94,0.22);
   font-size: 14px; transition: 0.2s;
 }
-.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(34,197,94,0.35); }
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(34,197,94,0.3); }
 
 /* ── Recurring sub-head cards ── */
 .rec-head-grid {
@@ -185,19 +185,20 @@ const css = `
   cursor: pointer; transition: all 0.22s;
   display: flex; flex-direction: column; align-items: center;
   gap: 10px; text-align: center;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 3px 14px rgba(0,0,0,0.05);
 }
 .rec-head-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(167,139,250,0.4);
-  background: rgba(167,139,250,0.08);
-  box-shadow: 0 10px 28px rgba(167,139,250,0.12);
+  border-color: rgba(124,58,237,0.35);
+  background: rgba(124,58,237,0.06);
+  box-shadow: 0 10px 28px rgba(124,58,237,0.1);
 }
 .rec-head-card .rhc-icon { font-size: 32px; }
 .rec-head-card .rhc-title {
   font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
-  color: rgba(255,255,255,0.82); line-height: 1.3;
+  color: rgba(20,30,70,0.82); line-height: 1.3;
 }
 
 /* ── Under Review ── */
@@ -205,102 +206,102 @@ const css = `
   display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap;
 }
 .review-tab {
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(0,100,220,0.12);
+  background: rgba(0,100,220,0.04);
+  color: rgba(20,30,70,0.52);
   border-radius: 10px; padding: 8px 16px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 13px; transition: 0.2s;
   display: flex; align-items: center; gap: 6px;
 }
 .review-tab.active-under {
-  border-color: rgba(251,191,36,0.4);
-  background: rgba(251,191,36,0.08); color: #fbbf24;
+  border-color: rgba(217,119,6,0.38);
+  background: rgba(217,119,6,0.09); color: #b45309;
 }
 .review-tab.active-approved {
-  border-color: rgba(34,197,94,0.4);
-  background: rgba(34,197,94,0.08); color: #22c55e;
+  border-color: rgba(34,197,94,0.38);
+  background: rgba(34,197,94,0.09); color: #16a34a;
 }
 .review-tab-count {
-  background: rgba(255,255,255,0.12);
+  background: rgba(0,100,220,0.1);
   border-radius: 999px; padding: 1px 7px;
   font-size: 11px; font-weight: 700;
 }
 
 .review-table { width: 100%; border-collapse: collapse; }
 .review-table th {
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.38);
+  background: rgba(0,100,220,0.04);
+  color: rgba(20,30,70,0.4);
   font-family: 'Syne', sans-serif; font-size: 10px;
   text-transform: uppercase; letter-spacing: 1px;
   padding: 12px 14px; text-align: left; white-space: nowrap;
 }
 .review-table td {
-  padding: 13px 14px; color: rgba(255,255,255,0.7);
+  padding: 13px 14px; color: rgba(20,30,70,0.72);
   font-family: 'DM Sans', sans-serif; font-size: 13px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(0,100,220,0.06);
   white-space: nowrap;
 }
 .review-table tr:last-child td { border-bottom: none; }
-.review-table tr:hover td { background: rgba(255,255,255,0.02); }
+.review-table tr:hover td { background: rgba(0,100,220,0.025); }
 
 .status-badge-review {
-  background: rgba(251,191,36,0.12); color: #fbbf24;
-  border: 1px solid rgba(251,191,36,0.3);
+  background: rgba(217,119,6,0.1); color: #b45309;
+  border: 1px solid rgba(217,119,6,0.28);
   padding: 4px 10px; border-radius: 999px;
   font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif;
 }
 .status-badge-approved {
-  background: rgba(34,197,94,0.12); color: #22c55e;
-  border: 1px solid rgba(34,197,94,0.3);
+  background: rgba(34,197,94,0.1); color: #16a34a;
+  border: 1px solid rgba(34,197,94,0.28);
   padding: 4px 10px; border-radius: 999px;
   font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif;
 }
 .type-badge {
-  background: rgba(56,189,248,0.1); color: #38bdf8;
-  border: 1px solid rgba(56,189,248,0.2);
+  background: rgba(2,132,199,0.09); color: #0284c7;
+  border: 1px solid rgba(2,132,199,0.2);
   padding: 3px 9px; border-radius: 999px;
   font-size: 11px; font-family: 'Syne', sans-serif; font-weight: 700;
 }
 .head-badge-purple {
-  background: rgba(167,139,250,0.1); color: #a78bfa;
-  border: 1px solid rgba(167,139,250,0.2);
+  background: rgba(124,58,237,0.08); color: #6d28d9;
+  border: 1px solid rgba(124,58,237,0.2);
   padding: 3px 9px; border-radius: 999px;
   font-size: 11px; font-family: 'DM Sans', sans-serif;
 }
-.amount-cell { color: #22c55e; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; }
+.amount-cell { color: #16a34a; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; }
 
 .review-action-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .preview-btn {
-  border: 1px solid rgba(56,189,248,0.3); background: rgba(56,189,248,0.08);
-  color: #38bdf8; border-radius: 8px; padding: 6px 11px; cursor: pointer;
+  border: 1px solid rgba(2,132,199,0.25); background: rgba(2,132,199,0.07);
+  color: #0284c7; border-radius: 8px; padding: 6px 11px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; transition: 0.2s;
 }
-.preview-btn:hover { background: rgba(56,189,248,0.18); }
+.preview-btn:hover { background: rgba(2,132,199,0.16); }
 .download-btn {
-  border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
-  color: #22c55e; border-radius: 8px; padding: 6px 11px; cursor: pointer;
+  border: 1px solid rgba(34,197,94,0.25); background: rgba(34,197,94,0.07);
+  color: #16a34a; border-radius: 8px; padding: 6px 11px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; transition: 0.2s;
 }
-.download-btn:hover { background: rgba(34,197,94,0.18); }
+.download-btn:hover { background: rgba(34,197,94,0.16); }
 .approve-btn {
-  border: 1px solid rgba(251,191,36,0.35); background: rgba(251,191,36,0.1);
-  color: #fbbf24; border-radius: 8px; padding: 6px 11px; cursor: pointer;
+  border: 1px solid rgba(217,119,6,0.32); background: rgba(217,119,6,0.09);
+  color: #b45309; border-radius: 8px; padding: 6px 11px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; transition: 0.2s;
 }
-.approve-btn:hover { background: rgba(251,191,36,0.2); }
+.approve-btn:hover { background: rgba(217,119,6,0.18); }
 
 /* ── Success Overlay ── */
 .success-overlay {
   position: fixed; inset: 0; z-index: 99999;
-  background: rgba(2,6,23,0.72); backdrop-filter: blur(10px);
+  background: rgba(15,23,42,0.45); backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center;
   animation: overlayFade 0.3s ease;
 }
 .success-box {
   width: min(400px,90vw); padding: 38px 30px; border-radius: 26px;
-  background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(8,47,73,0.94));
-  border: 1px solid rgba(56,189,248,0.25);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.45); text-align: center;
+  background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(239,246,255,0.96));
+  border: 1px solid rgba(2,132,199,0.2);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.14); text-align: center;
   animation: modalPop 0.55s cubic-bezier(0.2,1.4,0.4,1);
 }
 .success-check {
@@ -310,145 +311,148 @@ const css = `
   font-size: 42px; font-weight: 900;
   animation: checkPulse 1.2s ease infinite;
 }
-.success-box h2 { margin:0 0 8px; color:#fff; font-family:'Syne',sans-serif; font-size:22px; }
-.success-box p { margin:0; color:rgba(255,255,255,0.6); font-family:'DM Sans',sans-serif; font-size:14px; }
+.success-box h2 { margin:0 0 8px; color:#111827; font-family:'Syne',sans-serif; font-size:22px; }
+.success-box p { margin:0; color:rgba(20,30,70,0.6); font-family:'DM Sans',sans-serif; font-size:14px; }
 
 /* ── PDF Preview Modal ── */
 .pdf-preview-overlay {
   position: fixed; inset: 0; z-index: 1000000;
-  background: rgba(0,0,0,0.85);
+  background: rgba(15,23,42,0.55);
   display: flex; align-items: flex-start; justify-content: center;
   padding: 16px 24px; animation: overlayFade 0.2s ease;
 }
 .pdf-preview-box {
   width: min(900px,96vw); height: calc(100vh - 32px);
-  background: #111827; border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.1);
+  background: #ffffff; border-radius: 18px;
+  border: 1px solid rgba(0,100,220,0.1);
   overflow: hidden; display: flex; flex-direction: column;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.2);
 }
 .pdf-preview-head {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 18px; background: #0f172a;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 18px; background: #ffffff;
+  border-bottom: 1px solid rgba(0,100,220,0.08);
   flex-shrink: 0; gap: 10px; flex-wrap: wrap;
 }
-.pdf-preview-head span { color:rgba(255,255,255,0.7); font-family:'DM Sans',sans-serif; font-size:13px; }
+.pdf-preview-head span { color:rgba(20,30,70,0.72); font-family:'DM Sans',sans-serif; font-size:13px; }
 .pdf-preview-head div { display:flex; gap:8px; }
 .pdf-preview-head a, .pdf-preview-head button {
   border-radius: 9px; padding: 7px 13px; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
   text-decoration: none;
 }
-.pdf-preview-head a { background:#38bdf8; color:#001018; border:none; }
+.pdf-preview-head a { background:#0284c7; color:#fff; border:none; }
 .pdf-preview-head button { background:#ef4444; color:#fff; border:none; }
 .pdf-preview-frame { flex:1; width:100%; border:none; background:#fff; }
 
 /* ── Settled Bills Modal ── */
 .settled-modal-overlay {
   position: fixed; inset: 0; z-index: 999999;
-  background: rgba(2,6,23,0.78); backdrop-filter: blur(12px);
+  background: rgba(15,23,42,0.5); backdrop-filter: blur(12px);
   display: flex; align-items: flex-start; justify-content: center;
   padding: 80px 24px 24px; animation: overlayFade 0.28s ease;
 }
 .settled-modal {
   width: min(1200px,96vw); max-height: calc(100vh - 104px);
-  background: linear-gradient(160deg, #0d1b2e 0%, #0b1622 100%);
-  border: 1px solid rgba(56,189,248,0.18);
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(2,132,199,0.16);
   border-radius: 24px; overflow: hidden;
   display: flex; flex-direction: column;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.16);
   animation: modalPop 0.4s cubic-bezier(0.2,1.2,0.4,1);
 }
 .settled-modal-head {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 22px; background: rgba(56,189,248,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 16px 22px; background: rgba(2,132,199,0.07);
+  border-bottom: 1px solid rgba(0,100,220,0.08);
   flex-shrink: 0; flex-wrap: wrap; gap: 12px;
 }
 .settled-modal-head h2 {
-  margin:0; font-family:'Syne',sans-serif; color:#fff; font-size:16px;
+  margin:0; font-family:'Syne',sans-serif; color:#111827; font-size:16px;
   display:flex; align-items:center; gap:8px; flex-wrap:wrap;
 }
 .settled-modal-head h2 span {
-  background:rgba(251,191,36,0.18); color:#fbbf24;
+  background:rgba(217,119,6,0.14); color:#b45309;
   font-size:11px; padding:3px 9px; border-radius:999px;
-  border:1px solid rgba(251,191,36,0.3);
+  border:1px solid rgba(217,119,6,0.28);
 }
 .settled-modal-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 .modal-close-btn {
-  border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.1);
-  color:#ef4444; border-radius:10px; padding:8px 14px; cursor:pointer;
+  border:1px solid rgba(239,68,68,0.25); background:rgba(239,68,68,0.08);
+  color:#dc2626; border-radius:10px; padding:8px 14px; cursor:pointer;
   font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; transition:0.2s;
 }
-.modal-close-btn:hover { background:rgba(239,68,68,0.2); }
+.modal-close-btn:hover { background:rgba(239,68,68,0.16); }
 .settled-modal-body { overflow-y:auto; padding:22px; flex:1; }
 
 /* settled project tabs */
 .settled-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
 .settled-tab {
-  border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04);
-  color:rgba(255,255,255,0.5); border-radius:10px; padding:7px 14px;
+  border:1px solid rgba(0,100,220,0.12); background:rgba(0,100,220,0.04);
+  color:rgba(20,30,70,0.52); border-radius:10px; padding:7px 14px;
   cursor:pointer; font-family:'DM Sans',sans-serif; font-size:13px; transition:0.2s;
 }
-.settled-tab.active { border-color:rgba(251,191,36,0.45); background:rgba(251,191,36,0.1); color:#fbbf24; }
+.settled-tab.active { border-color:rgba(217,119,6,0.4); background:rgba(217,119,6,0.09); color:#b45309; }
 .settled-summary {
   display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px;
 }
 .settled-summary-card {
-  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.7); border:1px solid rgba(0,100,220,0.08);
   border-radius:14px; padding:14px 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 .settled-summary-card p {
   margin:0 0 4px; font-family:'DM Sans',sans-serif;
-  font-size:11px; text-transform:uppercase; letter-spacing:0.9px; color:rgba(255,255,255,0.35);
+  font-size:11px; text-transform:uppercase; letter-spacing:0.9px; color:rgba(20,30,70,0.4);
 }
-.settled-summary-card h4 { margin:0; font-family:'Syne',sans-serif; font-size:18px; color:#fff; }
-.settled-summary-card h4.green { color:#22c55e; }
-.settled-summary-card h4.yellow { color:#fbbf24; }
-.bills-table-wrap { overflow-x:auto; border-radius:14px; border:1px solid rgba(255,255,255,0.07); }
+.settled-summary-card h4 { margin:0; font-family:'Syne',sans-serif; font-size:18px; color:#111827; }
+.settled-summary-card h4.green { color:#16a34a; }
+.settled-summary-card h4.yellow { color:#b45309; }
+.bills-table-wrap { overflow-x:auto; border-radius:14px; border:1px solid rgba(0,100,220,0.08); }
 .bills-table { width:100%; border-collapse:collapse; min-width:800px; }
 .bills-table th {
-  background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.38);
+  background:rgba(0,100,220,0.04); color:rgba(20,30,70,0.4);
   font-family:'Syne',sans-serif; font-size:10px;
   text-transform:uppercase; letter-spacing:1px;
   padding:12px 14px; text-align:left; white-space:nowrap;
 }
 .bills-table td {
-  padding:12px 14px; color:rgba(255,255,255,0.7);
+  padding:12px 14px; color:rgba(20,30,70,0.72);
   font-family:'DM Sans',sans-serif; font-size:13px;
-  border-bottom:1px solid rgba(255,255,255,0.04); white-space:nowrap;
+  border-bottom:1px solid rgba(0,100,220,0.06); white-space:nowrap;
 }
 .bills-table tr:last-child td { border-bottom:none; }
-.bills-table tr:hover td { background:rgba(56,189,248,0.03); }
+.bills-table tr:hover td { background:rgba(2,132,199,0.035); }
 .ref-badge {
-  background:rgba(56,189,248,0.1); color:#38bdf8;
-  border:1px solid rgba(56,189,248,0.25);
+  background:rgba(2,132,199,0.09); color:#0284c7;
+  border:1px solid rgba(2,132,199,0.22);
   padding:3px 8px; border-radius:999px; font-size:11px; font-weight:700;
   font-family:'Syne',sans-serif;
 }
 .bill-action-group { display:flex; gap:5px; }
 .preview-bill-btn {
-  border:1px solid rgba(56,189,248,0.3); background:rgba(56,189,248,0.08);
-  color:#38bdf8; border-radius:7px; padding:5px 9px; cursor:pointer;
+  border:1px solid rgba(2,132,199,0.25); background:rgba(2,132,199,0.07);
+  color:#0284c7; border-radius:7px; padding:5px 9px; cursor:pointer;
   font-family:'DM Sans',sans-serif; font-size:11px; transition:0.2s;
 }
-.preview-bill-btn:hover { background:rgba(56,189,248,0.18); }
+.preview-bill-btn:hover { background:rgba(2,132,199,0.16); }
 .download-bill-btn {
-  border:1px solid rgba(34,197,94,0.3); background:rgba(34,197,94,0.08);
-  color:#22c55e; border-radius:7px; padding:5px 9px; cursor:pointer;
+  border:1px solid rgba(34,197,94,0.25); background:rgba(34,197,94,0.07);
+  color:#16a34a; border-radius:7px; padding:5px 9px; cursor:pointer;
   font-family:'DM Sans',sans-serif; font-size:11px; transition:0.2s; text-decoration:none;
   display:inline-flex; align-items:center;
 }
-.download-bill-btn:hover { background:rgba(34,197,94,0.18); }
-.no-file-text { color:rgba(255,255,255,0.28); font-size:12px; font-style:italic; }
+.download-bill-btn:hover { background:rgba(34,197,94,0.16); }
+.no-file-text { color:rgba(20,30,70,0.32); font-size:12px; font-style:italic; }
 .empty-bills {
   text-align:center; padding:40px 24px;
-  color:rgba(255,255,255,0.3); font-family:'DM Sans',sans-serif; font-size:14px;
+  color:rgba(20,30,70,0.35); font-family:'DM Sans',sans-serif; font-size:14px;
 }
 .empty-bills .empty-icon { font-size:36px; margin-bottom:10px; }
 
-/* ── Manpower (SSC) embed styles — original light theme ── */
+/* ── Manpower (SSC) embed styles — original light theme, kept as-is ── */
 .ssc-page {
   padding: 24px;
   background: #f4f6f8;
@@ -598,11 +602,11 @@ const css = `
 .dummy-form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
 .dummy-form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
 .dummy-field { display:flex; flex-direction:column; gap:6px; }
-.dummy-field label { font-family:'Syne',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.38); }
+.dummy-field label { font-family:'Syne',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:rgba(20,30,70,0.42); }
 .dummy-note {
-  background:rgba(251,191,36,0.07); border:1px solid rgba(251,191,36,0.2);
+  background:rgba(217,119,6,0.06); border:1px solid rgba(217,119,6,0.18);
   border-radius:12px; padding:12px 16px; margin-top:8px;
-  font-family:'DM Sans',sans-serif; font-size:13px; color:rgba(251,191,36,0.8);
+  font-family:'DM Sans',sans-serif; font-size:13px; color:#b45309;
 }
 `;
 
@@ -1117,7 +1121,565 @@ p.para.indent{text-indent:20px;}
 }
 
 
+/* ─── Other Expenses Proceedings PDF ── */
+function generateOtherExpensesPDF(formData, project) {
+  const td = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit", month: "2-digit", year: "numeric"
+  }).replace(/\//g, ".");
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(formData.amount));
+  const amountIncludingThis = project.amountIncurredSoFar + Number(formData.amount);
+  const purchaseOf = formData.purchaseOf || "other items";
 
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Other Expenses Proceedings – ${project.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Times New Roman",serif;font-size:18px;background:#f0f0f0;color:#000;padding:30px 0;}
+.page{width:210mm;min-height:297mm;padding:22mm 22mm 22mm 22mm;background:#fff;margin:0 auto 30px auto;box-shadow:0 2px 16px rgba(0,0,0,0.18);position:relative;}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;margin:0;}.print-btn{display:none;}}
+.print-btn{position:fixed;top:12px;right:12px;padding:8px 18px;background:#1565c0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-family:sans-serif;z-index:9999;}
+.hdr-wrap{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.hdr-logo{width:80px;height:80px;flex-shrink:0;}
+.hdr-text{text-align:center;flex:1;}
+.hdr-text .dept{font-size:16px;font-weight:bold;letter-spacing:0.6px;}
+.hdr-text .college{font-size:16px;font-weight:bold;}
+.hdr-text .univ{font-size:16px;font-weight:bold;}
+.meta-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:4px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #000;font-size:18px;}
+.meta-row strong{font-size:18px;}
+.proc-line{display:flex;justify-content:space-between;margin:5px 0;font-size:18px;}
+.section-gap{margin-top:18px;}
+.sub-ref-table{width:100%;border-collapse:collapse;margin:5px 0;}
+.sub-ref-table td{padding:3px 0;vertical-align:top;font-size:18px;}
+.sub-ref-table td:first-child{width:50px;font-weight:bold;}
+.stars{text-align:center;margin:3px 0;font-size:13px;font-weight:bold;}
+p.para{text-align:justify;line-height:1.6;margin:8px 0;font-size:18px;}
+p.para.indent{text-indent:20px;}
+.committed-section{width:80%;margin:10px auto;font-family:"Times New Roman",serif;font-size:18px;}
+.commit-header{display:grid;grid-template-columns:20px 1fr 180px;margin-bottom:8px;}
+.committed-title{text-align:center;font-weight:bold;}
+.commit-row{display:grid;grid-template-columns:20px 1fr 180px;margin:8px 0;align-items:start;}
+.commit-amount{text-align:center;}
+.sanction-reg{font-size:18px;margin:12px 0;}
+.sanction-reg .underline-box{display:inline-block;border-bottom:1px solid #000;min-width:60px;}
+.hod-sig{text-align:right;font-weight:bold;font-size:15px;margin-top:45px;margin-bottom:8px;}
+.to-section{font-size:18px;line-height:1.4;}
+.copy-section{font-size:18px;margin-top:12px;}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+<div class="page">
+  <div class="hdr-wrap">
+    <img class="hdr-logo" src="src/assets/anna-university-logo.png" alt="AU Logo" />
+    <div class="hdr-text">
+      <div class="dept">DEPARTMENT OF ${project.departmentFull.replace("Department of","").trim().toUpperCase()}</div>
+      <div class="college">COLLEGE OF ENGINEERING, GUINDY</div>
+      <div class="univ">ANNA UNIVERSITY, CHENNAI – 25</div>
+    </div>
+  </div>
+  <div class="meta-row">
+    <strong>Professor &amp; Head</strong>
+    <span>Phone: 2235 7744</span>
+  </div>
+  <div class="proc-line">
+    <span>Proceeding No. ${formData.proceedingNo}</span>
+    <span>Date: ${td}</span>
+  </div>
+  <div class="section-gap"></div>
+  <table class="sub-ref-table">
+    <tr>
+      <td>Sub:</td>
+      <td>${project.departmentFull.replace("Department of","").trim()} – ${formData.divisionLabel || "R&AC"} – ${project.scheme} - Purchase of ${purchaseOf} – Sanction Accorded – Reg.</td>
+    </tr>
+    <tr>
+      <td>Ref:</td>
+      <td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td>
+    </tr>
+  </table>
+  <div class="stars">*****</div>
+  <p class="para indent">
+    The ${formData.sanctioningAuthority || "Director of Technical Education (DoTE), Chennai"} has sanctioned a project titled
+    "<strong>${project.title}</strong>" at a total cost of Rs.${Number(project.sanctionedAmount).toLocaleString("en-IN")}/-
+    under ${project.scheme} Scheme – Project No. ${project.projectNo} to
+    <strong>${project.pi}, ${project.piDesignation}</strong>, ${project.departmentFull}, ${project.campus}, Anna University, Chennai.
+  </p>
+  <p class="para indent">
+    Sanction is hereby accorded to incur an expenditure not exceeding a sum of
+    <strong>Rs. ${Number(formData.amount).toLocaleString("en-IN")} /-
+    (Rupees ${toIndianWords(Number(formData.amount))})</strong>
+    towards the purchase of ${purchaseOf} in connection with the project work.
+  </p>
+  <p class="para" style="text-align:center;">
+    The Payment may be made to <strong><u>M/s. ${formData.vendorName || "______"} ${formData.vendorCity ? "– " + formData.vendorCity : ""}</u></strong>
+  </p>
+  <p class="para indent">
+    The expenditure is debitable under the Head of Account "M. H. No.${formData.mhNo || "16.1.17"} –
+    ${formData.sanctioningAuthority || "Directorate of Technical Education (DoTE), Chennai"},
+    Project – "<strong>${project.title}</strong>" -
+    Other Expenses for the year ${formData.financialYear || "2025 – 26"}.
+  </p>
+  <div class="committed-section">
+    <div class="commit-header">
+      <span></span><span></span>
+      <span class="committed-title">Committed</span>
+    </div>
+    <div class="commit-row">
+      <span style="font-size:22px;">•</span>
+      <span>Budget Allotment in BE/RE</span>
+      <span class="commit-amount">Rs. ${Number(project.budgetAllotment).toLocaleString("en-IN")}/-</span>
+    </div>
+    <div class="commit-row">
+      <span style="font-size:22px;">•</span>
+      <span>Amount incurred so far<br>(Including this proceeding)</span>
+      <span class="commit-amount">Rs. ${Number(amountIncludingThis).toLocaleString("en-IN")}/-</span>
+    </div>
+    <div class="commit-row">
+      <span></span>
+      <span>Balance amount available</span>
+      <span class="commit-amount">Rs. ${Number(balance).toLocaleString("en-IN")}/-</span>
+    </div>
+  </div>
+  <p class="sanction-reg">
+    The sanction amount has been entered in Sanction Register Vide Page No.
+    <span class="underline-box">&nbsp;${formData.sanctionPageNo || "______"}&nbsp;</span>
+    &nbsp; Sl. No. <span class="underline-box">&nbsp;${formData.sanctionSlNo || "______"}&nbsp;</span>
+    &nbsp; Vol. &nbsp;&nbsp;&nbsp; for the year ${formData.financialYear || "2025 - 26"}.
+  </p>
+  <div class="hod-sig">HOD (${project.department.toUpperCase()})</div>
+  <div class="to-section">
+    <div>To</div>
+    <div>${project.pi},</div>
+    <div>${project.piDesignation},</div>
+    <div>${formData.divisionLabel ? formData.divisionLabel + " Division," : ""}</div>
+    <div>${project.departmentFull},</div>
+    <div>Chennai – 600 025</div>
+  </div>
+  <div class="copy-section">Copy to: Bill</div>
+</div>
+</body></html>`;
+}
+
+
+/* ─── Travel Claim Proceedings PDF ── */
+/* ─── Travel Claim Proceedings PDF ── */
+/* ─── Travel Proceedings PDF ── */
+function generateTravelPDF(formData, project) {
+  const td = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit", month: "2-digit", year: "numeric"
+  }).replace(/\//g, ".");
+
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(formData.amount));
+  const amountIncludingThis = project.amountIncurredSoFar + Number(formData.amount);
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Travel Proceedings – ${project.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Times New Roman",serif;font-size:18px;background:#f0f0f0;color:#000;padding:30px 0;}
+.page{width:210mm;min-height:297mm;padding:22mm 22mm 22mm 22mm;background:#fff;margin:0 auto 30px auto;
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);position:relative;}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;margin:0;}
+  .print-btn{display:none;}}
+.print-btn{position:fixed;top:12px;right:12px;padding:8px 18px;background:#1565c0;color:#fff;
+  border:none;border-radius:4px;cursor:pointer;font-size:13px;font-family:sans-serif;z-index:9999;}
+.hdr-wrap{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.hdr-logo{width:80px;height:80px;flex-shrink:0;}
+.hdr-text{text-align:center;flex:1;}
+.hdr-text .dept{font-size:16px;font-weight:bold;letter-spacing:0.6px;}
+.hdr-text .college{font-size:16px;font-weight:bold;}
+.hdr-text .univ{font-size:16px;font-weight:bold;}
+.meta-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:4px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #000;font-size:18px;}
+.meta-row strong{font-size:18px;}
+.proc-line{display:flex;justify-content:space-between;margin:5px 0;font-size:18px;}
+.section-gap{margin-top:18px;}
+.sub-ref-table{width:100%;border-collapse:collapse;margin:5px 0;}
+.sub-ref-table td{padding:3px 0;vertical-align:top;font-size:18px;}
+.sub-ref-table td:first-child{width:50px;font-weight:bold;}
+.stars{text-align:center;margin:3px 0;font-size:13px;font-weight:bold;}
+p.para{text-align:justify;line-height:1.6;margin:8px 0;font-size:18px;}
+p.para.indent{text-indent:20px;}
+.committed-section{width:80%;margin:10px auto;font-family:"Times New Roman",serif;font-size:18px;}
+.commit-header{display:grid;grid-template-columns:20px 1fr 180px;margin-bottom:8px;}
+.committed-title{text-align:center;font-weight:bold;}
+.commit-row{display:grid;grid-template-columns:20px 1fr 180px;margin:8px 0;align-items:start;}
+.commit-amount{text-align:center;}
+.sanction-reg{font-size:18px;margin:12px 0;}
+.sanction-reg .underline-box{display:inline-block;border-bottom:1px solid #000;min-width:60px;}
+.cert-block{font-size:18px;margin:18px 0;text-align:justify;line-height:1.6;}
+.cert-block .cert-title{font-weight:bold;text-decoration:underline;margin-bottom:6px;}
+.hod-sig{text-align:right;font-weight:bold;font-size:15px;margin-top:45px;margin-bottom:8px;}
+.to-section{font-size:18px;line-height:1.4;}
+.copy-section{font-size:18px;margin-top:12px;}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+<div class="page">
+  <div class="hdr-wrap">
+    <img class="hdr-logo" src="src/assets/anna-university-logo.png" alt="AU Logo" />
+    <div class="hdr-text">
+      <div class="dept">DEPARTMENT OF ${project.departmentFull.replace("Department of","").trim().toUpperCase()}</div>
+      <div class="college">COLLEGE OF ENGINEERING, GUINDY</div>
+      <div class="univ">ANNA UNIVERSITY, CHENNAI – 25</div>
+    </div>
+  </div>
+  <div class="meta-row">
+    <strong>Professor &amp; Head</strong>
+    <span>Phone: 2235 7744</span>
+  </div>
+  <div class="proc-line">
+    <span>Proceeding No. ${formData.proceedingNo}</span>
+    <span>Date: ${td}</span>
+  </div>
+  <div class="section-gap"></div>
+  <table class="sub-ref-table">
+    <tr>
+      <td>Sub:</td>
+      <td>${project.departmentFull.replace("Department of","").trim()} – ${formData.divisionLabel || project.scheme} - Towards travelling expenses in connection with travel by ${formData.modeOfTravel || "own car"} – Amount sanctioned – Reg.</td>
+    </tr>
+    <tr>
+      <td>Ref:</td>
+      <td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td>
+    </tr>
+  </table>
+  <div class="stars">*****</div>
+
+  <p class="para indent">
+    Sanction is hereby accorded for an amount of <strong>Rs.${Number(formData.amount).toLocaleString("en-IN")}/-
+    (Rupees ${toIndianWords(Number(formData.amount))})</strong> towards travelling allowance by
+    ${formData.modeOfTravel || "own car"}${formData.vehicleNo ? ` (No.${formData.vehicleNo})` : ""} and DA charges on
+    <strong>${formData.travelDate}${formData.duration ? ` (${formData.duration})` : ""}</strong> from
+    <strong>${formData.fromPlace || "Chennai"}</strong> to <strong>${formData.toPlace}</strong> and return back to
+    ${formData.fromPlace || "Chennai"} in connection with ${formData.purpose || "field work"} under
+    ${project.scheme} project no.${project.projectNo} entitled "<strong>${project.title}</strong>".
+  </p>
+
+  <p class="para indent">
+    The Neft transfer made in favour of "<strong>${formData.payeeName}</strong>".
+  </p>
+
+  <p class="para indent">
+    Necessary entries have been made in the Sanction register vide Page no.
+    <span class="underline-box">&nbsp;${formData.sanctionPageNo || "______"}&nbsp;</span>
+    Sl no. <span class="underline-box">&nbsp;${formData.sanctionSlNo || "______"}&nbsp;</span>
+  </p>
+
+  <p class="para indent">
+    This expenditure is debitable under the Head of Account – "<strong>${formData.headOfAccount || "Travel"}</strong>".
+  </p>
+
+  <div class="committed-section">
+    <div class="commit-header">
+      <span></span><span></span>
+      <span class="committed-title">Committed</span>
+    </div>
+    <div class="commit-row">
+      <span style="font-size:22px;">•</span>
+      <span>Budget Allotment in BE/RE</span>
+      <span class="commit-amount">Rs. ${Number(project.budgetAllotment).toLocaleString("en-IN")}/-</span>
+    </div>
+    <div class="commit-row">
+      <span style="font-size:22px;">•</span>
+      <span>Amount incurred so far<br>(Including this proceeding)</span>
+      <span class="commit-amount">Rs. ${Number(amountIncludingThis).toLocaleString("en-IN")}/-</span>
+    </div>
+    <div class="commit-row">
+      <span></span>
+      <span>Balance amount available</span>
+      <span class="commit-amount">Rs. ${Number(balance).toLocaleString("en-IN")}/-</span>
+    </div>
+  </div>
+
+  <div class="hod-sig">
+    DIRECTOR<br/>
+    Centre for Sponsored Research and Consultancy<br/>
+    Anna University, Chennai – 600 025.
+  </div>
+
+  <div class="to-section">
+    <div>To</div>
+    <div>The Bill</div>
+  </div>
+
+  <div class="cert-block">
+    <div class="cert-title">Certificate</div>
+    It is certified that the amount paid towards travelling allowance by ${formData.modeOfTravel || "own car"} and DA
+    charges in connection with ${formData.purpose || "field work"} under ${project.scheme} project.
+    ${formData.startKm && formData.endKm ? `<br/>Starting reading: ${formData.startKm} &nbsp;&nbsp; Closing reading: ${formData.endKm}
+    &nbsp;&nbsp; Total: <strong>${Number(formData.endKm) - Number(formData.startKm)} Km.</strong>` : ""}
+  </div>
+
+  <div class="hod-sig">
+    DIRECTOR<br/>
+    Centre for Sponsored Research and Consultancy<br/>
+    Anna University, Chennai – 600 025.
+  </div>
+
+</div>
+</body></html>`;
+}
+
+/* ─── Contingency Proceedings PDF ── */
+function generateContingencyPDF(formData, project) {
+  const td = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit", month: "2-digit", year: "numeric"
+  }).replace(/\//g, ".");
+
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(formData.amount));
+  const amountIncludingThis = project.amountIncurredSoFar + Number(formData.amount);
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Contingency Proceedings – ${project.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Times New Roman",serif;font-size:18px;background:#f0f0f0;color:#000;padding:30px 0;}
+.page{width:210mm;min-height:297mm;padding:22mm 22mm 22mm 22mm;background:#fff;margin:0 auto 30px auto;
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);position:relative;}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;margin:0;}
+  .print-btn{display:none;}}
+.print-btn{position:fixed;top:12px;right:12px;padding:8px 18px;background:#1565c0;color:#fff;
+  border:none;border-radius:4px;cursor:pointer;font-size:13px;font-family:sans-serif;z-index:9999;}
+.hdr-wrap{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.hdr-logo{width:80px;height:80px;flex-shrink:0;}
+.hdr-text{text-align:center;flex:1;}
+.hdr-text .dept{font-size:16px;font-weight:bold;letter-spacing:0.6px;}
+.hdr-text .college{font-size:16px;font-weight:bold;}
+.hdr-text .univ{font-size:16px;font-weight:bold;}
+.meta-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:4px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #000;font-size:18px;}
+.meta-row strong{font-size:18px;}
+.proc-line{display:flex;justify-content:space-between;margin:5px 0;font-size:18px;}
+.section-gap{margin-top:18px;}
+.sub-ref-table{width:100%;border-collapse:collapse;margin:5px 0;}
+.sub-ref-table td{padding:3px 0;vertical-align:top;font-size:18px;}
+.sub-ref-table td:first-child{width:50px;font-weight:bold;}
+.stars{text-align:center;margin:3px 0;font-size:13px;font-weight:bold;}
+p.para{text-align:justify;line-height:1.6;margin:8px 0;font-size:18px;}
+p.para.indent{text-indent:20px;}
+.committed-section{width:80%;margin:10px auto;font-family:"Times New Roman",serif;font-size:18px;}
+.commit-header{display:grid;grid-template-columns:20px 1fr 180px;margin-bottom:8px;}
+.committed-title{text-align:center;font-weight:bold;}
+.commit-row{display:grid;grid-template-columns:20px 1fr 180px;margin:8px 0;align-items:start;}
+.commit-amount{text-align:center;}
+.sanction-reg{font-size:18px;margin:12px 0;}
+.sanction-reg .underline-box{display:inline-block;border-bottom:1px solid #000;min-width:60px;}
+.hod-sig{text-align:right;font-weight:bold;font-size:15px;margin-top:45px;margin-bottom:8px;}
+.to-section{font-size:18px;line-height:1.4;}
+.copy-section{font-size:18px;margin-top:12px;}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+<div class="page">
+  <div class="hdr-wrap">
+    <img class="hdr-logo" src="src/assets/anna-university-logo.png" alt="AU Logo" />
+    <div class="hdr-text">
+      <div class="dept">DEPARTMENT OF ${project.departmentFull.replace("Department of","").trim().toUpperCase()}</div>
+      <div class="college">COLLEGE OF ENGINEERING, GUINDY</div>
+      <div class="univ">ANNA UNIVERSITY, CHENNAI – 25</div>
+    </div>
+  </div>
+  <div class="meta-row">
+    <strong>Professor &amp; Head</strong>
+    <span>Phone: 2235 7744</span>
+  </div>
+  <div class="proc-line">
+    <span>Proceeding No. ${formData.proceedingNo}</span>
+    <span>Date: ${td}</span>
+  </div>
+  <div class="section-gap"></div>
+  <table class="sub-ref-table">
+    <tr>
+      <td>Sub:</td>
+      <td>${project.departmentFull.replace("Department of","").trim()} – ${formData.divisionLabel || "R&AC"} – ${project.scheme} - Purchase of ${formData.itemDescription || "contingency items"} – Sanction Accorded – Reg.</td>
+    </tr>
+    <tr>
+      <td>Ref:</td>
+      <td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td>
+    </tr>
+  </table>
+  <div class="stars">*****</div>
+  <p class="para indent">
+    The ${formData.sanctioningAuthority || "Director of Technical Education (DoTE), Chennai"} has sanctioned a project titled
+    "<strong>${project.title}</strong>" at a total cost of Rs.${Number(project.sanctionedAmount).toLocaleString("en-IN")}/-
+    under ${project.scheme} Scheme – Project No. ${project.projectNo} to
+    <strong>${project.pi}, ${project.piDesignation}</strong>, ${project.departmentFull}, ${project.campus}, Anna University, Chennai.
+  </p>
+  <p class="para indent">
+    Sanction is hereby accorded to incur an expenditure not exceeding a sum of
+    <strong>Rs. ${Number(formData.amount).toLocaleString("en-IN")} /-
+    (Rupees ${toIndianWords(Number(formData.amount))})</strong>
+    towards the purchase of ${formData.itemDescription || "contingency items"} in connection with the project work.
+  </p>
+  <p class="para indent">
+    The expenditure is debitable under the Head of Account "M. H. No.${formData.mhNo || "16.1.17"} –
+    ${formData.sanctioningAuthority || "Directorate of Technical Education (DoTE), Chennai"},
+    Project – "<strong>${project.title}</strong>" -
+    Recurring - Contingency for the year ${formData.financialYear || "2025 – 26"}.
+  </p>
+  <div class="committed-section">
+    <div class="commit-header">
+      <span></span><span></span>
+      <span class="committed-title">Committed</span>
+    </div>
+    <div class="commit-row">
+      <span style="font-size:22px;">•</span>
+      <span>Budget Allotment in BE/RE</span>
+      <span class="commit-amount">Rs. ${Number(project.budgetAllotment).toLocaleString("en-IN")}/-</span>
+    </div>
+    <div class="commit-row">
+      <span style="font-size:22px;">•</span>
+      <span>Amount incurred so far<br>(Including this proceeding)</span>
+      <span class="commit-amount">Rs. ${Number(amountIncludingThis).toLocaleString("en-IN")}/-</span>
+    </div>
+    <div class="commit-row">
+      <span></span>
+      <span>Balance amount available</span>
+      <span class="commit-amount">Rs. ${Number(balance).toLocaleString("en-IN")}/-</span>
+    </div>
+  </div>
+  <p class="sanction-reg">
+    The sanction amount has been entered in Sanction Register Vide Page No.
+    <span class="underline-box">&nbsp;${formData.sanctionPageNo || "______"}&nbsp;</span>
+    &nbsp; Sl. No. <span class="underline-box">&nbsp;${formData.sanctionSlNo || "______"}&nbsp;</span>
+    &nbsp; Vol. &nbsp;&nbsp;&nbsp; for the year ${formData.financialYear || "2025 - 26"}.
+  </p>
+  <div class="hod-sig">HOD (${project.department.toUpperCase()})</div>
+  <div class="to-section">
+    <div>To</div>
+    <div>${project.pi},</div>
+    <div>${project.piDesignation},</div>
+    <div>${formData.divisionLabel ? formData.divisionLabel + " Division," : ""}</div>
+    <div>${project.departmentFull},</div>
+    <div>Chennai – 600 025</div>
+  </div>
+  <div class="copy-section">Copy to: Bill</div>
+</div>
+</body></html>`;
+}
+
+
+/* ─── Non-Recurring (Equipment) Proceedings PDF ── */
+function generateNonRecurringPDF(formData, project) {
+  const td = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit", month: "2-digit", year: "numeric"
+  }).replace(/\//g, ".");
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(formData.amount));
+  const amountIncludingThis = project.amountIncurredSoFar + Number(formData.amount);
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Equipment Proceedings – ${project.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Times New Roman",serif;font-size:18px;background:#f0f0f0;color:#000;padding:30px 0;}
+.page{width:210mm;min-height:297mm;padding:22mm 22mm 22mm 22mm;background:#fff;margin:0 auto 30px auto;box-shadow:0 2px 16px rgba(0,0,0,0.18);position:relative;}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;margin:0;}.print-btn{display:none;}}
+.print-btn{position:fixed;top:12px;right:12px;padding:8px 18px;background:#1565c0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;font-family:sans-serif;z-index:9999;}
+.hdr-wrap{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.hdr-logo{width:80px;height:80px;flex-shrink:0;}
+.hdr-text{text-align:center;flex:1;}
+.hdr-text .dept{font-size:16px;font-weight:bold;letter-spacing:0.6px;}
+.hdr-text .college{font-size:16px;font-weight:bold;}
+.hdr-text .univ{font-size:16px;font-weight:bold;}
+.hod-name{font-size:18px;font-weight:bold;margin-top:6px;}
+.meta-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:2px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #000;font-size:18px;}
+.meta-row strong{font-size:18px;}
+.proc-line{display:flex;justify-content:space-between;margin:5px 0;font-size:18px;}
+.section-gap{margin-top:18px;}
+.sub-ref-table{width:100%;border-collapse:collapse;margin:5px 0;}
+.sub-ref-table td{padding:3px 0;vertical-align:top;font-size:18px;}
+.sub-ref-table td:first-child{width:50px;font-weight:bold;}
+.stars{text-align:center;margin:3px 0;font-size:13px;font-weight:bold;}
+p.para{text-align:justify;line-height:1.6;margin:8px 0;font-size:18px;}
+p.para.indent{text-indent:20px;}
+.bullet-section{margin:14px 0 10px 0;font-size:18px;}
+.bullet-row{display:flex;align-items:flex-start;margin:10px 0;}
+.bullet-dot{margin-right:12px;font-size:22px;line-height:1;}
+.bullet-label{flex:1;}
+.bullet-dots{display:inline-block;border-bottom:1px solid #000;width:220px;margin-left:8px;vertical-align:bottom;}
+.sanction-reg{font-size:18px;margin:12px 0;}
+.sanction-reg .underline-box{display:inline-block;border-bottom:1px solid #000;min-width:60px;}
+.hod-sig{text-align:right;font-weight:bold;font-size:18px;margin-top:45px;margin-bottom:8px;}
+.to-section{font-size:18px;line-height:1.6;}
+.copy-section{font-size:18px;margin-top:10px;}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+<div class="page">
+  <div class="hdr-wrap">
+    <img class="hdr-logo" src="src/assets/anna-university-logo.png" alt="AU Logo" />
+    <div class="hdr-text">
+      <div class="dept">DEPARTMENT OF ${project.departmentFull.replace("Department of","").trim().toUpperCase()}</div>
+      <div class="college">COLLEGE OF ENGINEERING, GUINDY</div>
+      <div class="univ">ANNA UNIVERSITY, CHENNAI – 25</div>
+    </div>
+  </div>
+  <div class="hod-name">${formData.hodName || ""}</div>
+  <div class="meta-row">
+    <strong>Professor &amp; Head</strong>
+    <span>Phone: 2235 7744</span>
+  </div>
+  <div class="proc-line">
+    <span>Proc.No. ${formData.proceedingNo}</span>
+    <span>Date: ${td}</span>
+  </div>
+  <div class="section-gap"></div>
+  <table class="sub-ref-table">
+    <tr>
+      <td>Sub:</td>
+      <td>${project.departmentFull.replace("Department of","").trim()} – ${formData.divisionLabel || "R&AC"} – ${project.scheme} - Purchase of ${formData.equipmentName || "Equipment"} – Sanction Accorded – Reg.</td>
+    </tr>
+    <tr>
+      <td>Ref:</td>
+      <td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td>
+    </tr>
+  </table>
+  <div class="stars">*****</div>
+  <p class="para indent">
+    The ${formData.sanctioningAuthority || "Director of Technical Education (DoTE), Chennai"} has sanctioned a project titled
+    "<strong>${project.title}</strong>" at a total cost of Rs.${Number(project.sanctionedAmount).toLocaleString("en-IN")}/-
+    under ${project.scheme} Scheme – Project No. ${project.projectNo} to
+    <strong>${project.pi}, ${project.piDesignation}</strong>, ${project.departmentFull}, ${project.campus}, Anna University, Chennai.
+  </p>
+  <p class="para indent">
+    Sanction is hereby accorded to incur an expenditure not exceeding a sum of
+    <strong>Rs.${Number(formData.amount).toLocaleString("en-IN")}/-. 
+    (Rupees ${toIndianWords(Number(formData.amount))})</strong> towards the procurement
+    of "<strong>${formData.equipmentName || "Equipment"}</strong>" in connection with the project work.
+  </p>
+  <p class="para" style="text-align:center;">
+    The Payment may be made in favour of <strong><u>M/s. ${formData.vendorName || "______"}</u></strong>
+  </p>
+  <p class="para indent">
+    The expenditure is debitable under the Head of Account "M. H. No.${formData.mhNo || "16.1.17"} –
+    ${formData.sanctioningAuthority || "Directorate of Technical Education (DoTE), Chennai"},
+    Project – "<strong>${project.title}</strong>" -
+    Non-Recurring for the year ${formData.financialYear || "2025 – 26"}.
+  </p>
+  <div class="bullet-section">
+    <div class="bullet-row">
+      <span class="bullet-dot">•</span>
+      <span class="bullet-label">Budget Allotment in BE/RE <span class="bullet-dots"></span></span>
+    </div>
+    <div class="bullet-row">
+      <span class="bullet-dot">•</span>
+      <span class="bullet-label">Amount incurred so far<br>&nbsp;&nbsp;&nbsp;(Including this proceeding) <span class="bullet-dots"></span></span>
+    </div>
+    <div class="bullet-row">
+      <span class="bullet-dot" style="visibility:hidden;">•</span>
+      <span class="bullet-label">Balance amount available <span class="bullet-dots"></span></span>
+    </div>
+  </div>
+  <p class="sanction-reg">
+    The sanction amount has been entered in Sanction Register Vide Page No.
+    <span class="underline-box">&nbsp;${formData.sanctionPageNo || "______"}&nbsp;</span>
+    &nbsp; Sl. No. <span class="underline-box">&nbsp;${formData.sanctionSlNo || "______"}&nbsp;</span>
+    for the year ${formData.financialYear || "2025 - 26"}.
+  </p>
+  <div class="hod-sig">HOD (${project.department.toUpperCase()})</div>
+  <div class="to-section">
+    <div>To</div>
+    <div>The Professor and Head,</div>
+    <div>${formData.divisionLabel ? formData.divisionLabel + " Division," : ""}</div>
+    <div>${project.departmentFull},</div>
+    <div>Chennai – 600 025</div>
+  </div>
+  <div class="copy-section">Copy to: Bill</div>
+</div>
+</body></html>`;
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    SUB COMPONENTS
@@ -1508,32 +2070,36 @@ const handleSubmit = () => {
   };
 
   // CSS for this light-theme form
+  // CSS for this light-theme form
   const formCSS = `
     .cons-page { padding: 0; }
     .cons-header { margin-bottom: 24px; }
-    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: rgba(255,255,255,0.92); margin: 0 0 6px; }
-    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(255,255,255,0.45); margin: 0; }
+    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: #111827; margin: 0 0 6px; }
+    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(20,30,70,0.45); margin: 0; }
 
     .cons-section {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.95);
       border-radius: 16px; overflow: hidden; margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 3px 18px rgba(0,0,0,0.05);
     }
     .cons-section-head {
       display: flex; align-items: center; gap: 10px;
       padding: 13px 18px;
-      background: rgba(56,189,248,0.07);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(2,132,199,0.06);
+      border-bottom: 1px solid rgba(0,100,220,0.07);
     }
     .cons-section-head .cs-badge {
       width: 26px; height: 26px; border-radius: 8px;
-      background: rgba(56,189,248,0.18); color: #38bdf8;
+      background: rgba(2,132,199,0.15); color: #0284c7;
       font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
       display: grid; place-items: center;
     }
     .cons-section-head h3 {
       font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
-      color: rgba(255,255,255,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
+      color: rgba(20,30,70,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
     }
     .cons-section-body { padding: 18px; }
 
@@ -1543,43 +2109,44 @@ const handleSubmit = () => {
     .cons-field { display: flex; flex-direction: column; gap: 7px; }
     .cons-field label {
       font-family: 'Syne', sans-serif; font-size: 10px;
-      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(255,255,255,0.38);
+      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(20,30,70,0.42);
       display: flex; align-items: center; gap: 5px;
     }
-    .cons-field label .req { color: #f87171; font-size: 12px; }
+    .cons-field label .req { color: #dc2626; font-size: 12px; }
     .cons-field label .src-badge {
       font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 700;
       letter-spacing: 0.5px;
     }
-    .src-fetch { background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.25); }
-    .src-enter { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
-    .src-auto { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
+    .src-fetch { background: rgba(2,132,199,0.1); color: #0284c7; border: 1px solid rgba(2,132,199,0.22); }
+    .src-enter { background: rgba(124,58,237,0.09); color: #6d28d9; border: 1px solid rgba(124,58,237,0.22); }
+    .src-auto { background: rgba(34,197,94,0.09); color: #16a34a; border: 1px solid rgba(34,197,94,0.18); }
 
     .cons-static {
-      background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.12);
+      background: rgba(2,132,199,0.04); border: 1px solid rgba(2,132,199,0.12);
       border-radius: 10px; padding: 10px 14px;
-      color: rgba(255,255,255,0.65); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      color: rgba(20,30,70,0.68); font-family: 'DM Sans', sans-serif; font-size: 13px;
       line-height: 1.5;
     }
-    .cons-static strong { color: rgba(255,255,255,0.85); }
+    .cons-static strong { color: rgba(20,30,70,0.88); }
 
     .balance-bar {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(0,100,220,0.08);
       border-radius: 14px; padding: 16px 20px; margin-top: 4px;
       display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
     }
     .bal-item { text-align: center; }
     .bal-item .bal-label {
       font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase;
-      letter-spacing: 1px; color: rgba(255,255,255,0.35); margin-bottom: 6px;
+      letter-spacing: 1px; color: rgba(20,30,70,0.4); margin-bottom: 6px;
     }
     .bal-item .bal-val {
       font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
     }
-    .bal-item .bal-val.green { color: #22c55e; }
-    .bal-item .bal-val.yellow { color: #fbbf24; }
-    .bal-item .bal-val.blue { color: #38bdf8; }
-    .bal-item .bal-val.red { color: #f87171; }
+    .bal-item .bal-val.green { color: #16a34a; }
+    .bal-item .bal-val.yellow { color: #b45309; }
+    .bal-item .bal-val.blue { color: #0284c7; }
+    .bal-item .bal-val.red { color: #dc2626; }
 
     .cons-action-row {
       display: flex; justify-content: space-between; align-items: center;
@@ -1587,50 +2154,50 @@ const handleSubmit = () => {
     }
     .cons-action-left { display: flex; gap: 10px; }
     .cons-preview-btn {
-      border: 1px solid rgba(56,189,248,0.35); background: rgba(56,189,248,0.1);
-      color: #38bdf8; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      border: 1px solid rgba(2,132,199,0.3); background: rgba(2,132,199,0.08);
+      color: #0284c7; border-radius: 12px; padding: 11px 22px; cursor: pointer;
       font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
       display: flex; align-items: center; gap: 7px;
     }
-    .cons-preview-btn:hover { background: rgba(56,189,248,0.2); transform: translateY(-1px); }
+    .cons-preview-btn:hover { background: rgba(2,132,199,0.16); transform: translateY(-1px); }
     .cons-download-btn {
-      border: 1px solid rgba(34,197,94,0.35); background: rgba(34,197,94,0.1);
-      color: #22c55e; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
+      color: #16a34a; border-radius: 12px; padding: 11px 22px; cursor: pointer;
       font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
       display: flex; align-items: center; gap: 7px;
     }
-    .cons-download-btn:hover { background: rgba(34,197,94,0.2); transform: translateY(-1px); }
+    .cons-download-btn:hover { background: rgba(34,197,94,0.16); transform: translateY(-1px); }
     .cons-submit-btn {
       border: none; border-radius: 12px; padding: 12px 28px;
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
       cursor: pointer; font-size: 14px; transition: 0.2s;
-      box-shadow: 0 8px 22px rgba(34,197,94,0.25);
+      box-shadow: 0 8px 22px rgba(34,197,94,0.22);
       display: flex; align-items: center; gap: 7px;
     }
-    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.35); }
+    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.3); }
 
     /* Preview overlay */
     .cons-preview-overlay {
       position: fixed; inset: 0; z-index: 2000000;
-      background: rgba(0,0,0,0.88);
+      background: rgba(15,23,42,0.6);
       display: flex; align-items: flex-start; justify-content: center;
       padding: 14px 20px;
     }
     .cons-preview-box {
       width: min(920px,96vw); height: calc(100vh - 28px);
-      background: #111827; border-radius: 16px; overflow: hidden;
+      background: #ffffff; border-radius: 16px; overflow: hidden;
       display: flex; flex-direction: column;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+      border: 1px solid rgba(0,100,220,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
     }
     .cons-preview-head {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 18px; background: #0f172a;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 18px; background: #ffffff;
+      border-bottom: 1px solid rgba(0,100,220,0.08);
       flex-shrink: 0;
     }
-    .cons-preview-head span { color: rgba(255,255,255,0.7); font-family: 'DM Sans',sans-serif; font-size: 13px; }
+    .cons-preview-head span { color: rgba(20,30,70,0.72); font-family: 'DM Sans',sans-serif; font-size: 13px; }
     .cons-preview-head div { display: flex; gap: 8px; }
     .cons-preview-head button {
       border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
@@ -1638,7 +2205,7 @@ const handleSubmit = () => {
     }
     .cons-preview-head .btn-dl { background: #22c55e; color: #fff; }
     .cons-preview-head .btn-cl { background: #ef4444; color: #fff; }
-.cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+    .cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
 
     @media (max-width: 768px) {
       .cons-grid-2, .cons-grid-3 { grid-template-columns: 1fr; }
@@ -1875,6 +2442,1212 @@ const handleSubmit = () => {
   );
 }
 
+/* ── Travel Claim Page ── */
+/* ── Travel Claim Page ── */
+/* ── Travel Claim Page ── */
+function TravelPage({ project, onSubmit, onBack }) {
+  const [data, setData] = useState({
+    proceedingNo: "", amount: "", modeOfTravel: "own car", vehicleNo: "",
+    travelDate: "", duration: "One day", fromPlace: "Chennai", toPlace: "",
+    purpose: "Data collection field work", payeeName: "",
+    headOfAccount: "Travel", divisionLabel: "",
+    startKm: "", endKm: "",
+    sanctionPageNo: "", sanctionSlNo: "",
+  });
+  const [preview, setPreview] = useState(false);
+  const [previewHTML, setPreviewHTML] = useState(null);
+  const set = (k, v) => setData(p => ({ ...p, [k]: v }));
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(data.amount || 0));
+
+  const validate = () => {
+    if (!data.proceedingNo || !data.amount || !data.toPlace || !data.travelDate || !data.payeeName) {
+      alert("Please fill Proceeding No., Amount, Destination, Travel Date and Payee Name.");
+      return false;
+    }
+    return true;
+  };
+
+  const handlePreview = () => {
+    if (!validate()) return;
+    setPreviewHTML(generateTravelPDF(data, project));
+    setPreview(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDownload = async () => {
+    if (!validate()) return;
+    const html = generateTravelPDF(data, project);
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.open(); iframe.contentDocument.write(html); iframe.contentDocument.close();
+    await new Promise(r => setTimeout(r, 800));
+    const page = iframe.contentDocument.querySelector(".page");
+    const canvas = await html2canvas(page, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: 794, windowHeight: 1123 });
+    document.body.removeChild(iframe);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pw = 210; const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pw, Math.min(ph, 297));
+    pdf.save(`Travel_Proceedings_${project.id}.pdf`);
+  };
+
+  const handleSubmit = () => {
+    if (!validate()) return;
+    const reportHTML = generateTravelPDF(data, project);
+    onSubmit({ ...data, _reportHTML: reportHTML }, "Travel");
+  };
+
+  const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+
+  // CSS for this light-theme form
+  const formCSS = `
+    .cons-page { padding: 0; }
+    .cons-header { margin-bottom: 24px; }
+    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: #111827; margin: 0 0 6px; }
+    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(20,30,70,0.45); margin: 0; }
+
+    .cons-section {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 16px; overflow: hidden; margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 3px 18px rgba(0,0,0,0.05);
+    }
+    .cons-section-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px;
+      background: rgba(2,132,199,0.06);
+      border-bottom: 1px solid rgba(0,100,220,0.07);
+    }
+    .cons-section-head .cs-badge {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(2,132,199,0.15); color: #0284c7;
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
+      display: grid; place-items: center;
+    }
+    .cons-section-head h3 {
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+      color: rgba(20,30,70,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .cons-section-body { padding: 18px; }
+
+    .cons-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cons-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .cons-grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .cons-field { display: flex; flex-direction: column; gap: 7px; }
+    .cons-field label {
+      font-family: 'Syne', sans-serif; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(20,30,70,0.42);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .cons-field label .req { color: #dc2626; font-size: 12px; }
+    .cons-field label .src-badge {
+      font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .src-fetch { background: rgba(2,132,199,0.1); color: #0284c7; border: 1px solid rgba(2,132,199,0.22); }
+    .src-enter { background: rgba(124,58,237,0.09); color: #6d28d9; border: 1px solid rgba(124,58,237,0.22); }
+    .src-auto { background: rgba(34,197,94,0.09); color: #16a34a; border: 1px solid rgba(34,197,94,0.18); }
+
+    .cons-static {
+      background: rgba(2,132,199,0.04); border: 1px solid rgba(2,132,199,0.12);
+      border-radius: 10px; padding: 10px 14px;
+      color: rgba(20,30,70,0.68); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      line-height: 1.5;
+    }
+    .cons-static strong { color: rgba(20,30,70,0.88); }
+
+    .balance-bar {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(0,100,220,0.08);
+      border-radius: 14px; padding: 16px 20px; margin-top: 4px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .bal-item { text-align: center; }
+    .bal-item .bal-label {
+      font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(20,30,70,0.4); margin-bottom: 6px;
+    }
+    .bal-item .bal-val {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+    }
+    .bal-item .bal-val.green { color: #16a34a; }
+    .bal-item .bal-val.yellow { color: #b45309; }
+    .bal-item .bal-val.blue { color: #0284c7; }
+    .bal-item .bal-val.red { color: #dc2626; }
+
+    .cons-action-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .cons-action-left { display: flex; gap: 10px; }
+    .cons-preview-btn {
+      border: 1px solid rgba(2,132,199,0.3); background: rgba(2,132,199,0.08);
+      color: #0284c7; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-preview-btn:hover { background: rgba(2,132,199,0.16); transform: translateY(-1px); }
+    .cons-download-btn {
+      border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
+      color: #16a34a; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-download-btn:hover { background: rgba(34,197,94,0.16); transform: translateY(-1px); }
+    .cons-submit-btn {
+      border: none; border-radius: 12px; padding: 12px 28px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
+      cursor: pointer; font-size: 14px; transition: 0.2s;
+      box-shadow: 0 8px 22px rgba(34,197,94,0.22);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.3); }
+
+    /* Preview overlay */
+    .cons-preview-overlay {
+      position: fixed; inset: 0; z-index: 2000000;
+      background: rgba(15,23,42,0.6);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 14px 20px;
+    }
+    .cons-preview-box {
+      width: min(920px,96vw); height: calc(100vh - 28px);
+      background: #ffffff; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(0,100,220,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+    }
+    .cons-preview-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px; background: #ffffff;
+      border-bottom: 1px solid rgba(0,100,220,0.08);
+      flex-shrink: 0;
+    }
+    .cons-preview-head span { color: rgba(20,30,70,0.72); font-family: 'DM Sans',sans-serif; font-size: 13px; }
+    .cons-preview-head div { display: flex; gap: 8px; }
+    .cons-preview-head button {
+      border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+      font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 700;
+    }
+    .cons-preview-head .btn-dl { background: #22c55e; color: #fff; }
+    .cons-preview-head .btn-cl { background: #ef4444; color: #fff; }
+    .cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+    @media (max-width: 768px) {
+      .cons-grid-2, .cons-grid-3 { grid-template-columns: 1fr; }
+      .balance-bar { grid-template-columns: 1fr; }
+    }
+  `;
+
+  return (
+    <>
+      <style>{formCSS}</style>
+      <div className="slip-card cons-page" style={{ animation: "slideIn 0.3s ease" }}>
+        <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
+        <div className="cons-header">
+          <h2>✈️ Travel — Claim Entry</h2>
+          <p>Generate the official sanction proceedings for travel allowance & DA charges</p>
+        </div>
+
+        {/* Section 1: Fetched */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">1</div><h3>Project Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>Auto-fetched</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:14}}>
+              <div className="cons-field"><label>Project Title <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.title}</strong></div></div>
+              <div className="cons-field"><label>Project No. <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.projectNo}</div></div>
+              <div className="cons-field"><label>PI Name & Designation <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.pi}</strong>, {project.piDesignation}</div></div>
+              <div className="cons-field"><label>Scheme <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.scheme}</div></div>
+              <div className="cons-field"><label>Department <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.departmentFull}, {project.campus}</div></div>
+              <div className="cons-field"><label>CSRC Proceedings Ref <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.csrcProcNo} dated {project.csrcProcDate}</div></div>
+              <div className="cons-field"><label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">Rs. {Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</div></div>
+              <div className="cons-field"><label>Date <span className="src-badge src-auto">Auto</span></label><div className="cons-static">{td}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Proceeding details */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">2</div><h3>Proceeding Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>To be entered by user</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Proceeding No. <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 008/ CDTEAT-CMRG/2025-2026" value={data.proceedingNo} onChange={e=>set("proceedingNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Division / Lab Label <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. R&AC, Thermal..." value={data.divisionLabel} onChange={e=>set("divisionLabel",e.target.value)} /></div>
+              <div className="cons-field"><label>Head of Account <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Travel" value={data.headOfAccount} onChange={e=>set("headOfAccount",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Travel details */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(167,139,250,0.18)",color:"#a78bfa"}}>3</div><h3>Travel Details</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-3" style={{gap:16,marginBottom:16}}>
+              <div className="cons-field"><label>From Place <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Chennai" value={data.fromPlace} onChange={e=>set("fromPlace",e.target.value)} /></div>
+              <div className="cons-field"><label>To Place (Destination) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Tanjore" value={data.toPlace} onChange={e=>set("toPlace",e.target.value)} /></div>
+              <div className="cons-field"><label>Mode of Travel <span className="src-badge src-enter">Enter</span></label>
+                <select className="slip-input" value={data.modeOfTravel} onChange={e=>set("modeOfTravel",e.target.value)}>
+                  <option value="own car">Own Car</option>
+                  <option value="own two wheeler">Own Two Wheeler</option>
+                  <option value="train">Train</option>
+                  <option value="bus">Bus</option>
+                  <option value="flight">Flight</option>
+                  <option value="taxi">Taxi</option>
+                </select>
+              </div>
+            </div>
+            <div className="cons-grid-3" style={{gap:16,marginBottom:16}}>
+              <div className="cons-field"><label>Vehicle No. (if own vehicle) <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. TN 14 D 1651" value={data.vehicleNo} onChange={e=>set("vehicleNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Travel Date <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 23.08.2025" value={data.travelDate} onChange={e=>set("travelDate",e.target.value)} /></div>
+              <div className="cons-field"><label>Duration <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. One day" value={data.duration} onChange={e=>set("duration",e.target.value)} /></div>
+            </div>
+            <div className="cons-grid-2" style={{gap:16,marginBottom:16}}>
+              <div className="cons-field" style={{gridColumn:"1 / -1"}}><label>Purpose of Travel <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Data collection field work" value={data.purpose} onChange={e=>set("purpose",e.target.value)} /></div>
+              <div className="cons-field"><label>Amount (₹) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="number" className="slip-input" placeholder="e.g. 9440" value={data.amount} onChange={e=>set("amount",e.target.value)} /></div>
+              <div className="cons-field"><label>Payee Name (NEFT in favour of) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. P. Uma Maheswari" value={data.payeeName} onChange={e=>set("payeeName",e.target.value)} /></div>
+            </div>
+            {data.amount && Number(data.amount) > 0 && (
+              <div className="cons-field" style={{marginBottom:16}}>
+                <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">Rupees <strong>{toIndianWords(Number(data.amount))}</strong></div>
+              </div>
+            )}
+            <div className="balance-bar">
+              <div className="bal-item"><div className="bal-label">Budget Allotment (BE/RE)</div><div className="bal-val blue">₹{Number(project.budgetAllotment).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Incurred (incl. this)</div><div className="bal-val yellow">₹{(project.amountIncurredSoFar+Number(data.amount||0)).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Balance Available</div><div className={`bal-val ${balance>=0?"green":"red"}`}>₹{Math.abs(balance).toLocaleString("en-IN")}{balance<0?" (Over)":""}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Odometer / Certificate */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(251,191,36,0.15)",color:"#fbbf24"}}>4</div><h3>Odometer Readings (for own vehicle)</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Starting Reading (Km) <span className="src-badge src-enter">Enter</span></label><input type="number" className="slip-input" placeholder="e.g. 87236" value={data.startKm} onChange={e=>set("startKm",e.target.value)} /></div>
+              <div className="cons-field"><label>Closing Reading (Km) <span className="src-badge src-enter">Enter</span></label><input type="number" className="slip-input" placeholder="e.g. 87856" value={data.endKm} onChange={e=>set("endKm",e.target.value)} /></div>
+            </div>
+            {data.startKm && data.endKm && Number(data.endKm) > Number(data.startKm) && (
+              <div className="cons-field" style={{marginTop:16}}>
+                <label>Total Distance <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">Total <strong>{Number(data.endKm) - Number(data.startKm)} Km</strong></div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Section 5: Sanction register */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(34,197,94,0.12)",color:"#22c55e"}}>5</div><h3>Sanction Register Entry</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Vide Page No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 34" value={data.sanctionPageNo} onChange={e=>set("sanctionPageNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Sl. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 1" value={data.sanctionSlNo} onChange={e=>set("sanctionSlNo",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cons-action-row">
+          <div className="cons-action-left">
+            <button className="cons-preview-btn" onClick={handlePreview}>👁 Preview Report</button>
+            <button className="cons-download-btn" onClick={handleDownload}>⬇ Download PDF</button>
+          </div>
+          <button className="cons-submit-btn" onClick={handleSubmit}>✓ Submit Claim →</button>
+        </div>
+      </div>
+
+      {preview && previewHTML && (
+        <div className="cons-preview-overlay" onClick={e=>{if(e.target===e.currentTarget)setPreview(false);}}>
+          <div className="cons-preview-box">
+            <div className="cons-preview-head">
+              <span>📄 Travel Proceedings — {project.id}</span>
+              <div><button className="btn-dl" onClick={handleDownload}>⬇ Download</button><button className="btn-cl" onClick={()=>setPreview(false)}>✕ Close</button></div>
+            </div>
+            <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Travel Proceedings" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ── Contingency Claim Page ── */
+function ContingencyPage({ project, onSubmit, onBack }) {
+  const [data, setData] = useState({
+    proceedingNo: "", amount: "", itemDescription: "contingency items",
+    divisionLabel: "", sanctioningAuthority: "Director of Technical Education (DoTE), Chennai",
+    mhNo: "16.1.17", financialYear: "2025 – 26", sanctionPageNo: "", sanctionSlNo: "",
+  });
+  const [preview, setPreview] = useState(false);
+  const [previewHTML, setPreviewHTML] = useState(null);
+  const set = (k, v) => setData(p => ({ ...p, [k]: v }));
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(data.amount || 0));
+
+  const handlePreview = () => {
+    if (!data.proceedingNo || !data.amount) { alert("Please fill Proceeding No. and Amount."); return; }
+    setPreviewHTML(generateContingencyPDF(data, project));
+    setPreview(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDownload = async () => {
+    if (!data.proceedingNo || !data.amount) { alert("Please fill required fields first."); return; }
+    const html = generateContingencyPDF(data, project);
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.open(); iframe.contentDocument.write(html); iframe.contentDocument.close();
+    await new Promise(r => setTimeout(r, 800));
+    const page = iframe.contentDocument.querySelector(".page");
+    const canvas = await html2canvas(page, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: 794, windowHeight: 1123 });
+    document.body.removeChild(iframe);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pw = 210; const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pw, Math.min(ph, 297));
+    pdf.save(`Contingency_Proceedings_${project.id}.pdf`);
+  };
+
+  const handleSubmit = () => {
+    if (!data.proceedingNo || !data.amount) { alert("Please fill all required fields."); return; }
+    const reportHTML = generateContingencyPDF(data, project);
+    onSubmit({ ...data, _reportHTML: reportHTML }, "Contingency");
+  };
+
+  const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+
+  // Reuse formCSS from ConsumablesPage (same class names)
+  // CSS for this light-theme form
+  const formCSS = `
+    .cons-page { padding: 0; }
+    .cons-header { margin-bottom: 24px; }
+    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: #111827; margin: 0 0 6px; }
+    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(20,30,70,0.45); margin: 0; }
+
+    .cons-section {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 16px; overflow: hidden; margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 3px 18px rgba(0,0,0,0.05);
+    }
+    .cons-section-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px;
+      background: rgba(2,132,199,0.06);
+      border-bottom: 1px solid rgba(0,100,220,0.07);
+    }
+    .cons-section-head .cs-badge {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(2,132,199,0.15); color: #0284c7;
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
+      display: grid; place-items: center;
+    }
+    .cons-section-head h3 {
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+      color: rgba(20,30,70,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .cons-section-body { padding: 18px; }
+
+    .cons-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cons-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .cons-grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .cons-field { display: flex; flex-direction: column; gap: 7px; }
+    .cons-field label {
+      font-family: 'Syne', sans-serif; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(20,30,70,0.42);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .cons-field label .req { color: #dc2626; font-size: 12px; }
+    .cons-field label .src-badge {
+      font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .src-fetch { background: rgba(2,132,199,0.1); color: #0284c7; border: 1px solid rgba(2,132,199,0.22); }
+    .src-enter { background: rgba(124,58,237,0.09); color: #6d28d9; border: 1px solid rgba(124,58,237,0.22); }
+    .src-auto { background: rgba(34,197,94,0.09); color: #16a34a; border: 1px solid rgba(34,197,94,0.18); }
+
+    .cons-static {
+      background: rgba(2,132,199,0.04); border: 1px solid rgba(2,132,199,0.12);
+      border-radius: 10px; padding: 10px 14px;
+      color: rgba(20,30,70,0.68); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      line-height: 1.5;
+    }
+    .cons-static strong { color: rgba(20,30,70,0.88); }
+
+    .balance-bar {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(0,100,220,0.08);
+      border-radius: 14px; padding: 16px 20px; margin-top: 4px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .bal-item { text-align: center; }
+    .bal-item .bal-label {
+      font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(20,30,70,0.4); margin-bottom: 6px;
+    }
+    .bal-item .bal-val {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+    }
+    .bal-item .bal-val.green { color: #16a34a; }
+    .bal-item .bal-val.yellow { color: #b45309; }
+    .bal-item .bal-val.blue { color: #0284c7; }
+    .bal-item .bal-val.red { color: #dc2626; }
+
+    .cons-action-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .cons-action-left { display: flex; gap: 10px; }
+    .cons-preview-btn {
+      border: 1px solid rgba(2,132,199,0.3); background: rgba(2,132,199,0.08);
+      color: #0284c7; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-preview-btn:hover { background: rgba(2,132,199,0.16); transform: translateY(-1px); }
+    .cons-download-btn {
+      border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
+      color: #16a34a; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-download-btn:hover { background: rgba(34,197,94,0.16); transform: translateY(-1px); }
+    .cons-submit-btn {
+      border: none; border-radius: 12px; padding: 12px 28px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
+      cursor: pointer; font-size: 14px; transition: 0.2s;
+      box-shadow: 0 8px 22px rgba(34,197,94,0.22);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.3); }
+
+    /* Preview overlay */
+    .cons-preview-overlay {
+      position: fixed; inset: 0; z-index: 2000000;
+      background: rgba(15,23,42,0.6);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 14px 20px;
+    }
+    .cons-preview-box {
+      width: min(920px,96vw); height: calc(100vh - 28px);
+      background: #ffffff; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(0,100,220,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+    }
+    .cons-preview-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px; background: #ffffff;
+      border-bottom: 1px solid rgba(0,100,220,0.08);
+      flex-shrink: 0;
+    }
+    .cons-preview-head span { color: rgba(20,30,70,0.72); font-family: 'DM Sans',sans-serif; font-size: 13px; }
+    .cons-preview-head div { display: flex; gap: 8px; }
+    .cons-preview-head button {
+      border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+      font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 700;
+    }
+    .cons-preview-head .btn-dl { background: #22c55e; color: #fff; }
+    .cons-preview-head .btn-cl { background: #ef4444; color: #fff; }
+    .cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+    @media (max-width: 768px) {
+      .cons-grid-2, .cons-grid-3 { grid-template-columns: 1fr; }
+      .balance-bar { grid-template-columns: 1fr; }
+    }
+  `;
+
+  return (
+    <>
+      <style>{formCSS}</style>
+      <div className="slip-card cons-page" style={{ animation: "slideIn 0.3s ease" }}>
+        <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
+        <div className="cons-header">
+          <h2>📦 Contingency — Claim Entry</h2>
+          <p>Generate the official Department Proceedings for contingency purchase sanction</p>
+        </div>
+
+        {/* Section 1: Fetched */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">1</div><h3>Project Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>Auto-fetched</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:14}}>
+              <div className="cons-field"><label>Project Title <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.title}</strong></div></div>
+              <div className="cons-field"><label>Project No. <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.projectNo}</div></div>
+              <div className="cons-field"><label>PI Name & Designation <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.pi}</strong>, {project.piDesignation}</div></div>
+              <div className="cons-field"><label>Scheme <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.scheme}</div></div>
+              <div className="cons-field"><label>Department <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.departmentFull}, {project.campus}</div></div>
+              <div className="cons-field"><label>CSRC Proceedings Ref <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.csrcProcNo} dated {project.csrcProcDate}</div></div>
+              <div className="cons-field"><label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">Rs. {Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</div></div>
+              <div className="cons-field"><label>Date <span className="src-badge src-auto">Auto</span></label><div className="cons-static">{td}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Proceeding details */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">2</div><h3>Proceeding Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>To be entered by user</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Proceeding No. <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 08 / RAC /CMRG/ Contingency / 2025-26" value={data.proceedingNo} onChange={e=>set("proceedingNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Division / Lab Label <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. R&AC, Thermal..." value={data.divisionLabel} onChange={e=>set("divisionLabel",e.target.value)} /></div>
+              <div className="cons-field"><label>Sanctioning Authority <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Director of Technical Education (DoTE), Chennai" value={data.sanctioningAuthority} onChange={e=>set("sanctioningAuthority",e.target.value)} /></div>
+              <div className="cons-field"><label>M.H. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 16.1.17" value={data.mhNo} onChange={e=>set("mhNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Financial Year <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 2025 – 26" value={data.financialYear} onChange={e=>set("financialYear",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Expenditure */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(167,139,250,0.18)",color:"#a78bfa"}}>3</div><h3>Expenditure Details</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16,marginBottom:16}}>
+              <div className="cons-field"><label>Amount (₹) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="number" className="slip-input" placeholder="e.g. 5000" value={data.amount} onChange={e=>set("amount",e.target.value)} /></div>
+              <div className="cons-field"><label>Item / Description <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. printing, postage, stationery..." value={data.itemDescription} onChange={e=>set("itemDescription",e.target.value)} /></div>
+            </div>
+            {data.amount && Number(data.amount) > 0 && (
+              <div className="cons-field" style={{marginBottom:16}}>
+                <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">Rupees <strong>{toIndianWords(Number(data.amount))}</strong></div>
+              </div>
+            )}
+            <div className="balance-bar">
+              <div className="bal-item"><div className="bal-label">Budget Allotment (BE/RE)</div><div className="bal-val blue">₹{Number(project.budgetAllotment).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Incurred (incl. this)</div><div className="bal-val yellow">₹{(project.amountIncurredSoFar+Number(data.amount||0)).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Balance Available</div><div className={`bal-val ${balance>=0?"green":"red"}`}>₹{Math.abs(balance).toLocaleString("en-IN")}{balance<0?" (Over)":""}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Sanction register */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(34,197,94,0.12)",color:"#22c55e"}}>4</div><h3>Sanction Register Entry</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Vide Page No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="Page number" value={data.sanctionPageNo} onChange={e=>set("sanctionPageNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Sl. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="Serial number" value={data.sanctionSlNo} onChange={e=>set("sanctionSlNo",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cons-action-row">
+          <div className="cons-action-left">
+            <button className="cons-preview-btn" onClick={handlePreview}>👁 Preview Report</button>
+            <button className="cons-download-btn" onClick={handleDownload}>⬇ Download PDF</button>
+          </div>
+          <button className="cons-submit-btn" onClick={handleSubmit}>✓ Submit Claim →</button>
+        </div>
+      </div>
+
+      {preview && previewHTML && (
+        <div className="cons-preview-overlay" onClick={e=>{if(e.target===e.currentTarget)setPreview(false);}}>
+          <div className="cons-preview-box">
+            <div className="cons-preview-head">
+              <span>📄 Contingency Proceedings — {project.id}</span>
+              <div><button className="btn-dl" onClick={handleDownload}>⬇ Download</button><button className="btn-cl" onClick={()=>setPreview(false)}>✕ Close</button></div>
+            </div>
+            <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Contingency Proceedings" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ── Other Expenses Claim Page ── */
+function OtherExpensesPage({ project, onSubmit, onBack }) {
+  const [data, setData] = useState({
+    proceedingNo: "", amount: "", purchaseOf: "", vendorName: "", vendorCity: "",
+    itemDescription: "", divisionLabel: "",
+    sanctioningAuthority: "Director of Technical Education (DoTE), Chennai",
+    mhNo: "16.1.17", financialYear: "2025 – 26", sanctionPageNo: "", sanctionSlNo: "",
+  });
+  const [preview, setPreview] = useState(false);
+  const [previewHTML, setPreviewHTML] = useState(null);
+  const set = (k, v) => setData(p => ({ ...p, [k]: v }));
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(data.amount || 0));
+
+  const handlePreview = () => {
+    if (!data.proceedingNo || !data.amount || !data.purchaseOf) { alert("Please fill Proceeding No., Amount, and Purchase of (what)."); return; }
+    setPreviewHTML(generateOtherExpensesPDF(data, project));
+    setPreview(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDownload = async () => {
+    if (!data.proceedingNo || !data.amount || !data.purchaseOf) { alert("Please fill required fields first."); return; }
+    const html = generateOtherExpensesPDF(data, project);
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.open(); iframe.contentDocument.write(html); iframe.contentDocument.close();
+    await new Promise(r => setTimeout(r, 800));
+    const page = iframe.contentDocument.querySelector(".page");
+    const canvas = await html2canvas(page, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: 794, windowHeight: 1123 });
+    document.body.removeChild(iframe);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pw = 210; const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pw, Math.min(ph, 297));
+    pdf.save(`OtherExpenses_Proceedings_${project.id}.pdf`);
+  };
+
+  const handleSubmit = () => {
+    if (!data.proceedingNo || !data.amount || !data.purchaseOf) { alert("Please fill all required fields."); return; }
+    const reportHTML = generateOtherExpensesPDF(data, project);
+    onSubmit({ ...data, _reportHTML: reportHTML }, "Other Expenses");
+  };
+
+  const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+
+  // reuse same formCSS string (class names are shared)
+  // CSS for this light-theme form
+  const formCSS = `
+    .cons-page { padding: 0; }
+    .cons-header { margin-bottom: 24px; }
+    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: #111827; margin: 0 0 6px; }
+    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(20,30,70,0.45); margin: 0; }
+
+    .cons-section {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 16px; overflow: hidden; margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 3px 18px rgba(0,0,0,0.05);
+    }
+    .cons-section-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px;
+      background: rgba(2,132,199,0.06);
+      border-bottom: 1px solid rgba(0,100,220,0.07);
+    }
+    .cons-section-head .cs-badge {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(2,132,199,0.15); color: #0284c7;
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
+      display: grid; place-items: center;
+    }
+    .cons-section-head h3 {
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+      color: rgba(20,30,70,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .cons-section-body { padding: 18px; }
+
+    .cons-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cons-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .cons-grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .cons-field { display: flex; flex-direction: column; gap: 7px; }
+    .cons-field label {
+      font-family: 'Syne', sans-serif; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(20,30,70,0.42);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .cons-field label .req { color: #dc2626; font-size: 12px; }
+    .cons-field label .src-badge {
+      font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .src-fetch { background: rgba(2,132,199,0.1); color: #0284c7; border: 1px solid rgba(2,132,199,0.22); }
+    .src-enter { background: rgba(124,58,237,0.09); color: #6d28d9; border: 1px solid rgba(124,58,237,0.22); }
+    .src-auto { background: rgba(34,197,94,0.09); color: #16a34a; border: 1px solid rgba(34,197,94,0.18); }
+
+    .cons-static {
+      background: rgba(2,132,199,0.04); border: 1px solid rgba(2,132,199,0.12);
+      border-radius: 10px; padding: 10px 14px;
+      color: rgba(20,30,70,0.68); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      line-height: 1.5;
+    }
+    .cons-static strong { color: rgba(20,30,70,0.88); }
+
+    .balance-bar {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(0,100,220,0.08);
+      border-radius: 14px; padding: 16px 20px; margin-top: 4px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .bal-item { text-align: center; }
+    .bal-item .bal-label {
+      font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(20,30,70,0.4); margin-bottom: 6px;
+    }
+    .bal-item .bal-val {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+    }
+    .bal-item .bal-val.green { color: #16a34a; }
+    .bal-item .bal-val.yellow { color: #b45309; }
+    .bal-item .bal-val.blue { color: #0284c7; }
+    .bal-item .bal-val.red { color: #dc2626; }
+
+    .cons-action-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .cons-action-left { display: flex; gap: 10px; }
+    .cons-preview-btn {
+      border: 1px solid rgba(2,132,199,0.3); background: rgba(2,132,199,0.08);
+      color: #0284c7; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-preview-btn:hover { background: rgba(2,132,199,0.16); transform: translateY(-1px); }
+    .cons-download-btn {
+      border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
+      color: #16a34a; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-download-btn:hover { background: rgba(34,197,94,0.16); transform: translateY(-1px); }
+    .cons-submit-btn {
+      border: none; border-radius: 12px; padding: 12px 28px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
+      cursor: pointer; font-size: 14px; transition: 0.2s;
+      box-shadow: 0 8px 22px rgba(34,197,94,0.22);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.3); }
+
+    /* Preview overlay */
+    .cons-preview-overlay {
+      position: fixed; inset: 0; z-index: 2000000;
+      background: rgba(15,23,42,0.6);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 14px 20px;
+    }
+    .cons-preview-box {
+      width: min(920px,96vw); height: calc(100vh - 28px);
+      background: #ffffff; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(0,100,220,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+    }
+    .cons-preview-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px; background: #ffffff;
+      border-bottom: 1px solid rgba(0,100,220,0.08);
+      flex-shrink: 0;
+    }
+    .cons-preview-head span { color: rgba(20,30,70,0.72); font-family: 'DM Sans',sans-serif; font-size: 13px; }
+    .cons-preview-head div { display: flex; gap: 8px; }
+    .cons-preview-head button {
+      border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+      font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 700;
+    }
+    .cons-preview-head .btn-dl { background: #22c55e; color: #fff; }
+    .cons-preview-head .btn-cl { background: #ef4444; color: #fff; }
+    .cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+    @media (max-width: 768px) {
+      .cons-grid-2, .cons-grid-3 { grid-template-columns: 1fr; }
+      .balance-bar { grid-template-columns: 1fr; }
+    }
+  `;
+
+  return (
+    <>
+      <style>{formCSS}</style>
+      <div className="slip-card cons-page" style={{ animation: "slideIn 0.3s ease" }}>
+        <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
+        <div className="cons-header">
+          <h2>💰 Other Expenses — Claim Entry</h2>
+          <p>Generate the official Department Proceedings for other expenses sanction</p>
+        </div>
+
+        {/* Section 1: Fetched */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">1</div><h3>Project Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>Auto-fetched</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:14}}>
+              <div className="cons-field"><label>Project Title <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.title}</strong></div></div>
+              <div className="cons-field"><label>Project No. <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.projectNo}</div></div>
+              <div className="cons-field"><label>PI Name & Designation <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.pi}</strong>, {project.piDesignation}</div></div>
+              <div className="cons-field"><label>Scheme <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.scheme}</div></div>
+              <div className="cons-field"><label>Department <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.departmentFull}, {project.campus}</div></div>
+              <div className="cons-field"><label>CSRC Proceedings Ref <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.csrcProcNo} dated {project.csrcProcDate}</div></div>
+              <div className="cons-field"><label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">Rs. {Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</div></div>
+              <div className="cons-field"><label>Date <span className="src-badge src-auto">Auto</span></label><div className="cons-static">{td}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Proceeding details */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">2</div><h3>Proceeding Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>To be entered by user</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Proceeding No. <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 10 / RAC /CMRG/ OtherExp / 2025-26" value={data.proceedingNo} onChange={e=>set("proceedingNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Division / Lab Label <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. R&AC, Thermal..." value={data.divisionLabel} onChange={e=>set("divisionLabel",e.target.value)} /></div>
+              <div className="cons-field"><label>Sanctioning Authority <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Director of Technical Education (DoTE), Chennai" value={data.sanctioningAuthority} onChange={e=>set("sanctioningAuthority",e.target.value)} /></div>
+              <div className="cons-field"><label>M.H. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 16.1.17" value={data.mhNo} onChange={e=>set("mhNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Financial Year <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 2025 – 26" value={data.financialYear} onChange={e=>set("financialYear",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Expenditure + Purchase Of */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(167,139,250,0.18)",color:"#a78bfa"}}>3</div><h3>Expenditure Details</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16,marginBottom:16}}>
+              <div className="cons-field"><label>Purchase of (What?) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Publication charges, Patent filing fees..." value={data.purchaseOf} onChange={e=>set("purchaseOf",e.target.value)} /></div>
+              <div className="cons-field"><label>Amount (₹) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="number" className="slip-input" placeholder="e.g. 8000" value={data.amount} onChange={e=>set("amount",e.target.value)} /></div>
+            </div>
+            {data.amount && Number(data.amount) > 0 && (
+              <div className="cons-field" style={{marginBottom:16}}>
+                <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">Rupees <strong>{toIndianWords(Number(data.amount))}</strong></div>
+              </div>
+            )}
+            <div className="balance-bar">
+              <div className="bal-item"><div className="bal-label">Budget Allotment (BE/RE)</div><div className="bal-val blue">₹{Number(project.budgetAllotment).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Incurred (incl. this)</div><div className="bal-val yellow">₹{(project.amountIncurredSoFar+Number(data.amount||0)).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Balance Available</div><div className={`bal-val ${balance>=0?"green":"red"}`}>₹{Math.abs(balance).toLocaleString("en-IN")}{balance<0?" (Over)":""}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Vendor */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(251,191,36,0.15)",color:"#fbbf24"}}>4</div><h3>Vendor / Payee Details</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Vendor / Payee Name (M/s.) <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Springer, IEEE, Patent Office..." value={data.vendorName} onChange={e=>set("vendorName",e.target.value)} /></div>
+              <div className="cons-field"><label>City / Location <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. New Delhi" value={data.vendorCity} onChange={e=>set("vendorCity",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 5: Sanction register */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(34,197,94,0.12)",color:"#22c55e"}}>5</div><h3>Sanction Register Entry</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Vide Page No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="Page number" value={data.sanctionPageNo} onChange={e=>set("sanctionPageNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Sl. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="Serial number" value={data.sanctionSlNo} onChange={e=>set("sanctionSlNo",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cons-action-row">
+          <div className="cons-action-left">
+            <button className="cons-preview-btn" onClick={handlePreview}>👁 Preview Report</button>
+            <button className="cons-download-btn" onClick={handleDownload}>⬇ Download PDF</button>
+          </div>
+          <button className="cons-submit-btn" onClick={handleSubmit}>✓ Submit Claim →</button>
+        </div>
+      </div>
+
+      {preview && previewHTML && (
+        <div className="cons-preview-overlay" onClick={e=>{if(e.target===e.currentTarget)setPreview(false);}}>
+          <div className="cons-preview-box">
+            <div className="cons-preview-head">
+              <span>📄 Other Expenses Proceedings — {project.id}</span>
+              <div><button className="btn-dl" onClick={handleDownload}>⬇ Download</button><button className="btn-cl" onClick={()=>setPreview(false)}>✕ Close</button></div>
+            </div>
+            <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Other Expenses Proceedings" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+/* ── Non-Recurring Equipment Claim Page ── */
+function NonRecurringEquipmentPage({ project, onSubmit, onBack }) {
+  const [data, setData] = useState({
+    proceedingNo: "", amount: "", equipmentName: "", vendorName: "",
+    hodName: "", divisionLabel: "",
+    sanctioningAuthority: "Director of Technical Education (DoTE), Chennai",
+    mhNo: "16.1.17", financialYear: "2025 – 26", sanctionPageNo: "", sanctionSlNo: "",
+  });
+  const [preview, setPreview] = useState(false);
+  const [previewHTML, setPreviewHTML] = useState(null);
+  const set = (k, v) => setData(p => ({ ...p, [k]: v }));
+  const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(data.amount || 0));
+
+  const handlePreview = () => {
+    if (!data.proceedingNo || !data.amount || !data.equipmentName) { alert("Please fill Proceeding No., Amount, and Equipment Name."); return; }
+    setPreviewHTML(generateNonRecurringPDF(data, project));
+    setPreview(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDownload = async () => {
+    if (!data.proceedingNo || !data.amount || !data.equipmentName) { alert("Please fill required fields first."); return; }
+    const html = generateNonRecurringPDF(data, project);
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.open(); iframe.contentDocument.write(html); iframe.contentDocument.close();
+    await new Promise(r => setTimeout(r, 800));
+    const page = iframe.contentDocument.querySelector(".page");
+    const canvas = await html2canvas(page, { scale: 2, useCORS: true, backgroundColor: "#ffffff", windowWidth: 794, windowHeight: 1123 });
+    document.body.removeChild(iframe);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pw = 210; const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pw, Math.min(ph, 297));
+    pdf.save(`Equipment_Proceedings_${project.id}.pdf`);
+  };
+
+  const handleSubmit = () => {
+    if (!data.proceedingNo || !data.amount || !data.equipmentName) { alert("Please fill all required fields."); return; }
+    const reportHTML = generateNonRecurringPDF(data, project);
+    onSubmit({ ...data, _reportHTML: reportHTML }, data.equipmentName);
+  };
+
+  const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+
+  // CSS for this light-theme form
+  const formCSS = `
+    .cons-page { padding: 0; }
+    .cons-header { margin-bottom: 24px; }
+    .cons-header h2 { font-family: 'Syne', sans-serif; font-size: 20px; color: #111827; margin: 0 0 6px; }
+    .cons-header p { font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(20,30,70,0.45); margin: 0; }
+
+    .cons-section {
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 16px; overflow: hidden; margin-bottom: 18px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 3px 18px rgba(0,0,0,0.05);
+    }
+    .cons-section-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 18px;
+      background: rgba(2,132,199,0.06);
+      border-bottom: 1px solid rgba(0,100,220,0.07);
+    }
+    .cons-section-head .cs-badge {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: rgba(2,132,199,0.15); color: #0284c7;
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
+      display: grid; place-items: center;
+    }
+    .cons-section-head h3 {
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+      color: rgba(20,30,70,0.8); margin: 0; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .cons-section-body { padding: 18px; }
+
+    .cons-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cons-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .cons-grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .cons-field { display: flex; flex-direction: column; gap: 7px; }
+    .cons-field label {
+      font-family: 'Syne', sans-serif; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1.1px; color: rgba(20,30,70,0.42);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .cons-field label .req { color: #dc2626; font-size: 12px; }
+    .cons-field label .src-badge {
+      font-size: 9px; padding: 2px 6px; border-radius: 999px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .src-fetch { background: rgba(2,132,199,0.1); color: #0284c7; border: 1px solid rgba(2,132,199,0.22); }
+    .src-enter { background: rgba(124,58,237,0.09); color: #6d28d9; border: 1px solid rgba(124,58,237,0.22); }
+    .src-auto { background: rgba(34,197,94,0.09); color: #16a34a; border: 1px solid rgba(34,197,94,0.18); }
+
+    .cons-static {
+      background: rgba(2,132,199,0.04); border: 1px solid rgba(2,132,199,0.12);
+      border-radius: 10px; padding: 10px 14px;
+      color: rgba(20,30,70,0.68); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      line-height: 1.5;
+    }
+    .cons-static strong { color: rgba(20,30,70,0.88); }
+
+    .balance-bar {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(0,100,220,0.08);
+      border-radius: 14px; padding: 16px 20px; margin-top: 4px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .bal-item { text-align: center; }
+    .bal-item .bal-label {
+      font-family: 'Syne', sans-serif; font-size: 9px; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(20,30,70,0.4); margin-bottom: 6px;
+    }
+    .bal-item .bal-val {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+    }
+    .bal-item .bal-val.green { color: #16a34a; }
+    .bal-item .bal-val.yellow { color: #b45309; }
+    .bal-item .bal-val.blue { color: #0284c7; }
+    .bal-item .bal-val.red { color: #dc2626; }
+
+    .cons-action-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-top: 24px; flex-wrap: wrap;
+    }
+    .cons-action-left { display: flex; gap: 10px; }
+    .cons-preview-btn {
+      border: 1px solid rgba(2,132,199,0.3); background: rgba(2,132,199,0.08);
+      color: #0284c7; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-preview-btn:hover { background: rgba(2,132,199,0.16); transform: translateY(-1px); }
+    .cons-download-btn {
+      border: 1px solid rgba(34,197,94,0.3); background: rgba(34,197,94,0.08);
+      color: #16a34a; border-radius: 12px; padding: 11px 22px; cursor: pointer;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; transition: 0.2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-download-btn:hover { background: rgba(34,197,94,0.16); transform: translateY(-1px); }
+    .cons-submit-btn {
+      border: none; border-radius: 12px; padding: 12px 28px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff; font-family: 'Syne', sans-serif; font-weight: 800;
+      cursor: pointer; font-size: 14px; transition: 0.2s;
+      box-shadow: 0 8px 22px rgba(34,197,94,0.22);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .cons-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(34,197,94,0.3); }
+
+    /* Preview overlay */
+    .cons-preview-overlay {
+      position: fixed; inset: 0; z-index: 2000000;
+      background: rgba(15,23,42,0.6);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 14px 20px;
+    }
+    .cons-preview-box {
+      width: min(920px,96vw); height: calc(100vh - 28px);
+      background: #ffffff; border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(0,100,220,0.1);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.2);
+    }
+    .cons-preview-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 18px; background: #ffffff;
+      border-bottom: 1px solid rgba(0,100,220,0.08);
+      flex-shrink: 0;
+    }
+    .cons-preview-head span { color: rgba(20,30,70,0.72); font-family: 'DM Sans',sans-serif; font-size: 13px; }
+    .cons-preview-head div { display: flex; gap: 8px; }
+    .cons-preview-head button {
+      border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+      font-family: 'DM Sans',sans-serif; font-size: 12px; font-weight: 700;
+    }
+    .cons-preview-head .btn-dl { background: #22c55e; color: #fff; }
+    .cons-preview-head .btn-cl { background: #ef4444; color: #fff; }
+    .cons-preview-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+    @media (max-width: 768px) {
+      .cons-grid-2, .cons-grid-3 { grid-template-columns: 1fr; }
+      .balance-bar { grid-template-columns: 1fr; }
+    }
+  `;
+
+  return (
+    <>
+      <style>{formCSS}</style>
+      <div className="slip-card cons-page" style={{ animation: "slideIn 0.3s ease" }}>
+        <button className="back-btn" onClick={onBack}>← Back</button>
+        <div className="cons-header">
+          <h2>🔧 Non-Recurring — Equipment Proceedings</h2>
+          <p>Generate the official Department Proceedings for equipment purchase sanction</p>
+        </div>
+
+        {/* Section 1: Fetched */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">1</div><h3>Project Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>Auto-fetched</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:14}}>
+              <div className="cons-field"><label>Project Title <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.title}</strong></div></div>
+              <div className="cons-field"><label>Project No. <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.projectNo}</div></div>
+              <div className="cons-field"><label>PI Name & Designation <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static"><strong>{project.pi}</strong>, {project.piDesignation}</div></div>
+              <div className="cons-field"><label>Scheme <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.scheme}</div></div>
+              <div className="cons-field"><label>Department <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.departmentFull}, {project.campus}</div></div>
+              <div className="cons-field"><label>CSRC Proceedings Ref <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">{project.csrcProcNo} dated {project.csrcProcDate}</div></div>
+              <div className="cons-field"><label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">Rs. {Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</div></div>
+              <div className="cons-field"><label>Date <span className="src-badge src-auto">Auto</span></label><div className="cons-static">{td}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Proceeding details */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge">2</div><h3>Proceeding Details</h3><span style={{marginLeft:"auto",fontSize:11,color:"rgba(255,255,255,0.35)",fontFamily:"DM Sans,sans-serif"}}>To be entered by user</span></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>HOD Name <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Dr. S. Senthil Kumaran" value={data.hodName} onChange={e=>set("hodName",e.target.value)} /></div>
+              <div className="cons-field"><label>Proceeding No. <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 02 / RAC /CMRG/ 2025-26" value={data.proceedingNo} onChange={e=>set("proceedingNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Division / Lab Label <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. R&AC, Thermal..." value={data.divisionLabel} onChange={e=>set("divisionLabel",e.target.value)} /></div>
+              <div className="cons-field"><label>Sanctioning Authority <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Director of Technical Education (DoTE), Chennai" value={data.sanctioningAuthority} onChange={e=>set("sanctioningAuthority",e.target.value)} /></div>
+              <div className="cons-field"><label>M.H. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 16.1.17" value={data.mhNo} onChange={e=>set("mhNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Financial Year <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. 2025 – 26" value={data.financialYear} onChange={e=>set("financialYear",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Equipment + Expenditure */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(167,139,250,0.18)",color:"#a78bfa"}}>3</div><h3>Equipment & Expenditure Details</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16,marginBottom:16}}>
+              <div className="cons-field" style={{gridColumn:"1 / -1"}}><label>Equipment Name <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Multi-parameter Bench Top Measuring Instrument for Auto reverse VCRS Freeze Desalination Unit" value={data.equipmentName} onChange={e=>set("equipmentName",e.target.value)} /></div>
+              <div className="cons-field"><label>Amount (₹) <span className="req">*</span> <span className="src-badge src-enter">Enter</span></label><input type="number" className="slip-input" placeholder="e.g. 73750" value={data.amount} onChange={e=>set("amount",e.target.value)} /></div>
+              <div className="cons-field"><label>Vendor / Supplier Name (M/s.) <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="e.g. Acurel weighing systems Pvt. Ltd." value={data.vendorName} onChange={e=>set("vendorName",e.target.value)} /></div>
+            </div>
+            {data.amount && Number(data.amount) > 0 && (
+              <div className="cons-field" style={{marginBottom:16}}>
+                <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
+                <div className="cons-static">Rupees <strong>{toIndianWords(Number(data.amount))}</strong></div>
+              </div>
+            )}
+            <div className="balance-bar">
+              <div className="bal-item"><div className="bal-label">Budget Allotment (BE/RE)</div><div className="bal-val blue">₹{Number(project.budgetAllotment).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Incurred (incl. this)</div><div className="bal-val yellow">₹{(project.amountIncurredSoFar+Number(data.amount||0)).toLocaleString("en-IN")}</div></div>
+              <div className="bal-item"><div className="bal-label">Balance Available</div><div className={`bal-val ${balance>=0?"green":"red"}`}>₹{Math.abs(balance).toLocaleString("en-IN")}{balance<0?" (Over)":""}</div></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Sanction register */}
+        <div className="cons-section">
+          <div className="cons-section-head"><div className="cs-badge" style={{background:"rgba(34,197,94,0.12)",color:"#22c55e"}}>4</div><h3>Sanction Register Entry</h3></div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{gap:16}}>
+              <div className="cons-field"><label>Vide Page No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="Page number" value={data.sanctionPageNo} onChange={e=>set("sanctionPageNo",e.target.value)} /></div>
+              <div className="cons-field"><label>Sl. No. <span className="src-badge src-enter">Enter</span></label><input type="text" className="slip-input" placeholder="Serial number" value={data.sanctionSlNo} onChange={e=>set("sanctionSlNo",e.target.value)} /></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cons-action-row">
+          <div className="cons-action-left">
+            <button className="cons-preview-btn" onClick={handlePreview}>👁 Preview Report</button>
+            <button className="cons-download-btn" onClick={handleDownload}>⬇ Download PDF</button>
+          </div>
+          <button className="cons-submit-btn" onClick={handleSubmit}>✓ Submit Claim →</button>
+        </div>
+      </div>
+
+      {preview && previewHTML && (
+        <div className="cons-preview-overlay" onClick={e=>{if(e.target===e.currentTarget)setPreview(false);}}>
+          <div className="cons-preview-box">
+            <div className="cons-preview-head">
+              <span>📄 Equipment Proceedings — {project.id}</span>
+              <div><button className="btn-dl" onClick={handleDownload}>⬇ Download</button><button className="btn-cl" onClick={()=>setPreview(false)}>✕ Close</button></div>
+            </div>
+            <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Equipment Proceedings" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 
 export default function ZBASlipPage() {
   /* ── navigation state ── */
@@ -1918,6 +3691,20 @@ export default function ZBASlipPage() {
       [pid]: (prev[pid] || []).map(c => c.id === cid ? { ...c, status: "approved" } : c),
     }));
   };
+
+  const rejectClaim = (pid, cid) => {
+  setClaimsStore(prev => ({
+    ...prev,
+    [pid]: (prev[pid] || []).map(c => c.id === cid ? { ...c, status: "rejected" } : c),
+  }));
+};
+
+const revertClaim = (pid, cid) => {
+  setClaimsStore(prev => ({
+    ...prev,
+    [pid]: (prev[pid] || []).map(c => c.id === cid ? { ...c, status: "review" } : c),
+  }));
+};
 
   const showSuccessFor = (ms = 2200) => {
     setShowSuccess(true);
@@ -2046,64 +3833,26 @@ const handleRecurringSubmit = (data, headName) => {
     </div>
   );
 
+  
+
   /* ── Non-Recurring Form ── */
-  const renderNonRecurring = () => (
-    <div className="slip-card" style={{ animation: "slideIn 0.3s ease" }}>
-      <div className="claim-breadcrumb">
-        <span className="bc-link" onClick={() => setScreen("projects")}>Projects</span>
-        <span className="bc-sep">›</span>
-        <span className="bc-link" onClick={() => setScreen("headType")}>Update Claim</span>
-        <span className="bc-sep">›</span>
-        <span className="bc-cur">Non-Recurring</span>
-      </div>
-      <h2>🔧 Non-Recurring Head — Equipment Entry</h2>
-
-      <div className="nr-form-grid">
-        <div className="nr-field">
-          <label>Equipment / Item</label>
-          <select className="slip-input" value={nrData.equipment || ""} onChange={e => setNrData(p => ({ ...p, equipment: e.target.value }))}>
-            <option value="">-- Select Equipment --</option>
-            {selectedProject.equipment.map(eq => <option key={eq} value={eq}>{eq}</option>)}
-          </select>
-        </div>
-
-        <div className="nr-row-2">
-          <div className="nr-field">
-            <label>Amount (₹)</label>
-            <input type="number" className="slip-input" placeholder="Enter amount" value={nrData.amount || ""} disabled={!nrData.equipment} onChange={e => setNrData(p => ({ ...p, amount: e.target.value }))} />
-          </div>
-          <div className="nr-field">
-            <label>Vendor / Supplier</label>
-            <input type="text" className="slip-input" placeholder="Supplier name" value={nrData.vendor || ""} disabled={!nrData.equipment} onChange={e => setNrData(p => ({ ...p, vendor: e.target.value }))} />
-          </div>
-        </div>
-
-        <div className="nr-row-3">
-          <div className="nr-field">
-            <label>Invoice Number</label>
-            <input type="text" className="slip-input" placeholder="INV-XXXX" value={nrData.invoiceNo || ""} disabled={!nrData.equipment} onChange={e => setNrData(p => ({ ...p, invoiceNo: e.target.value }))} />
-          </div>
-          <div className="nr-field">
-            <label>Invoice Date</label>
-            <input type="date" className="slip-input" value={nrData.invoiceDate || ""} disabled={!nrData.equipment} onChange={e => setNrData(p => ({ ...p, invoiceDate: e.target.value }))} />
-          </div>
-          <div className="nr-field">
-            <label>Upload Bill</label>
-            <input type="file" accept=".pdf,image/*" className="slip-input" disabled={!nrData.equipment} onChange={e => setNrData(p => ({ ...p, bill: e.target.files[0] }))} />
-          </div>
-        </div>
-
-        <div className="nr-field">
-          <label>Further Details / Remarks</label>
-          <textarea className="slip-input" rows={3} placeholder="Enter additional details..." value={nrData.remarks || ""} disabled={!nrData.equipment} onChange={e => setNrData(p => ({ ...p, remarks: e.target.value }))} style={{ resize: "vertical" }} />
-        </div>
-      </div>
-
-      <div className="slip-submit-row">
-        <button className="back-btn" onClick={() => setScreen("headType")}>← Back</button>
-        <button className="submit-btn" onClick={handleNRSubmit}>Submit Claim →</button>
-      </div>
-    </div>
+const renderNonRecurring = () => (
+    <NonRecurringEquipmentPage
+      project={selectedProject}
+      onSubmit={(data, headName) => {
+        const id = Date.now();
+        const amount = Number(data.amount || 0);
+        const reportHTML = data._reportHTML || "";
+        pushClaim(selectedProject.id, {
+          id, type: "Non-Recurring", head: headName,
+          amount, date: today(), status: "review", reportHTML,
+          fileURL: null, fileName: null,
+        });
+        showSuccessFor();
+        setTimeout(() => setScreen("underReview"), 2200);
+      }}
+      onBack={() => setScreen("headType")}
+    />
   );
 
   /* ── Recurring Head Selection ── */
@@ -2139,25 +3888,25 @@ const handleRecurringSubmit = (data, headName) => {
   );
 
   /* ── Recurring Head Detail ── */
+  
 const renderRecurringHead = () => {
     const headCfg = RECURRING_HEADS.find(h => h.key === recurringHead);
     if (recurringHead === "manpower") {
       return <ManpowerPage onBack={() => setScreen("recurring")} />;
     }
     if (recurringHead === "consumables") {
-      return (
-        <ConsumablesPage
-          project={selectedProject}
-          onSubmit={handleRecurringSubmit}
-          onBack={() => setScreen("recurring")}
-        />
-      );
+      return <ConsumablesPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
+    }
+    if (recurringHead === "travel") {
+  return <TravelPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
+}
+    if (recurringHead === "contingency") {
+      return <ContingencyPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
+    }
+    if (recurringHead === "otherExpenses") {
+      return <OtherExpensesPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
     }
     let fields = [];
-    if (recurringHead === "travel") fields = TRAVEL_FIELDS;
-    else if (recurringHead === "contingency") fields = CONTINGENCY_FIELDS;
-    else if (recurringHead === "otherExpenses") fields = OTHER_EXPENSES_FIELDS;
-
     return (
       <DummyRecurringForm
         headName={headCfg.label}
