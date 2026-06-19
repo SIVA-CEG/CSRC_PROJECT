@@ -5573,7 +5573,7 @@ const facultyNames = [
       "value": "412"
     },
     {
-      "text": "Soorya Vennila .",
+      "text": "soorya Vennila .",
       "value": "1064"
     },
     {
@@ -7327,15 +7327,33 @@ const ClosureStatus = ({ s }) => {
         background: m.bg,
         color: m.color,
         borderRadius: 20,
-        padding: "3px 12px",
-        fontSize: 12,
-        fontWeight: 600,
+        padding: "4px 14px",
+        fontSize: 13,
+        fontWeight: 700,
       }}
     >
       {m.label}
     </span>
   );
 };
+
+// Document checklist definition — single source of truth, used for both
+// the on-screen checklist (with per-row upload) and the printable PDF.
+const DOC_CHECKLIST = [
+  { no: "1", label: "Project Sanction copy", key: "docProjectSanction" },
+  { no: "2", label: "CTDT proceedings", key: "docCTDTProceedings" },
+  { no: "3", label: "Project Extension letter", key: "docExtensionLetter" },
+  { no: "4", label: "Utilization certificate copies (year wise)", key: "docUCYearwise" },
+  { no: "5", label: "Utilization certificate copy Final", key: "docUCFinal" },
+  { no: "6", label: "Reply to audit objection (if any)", key: "docAuditReply" },
+  { no: "7", label: "Project Closure Report", key: "docCompletionReport" },
+  { no: "8", label: "Unspent money return details (if any)", key: "docUnspentReturn" },
+  { no: "9", label: "Publication (First page of publication)", key: "docPublication" },
+  { no: "11", label: "Patent details", key: "docPatent" },
+  { no: "12", label: "Conference/Seminar presented", key: "docConference" },
+  { no: "13", label: "Project closure certificate received from Funding agency", key: "docClosureCert" },
+  { no: "14", label: "Equipment stock register entry (copy) in case of equipment cost more than 10 Lakhs", key: "docStockRegister" },
+];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Filters panel (shared)
@@ -7402,7 +7420,7 @@ function FiltersPanel({ filters, setFilters, onSearch, onReset }) {
             <label>{label}</label>
             <div className="rp-di">
               <input type="date" value={filters[f]} onChange={set(f)} />
-              <span style={{ color: "#94a3b8", fontSize: 12 }}>to</span>
+              <span style={{ color: "#94a3b8", fontSize: 13 }}>to</span>
               <input type="date" value={filters[t]} onChange={set(t)} />
             </div>
           </div>
@@ -7530,42 +7548,68 @@ function ProjectRow({ project, onClick, onSubmitClosure }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Closure Report Form  (3-page form based on the actual CSRC form)
+// Closure Report Form  (3-page form based on the actual CSRC paper form)
 // ─────────────────────────────────────────────────────────────────────────────
 const emptyForm = {
   // Page 1 – Project Details
   projectTitle: "",
   fundingAgency: "",
   national: "national",
-  pi: "",
+
+  // PI — split into 3 distinct fields, as on the paper form
+  piName: "",
   piDesignation: "",
-  coPI1: "",
+  piAddress: "",
+
+  // Co-PI 1 / 2 / 3 — each split into name / designation / address
+  coPI1Name: "",
   coPI1Designation: "",
-  coPI2: "",
-  coPI3: "",
+  coPI1Address: "",
+  coPI2Name: "",
+  coPI2Designation: "",
+  coPI2Address: "",
+  coPI3Name: "",
+  coPI3Designation: "",
+  coPI3Address: "",
+
   externalCollaborators: "no",
   moaSigned: "no",
+
   // Project details
   sanctionRef: "",
   projectDuration: "",
   budgetSanctioned: "",
+
+  // Budget released — each instalment now also carries its own CTDT Proc No,
+  // matching the paper form where "CTDT proc no" sits beside Date/Amount.
   installment1Amount: "",
   installment1Date: "",
+  installment1Ctdt: "",
   installment2Amount: "",
   installment2Date: "",
+  installment2Ctdt: "",
   installment3Amount: "",
   installment3Date: "",
+  installment3Ctdt: "",
+
   majorEquipment: "no",
   equipmentCost: "",
-  ctdtProcNo: "",
-  ctdtSNo: "",
-  ctdtPgNo: "",
+  // Equipment stock-register entry block (S.No / Pg.No — both present, as on paper form)
+  stockEntrySNo: "",
+  stockEntryPgNo: "",
   stockRegisterEnclose: "no",
+
   extensionObtained: "no",
   extensionAgency: "",
+
+  // Item 7 — Utilization Certificate (separate Yes/No question)
+  utilizationCertificate: "no",
+
+  // Item 8 — Percentage of Fund Utilization (separate I/II/III year %s)
   utilizationI: "",
   utilizationII: "",
   utilizationIII: "",
+
   // Page 2 – Completion details
   unspentReturned: "no",
   unspentAmount: "",
@@ -7579,7 +7623,8 @@ const emptyForm = {
   outcomePhD: false,
   trlLevel: "",
   piInterestedContinue: "no",
-  // Documents (checklist)
+
+  // Documents (checklist) — yes/no/na per document
   docProjectSanction: "",
   docCTDTProceedings: "",
   docExtensionLetter: "",
@@ -7593,8 +7638,9 @@ const emptyForm = {
   docConference: "",
   docClosureCert: "",
   docStockRegister: "",
-  // Uploads
-  uploads: [],
+
+  // Uploads — keyed per document so each of the 14 rows has its own files
+  uploadsByDoc: {},
 };
 
 function ClosureForm({ project, onClose, onSubmit }) {
@@ -7603,37 +7649,70 @@ function ClosureForm({ project, onClose, onSubmit }) {
     ...emptyForm,
     projectTitle: project.title,
     fundingAgency: project.funding,
-    pi: project.pi,
-    coPI1: project.coPI1 || "",
-    coPI2: project.coPI2 || "",
-    coPI3: project.coPI3 || "",
+    piName: project.pi,
+    coPI1Name: project.coPI1 || "",
+    coPI2Name: project.coPI2 || "",
+    coPI3Name: project.coPI3 || "",
     budgetSanctioned: project.amount,
   });
-  const fileRef = useRef();
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const fileRefs = useRef({});
 
   const set = (k) => (e) => {
     const val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setForm((p) => ({ ...p, [k]: val }));
   };
 
-  const handleFiles = (e) => {
+  const triggerUpload = (docKey) => {
+    fileRefs.current[docKey]?.click();
+  };
+
+  const handleDocFiles = (docKey) => (e) => {
     const files = Array.from(e.target.files).map((f) => f.name);
-    setForm((p) => ({ ...p, uploads: [...p.uploads, ...files] }));
+    if (files.length === 0) return;
+    setForm((p) => ({
+      ...p,
+      uploadsByDoc: {
+        ...p.uploadsByDoc,
+        [docKey]: [...(p.uploadsByDoc[docKey] || []), ...files],
+      },
+    }));
+    e.target.value = "";
+  };
+
+  const removeDocFile = (docKey, idx) => {
+    setForm((p) => {
+      const list = [...(p.uploadsByDoc[docKey] || [])];
+      list.splice(idx, 1);
+      return { ...p, uploadsByDoc: { ...p.uploadsByDoc, [docKey]: list } };
+    });
   };
 
   const handleSubmit = () => onSubmit(project.id, form);
 
-  // PDF generation
+  // ── PDF generation ──────────────────────────────────────────────────────
+  // The printable node is rendered permanently in the DOM (off-screen, but
+  // visible/laid-out) so html2canvas has real content + dimensions to
+  // rasterize. Rendering it only "on demand" inside a closed/hidden tree
+  // (display:none, or unmounted) is what produces blank PDFs.
   const downloadPDF = () => {
-    const el = document.getElementById("closure-pdf-content");
+    const el = document.getElementById(`closure-pdf-content-${project.id}`);
     if (!el) return;
-    html2pdf().set({
+    setPdfBusy(true);
+    const opts = {
       margin: 10,
-      filename: `${project.fileNo}_ClosureReport.pdf`,
-      image: { type: "jpeg", quality: 1 },
-      html2canvas: { scale: 2 },
+      filename: `${project.fileNo.replace(/[\/\\]/g, "_")}_ClosureReport.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    }).from(el).save();
+      pagebreak: { mode: ["css", "legacy"] },
+    };
+    html2pdf()
+      .set(opts)
+      .from(el)
+      .save()
+      .then(() => setPdfBusy(false))
+      .catch(() => setPdfBusy(false));
   };
 
   const YNRadio = ({ name, val, onChange, label = "" }) => (
@@ -7648,22 +7727,61 @@ function ClosureForm({ project, onClose, onSubmit }) {
     </div>
   );
 
-  const CheckDoc = ({ label, fKey }) => (
-    <tr>
-      <td className="rp-chtd">{label}</td>
-      {["yes", "no", "na"].map((v) => (
-        <td key={v} className="rp-chtd rp-chtd-center">
+  // Checklist row with its own Yes/No/NA + its own upload control.
+  const CheckDocRow = ({ no, label, fKey }) => {
+    const files = form.uploadsByDoc[fKey] || [];
+    return (
+      <tr>
+        <td className="rp-chtd rp-chtd-no">{no}</td>
+        <td className="rp-chtd">{label}</td>
+        {["yes", "no", "na"].map((v) => (
+          <td key={v} className="rp-chtd rp-chtd-center">
+            <input
+              type="radio"
+              name={fKey}
+              value={v}
+              checked={form[fKey] === v}
+              onChange={set(fKey)}
+            />
+          </td>
+        ))}
+        <td className="rp-chtd rp-chtd-upload">
           <input
-            type="radio"
-            name={fKey}
-            value={v}
-            checked={form[fKey] === v}
-            onChange={set(fKey)}
+            ref={(node) => (fileRefs.current[fKey] = node)}
+            type="file"
+            multiple
+            accept=".pdf,.jpg,.jpeg,.png"
+            style={{ display: "none" }}
+            onChange={handleDocFiles(fKey)}
           />
+          <button
+            type="button"
+            className="rp-upload-pill"
+            onClick={() => triggerUpload(fKey)}
+          >
+            📎 Upload
+          </button>
+          {files.length > 0 && (
+            <div className="rp-upload-pill-list">
+              {files.map((f, i) => (
+                <span key={i} className="rp-upload-pill-file">
+                  {f}
+                  <button
+                    type="button"
+                    className="rp-upload-pill-remove"
+                    onClick={() => removeDocFile(fKey, i)}
+                    aria-label={`Remove ${f}`}
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </td>
-      ))}
-    </tr>
-  );
+      </tr>
+    );
+  };
 
   return (
     <div className="rp-drawer-overlay">
@@ -7712,36 +7830,84 @@ function ClosureForm({ project, onClose, onSubmit }) {
                     <option value="international">International</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Principal Investigator — Name / Designation / Address as 3 distinct fields */}
+              <p className="rp-sublabel rp-mt">Principal Investigator</p>
+              <div className="rp-person-grid">
                 <div>
-                  <label>Principal Investigator</label>
-                  <input type="text" value={form.pi} onChange={set("pi")} />
+                  <label>PI Name</label>
+                  <input type="text" value={form.piName} onChange={set("piName")} placeholder="Name" />
                 </div>
                 <div>
-                  <label>PI Designation & Address</label>
-                  <input type="text" value={form.piDesignation} onChange={set("piDesignation")} />
+                  <label>PI Designation</label>
+                  <input type="text" value={form.piDesignation} onChange={set("piDesignation")} placeholder="Designation" />
                 </div>
                 <div>
-                  <label>Co-PI 1 & Designation</label>
-                  <input type="text" value={form.coPI1} onChange={set("coPI1")} />
-                  <input type="text" placeholder="Designation & Address" value={form.coPI1Designation} onChange={set("coPI1Designation")} style={{ marginTop: 6 }} />
-                </div>
-                <div>
-                  <label>Co-PI 2 Designation & Address</label>
-                  <input type="text" value={form.coPI2} onChange={set("coPI2")} />
-                </div>
-                <div>
-                  <label>Co-PI 3 Designation & Address</label>
-                  <input type="text" value={form.coPI3} onChange={set("coPI3")} />
+                  <label>PI Address</label>
+                  <input type="text" value={form.piAddress} onChange={set("piAddress")} placeholder="Address" />
                 </div>
               </div>
-              <div className="rp-form-row">
+
+              {/* Co-PI 1 */}
+              <p className="rp-sublabel rp-mt">Co-PI 1</p>
+              <div className="rp-person-grid">
+                <div>
+                  <label>Co-PI 1 Name</label>
+                  <input type="text" value={form.coPI1Name} onChange={set("coPI1Name")} placeholder="Name" />
+                </div>
+                <div>
+                  <label>Co-PI 1 Designation</label>
+                  <input type="text" value={form.coPI1Designation} onChange={set("coPI1Designation")} placeholder="Designation" />
+                </div>
+                <div>
+                  <label>Co-PI 1 Address</label>
+                  <input type="text" value={form.coPI1Address} onChange={set("coPI1Address")} placeholder="Address" />
+                </div>
+              </div>
+
+              {/* Co-PI 2 */}
+              <p className="rp-sublabel rp-mt">Co-PI 2</p>
+              <div className="rp-person-grid">
+                <div>
+                  <label>Co-PI 2 Name</label>
+                  <input type="text" value={form.coPI2Name} onChange={set("coPI2Name")} placeholder="Name" />
+                </div>
+                <div>
+                  <label>Co-PI 2 Designation</label>
+                  <input type="text" value={form.coPI2Designation} onChange={set("coPI2Designation")} placeholder="Designation" />
+                </div>
+                <div>
+                  <label>Co-PI 2 Address</label>
+                  <input type="text" value={form.coPI2Address} onChange={set("coPI2Address")} placeholder="Address" />
+                </div>
+              </div>
+
+              {/* Co-PI 3 */}
+              <p className="rp-sublabel rp-mt">Co-PI 3</p>
+              <div className="rp-person-grid">
+                <div>
+                  <label>Co-PI 3 Name</label>
+                  <input type="text" value={form.coPI3Name} onChange={set("coPI3Name")} placeholder="Name" />
+                </div>
+                <div>
+                  <label>Co-PI 3 Designation</label>
+                  <input type="text" value={form.coPI3Designation} onChange={set("coPI3Designation")} placeholder="Designation" />
+                </div>
+                <div>
+                  <label>Co-PI 3 Address</label>
+                  <input type="text" value={form.coPI3Address} onChange={set("coPI3Address")} placeholder="Address" />
+                </div>
+              </div>
+
+              <div className="rp-form-row rp-mt">
                 <YNRadio name="externalCollaborators" val={form.externalCollaborators} onChange={set("externalCollaborators")} label="Any external collaborators involved in the project?" />
               </div>
               <div className="rp-form-row">
                 <YNRadio name="moaSigned" val={form.moaSigned} onChange={set("moaSigned")} label="Any MOA/MOU signed?" />
               </div>
 
-              <h3 className="rp-form-section-title" style={{ marginTop: 24 }}>B. Project Details</h3>
+              <h3 className="rp-form-section-title" style={{ marginTop: 28 }}>B. Project Details</h3>
               <div className="rp-form-grid">
                 <div>
                   <label>Project Sanction Reference No.</label>
@@ -7757,17 +7923,22 @@ function ClosureForm({ project, onClose, onSubmit }) {
                 </div>
               </div>
 
+              {/* Budget Released — Date / Amount / CTDT Proc No, as on paper form */}
               <p className="rp-sublabel">Budget Released</p>
               <div className="rp-installment-grid">
                 {[
-                  ["I Instalment", "installment1Amount", "installment1Date"],
-                  ["II Instalment", "installment2Amount", "installment2Date"],
-                  ["III Instalment", "installment3Amount", "installment3Date"],
-                ].map(([label, aKey, dKey]) => (
+                  ["I Instalment", "installment1Amount", "installment1Date", "installment1Ctdt"],
+                  ["II Instalment", "installment2Amount", "installment2Date", "installment2Ctdt"],
+                  ["III Instalment", "installment3Amount", "installment3Date", "installment3Ctdt"],
+                ].map(([label, aKey, dKey, cKey]) => (
                   <div className="rp-instalment" key={label}>
                     <span className="rp-inst-label">{label}</span>
+                    <label className="rp-inst-field-label">Date of release</label>
+                    <input type="date" value={form[dKey]} onChange={set(dKey)} />
+                    <label className="rp-inst-field-label">Amount (₹)</label>
                     <input type="text" placeholder="Amount (₹)" value={form[aKey]} onChange={set(aKey)} />
-                    <input type="date" placeholder="Date of release" value={form[dKey]} onChange={set(dKey)} />
+                    <label className="rp-inst-field-label">CTDT Proc No.</label>
+                    <input type="text" placeholder="CTDT proc no" value={form[cKey]} onChange={set(cKey)} />
                   </div>
                 ))}
               </div>
@@ -7776,26 +7947,29 @@ function ClosureForm({ project, onClose, onSubmit }) {
                 <YNRadio name="majorEquipment" val={form.majorEquipment} onChange={set("majorEquipment")} label="Any major equipment purchased (costing more than ₹10 lakhs)?" />
               </div>
               {form.majorEquipment === "yes" && (
-                <div className="rp-form-grid rp-conditional">
-                  <div>
-                    <label>Cost of Equipment</label>
-                    <input type="text" value={form.equipmentCost} onChange={set("equipmentCost")} />
+                <div className="rp-conditional">
+                  <div className="rp-form-grid" style={{ marginBottom: 14 }}>
+                    <div>
+                      <label>Cost of Equipment</label>
+                      <input type="text" value={form.equipmentCost} onChange={set("equipmentCost")} />
+                    </div>
                   </div>
-                  <div>
-                    <label>CTDT Proc No.</label>
-                    <input type="text" value={form.ctdtProcNo} onChange={set("ctdtProcNo")} />
+                  <p className="rp-sublabel" style={{ marginBottom: 8 }}>
+                    Equipment entry details in department stock register
+                    <span className="rp-hint"> (Enclose the copy of the stock register with this report)</span>
+                  </p>
+                  <div className="rp-form-grid">
+                    <div>
+                      <label>S.No.</label>
+                      <input type="text" value={form.stockEntrySNo} onChange={set("stockEntrySNo")} />
+                    </div>
+                    <div>
+                      <label>Pg.No.</label>
+                      <input type="text" value={form.stockEntryPgNo} onChange={set("stockEntryPgNo")} />
+                    </div>
                   </div>
-                  <div>
-                    <label>S.No.</label>
-                    <input type="text" value={form.ctdtSNo} onChange={set("ctdtSNo")} />
-                  </div>
-                  <div>
-                    <label>Pg.No.</label>
-                    <input type="text" value={form.ctdtPgNo} onChange={set("ctdtPgNo")} />
-                  </div>
-                  <div>
-                    <label>Enclose copy of stock register?</label>
-                    <YNRadio name="stockRegisterEnclose" val={form.stockRegisterEnclose} onChange={set("stockRegisterEnclose")} />
+                  <div className="rp-form-row" style={{ marginTop: 10 }}>
+                    <YNRadio name="stockRegisterEnclose" val={form.stockRegisterEnclose} onChange={set("stockRegisterEnclose")} label="Stock register copy enclosed with this report?" />
                   </div>
                 </div>
               )}
@@ -7812,7 +7986,13 @@ function ClosureForm({ project, onClose, onSubmit }) {
                 </div>
               )}
 
-              <p className="rp-sublabel rp-mt">Percentage of Fund Utilization (based on amount received)</p>
+              {/* Item 7 — Utilization Certificate (separate Yes/No) */}
+              <div className="rp-form-row rp-mt">
+                <YNRadio name="utilizationCertificate" val={form.utilizationCertificate} onChange={set("utilizationCertificate")} label="Utilization Certificate submitted?" />
+              </div>
+
+              {/* Item 8 — Percentage of Fund Utilization (kept distinct from item 7) */}
+              <p className="rp-sublabel rp-mt">Percentage of Fund Utilization (based on the amount received)</p>
               <div className="rp-form-grid">
                 {[["I Year", "utilizationI"], ["II Year", "utilizationII"], ["III Year", "utilizationIII"]].map(([lbl, k]) => (
                   <div key={k}>
@@ -7933,7 +8113,7 @@ function ClosureForm({ project, onClose, onSubmit }) {
                 </div>
               </div>
               <div className="rp-sig-center">
-                <div className="rp-sig-box" style={{ maxWidth: 360 }}>
+                <div className="rp-sig-box" style={{ maxWidth: 380 }}>
                   <span>Signature of the Director/HOD with seal and Date</span>
                   <div className="rp-sig-line" />
                 </div>
@@ -7945,65 +8125,28 @@ function ClosureForm({ project, onClose, onSubmit }) {
           {page === 3 && (
             <div>
               <h3 className="rp-form-section-title">Checklist: Project Closure Report</h3>
-              <table className="rp-checklist-table">
-                <thead>
-                  <tr>
-                    <th className="rp-chth rp-chth-doc">Documents Enclosed</th>
-                    <th className="rp-chth rp-chth-yn">Yes</th>
-                    <th className="rp-chth rp-chth-yn">No</th>
-                    <th className="rp-chth rp-chth-yn">NA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["1. Project Sanction copy", "docProjectSanction"],
-                    ["2. CTDT proceedings", "docCTDTProceedings"],
-                    ["3. Project Extension letter", "docExtensionLetter"],
-                    ["4. Utilization certificate copies (year wise)", "docUCYearwise"],
-                    ["5. Utilization certificate copy Final", "docUCFinal"],
-                    ["6. Reply to audit objection (if any)", "docAuditReply"],
-                    ["7. Project Closure Report", "docCompletionReport"],
-                    ["8. Unspent money return details (if any)", "docUnspentReturn"],
-                    ["9. Publication (First page of publication)", "docPublication"],
-                    ["11. Patent details", "docPatent"],
-                    ["12. Conference/Seminar presented", "docConference"],
-                    ["13. Project closure certificate received from Funding agency", "docClosureCert"],
-                    ["14. Equipment stock register entry (copy) in case of equipment cost more than 10 Lakhs", "docStockRegister"],
-                  ].map(([lbl, fKey]) => (
-                    <CheckDoc key={fKey} label={lbl} fKey={fKey} />
-                  ))}
-                </tbody>
-              </table>
-
-              {/* File upload */}
-              <div className="rp-upload-section">
-                <h4>Upload Supporting Documents</h4>
-                <div
-                  className="rp-dropzone"
-                  onClick={() => fileRef.current?.click()}
-                >
-                  <span>📎 Click to upload files (PDF, JPG, PNG)</span>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    style={{ display: "none" }}
-                    onChange={handleFiles}
-                  />
-                </div>
-                {form.uploads.length > 0 && (
-                  <div className="rp-upload-list">
-                    {form.uploads.map((f, i) => (
-                      <div key={i} className="rp-upload-file">
-                        📄 {f}
-                      </div>
+              <p className="rp-checklist-hint">Mark Yes / No / NA for each item, and attach the matching file using its own Upload button.</p>
+              <div className="rp-table-wrap rp-checklist-wrap">
+                <table className="rp-checklist-table">
+                  <thead>
+                    <tr>
+                      <th className="rp-chth rp-chth-no">S.No</th>
+                      <th className="rp-chth rp-chth-doc">Documents Enclosed</th>
+                      <th className="rp-chth rp-chth-yn">Yes</th>
+                      <th className="rp-chth rp-chth-yn">No</th>
+                      <th className="rp-chth rp-chth-yn">NA</th>
+                      <th className="rp-chth rp-chth-upload-head">Upload</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {DOC_CHECKLIST.map((d) => (
+                      <CheckDocRow key={d.key} no={d.no} label={d.label} fKey={d.key} />
                     ))}
-                  </div>
-                )}
+                  </tbody>
+                </table>
               </div>
 
-              <div className="rp-signature-grid">
+              <div className="rp-signature-grid rp-mt">
                 <div className="rp-sig-box">
                   <span>Name and Signature of PI</span>
                   <div className="rp-sig-line" />
@@ -8034,7 +8177,9 @@ function ClosureForm({ project, onClose, onSubmit }) {
             )}
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <button className="rp-btn-ghost" onClick={downloadPDF}>Download PDF</button>
+            <button className="rp-btn-ghost" onClick={downloadPDF} disabled={pdfBusy}>
+              {pdfBusy ? "Generating…" : "Download PDF"}
+            </button>
             {page < 3 ? (
               <button className="rp-btn-primary" onClick={() => setPage(p => p + 1)}>Next →</button>
             ) : (
@@ -8044,98 +8189,207 @@ function ClosureForm({ project, onClose, onSubmit }) {
         </div>
       </div>
 
-      {/* Hidden PDF content */}
-      <div id="closure-pdf-content" style={{ position: "absolute", left: -9999, top: 0, width: 794, background: "white", padding: 40, fontFamily: "sans-serif", fontSize: 13, color: "#000" }}>
-        <div style={{ textAlign: "center", marginBottom: 20 }}>
-          <strong style={{ fontSize: 16 }}>CENTRE FOR SPONSORED RESEARCH AND CONSULTANCY</strong><br />
-          <strong>ANNA UNIVERSITY</strong><br />
-          <strong>PROJECT CLOSURE REPORT</strong><br />
-          <em style={{ fontSize: 12 }}>[To be submitted to CSRC after closure of each funded project]</em>
+      {/* ── Hidden, but fully laid-out, printable PDF source ───────────────
+          Kept at full A4-ish width with normal visibility (not display:none)
+          so html2canvas can actually rasterize it; only pushed off-screen
+          via position+left so it never appears in the UI. */}
+      <div
+        id={`closure-pdf-content-${project.id}`}
+        className="rp-pdf-source"
+      >
+        <div className="rp-pdf-header">
+          <strong className="rp-pdf-org">CENTRE FOR SPONSORED RESEARCH AND CONSULTANCY</strong>
+          <strong className="rp-pdf-univ">ANNA UNIVERSITY</strong>
+          <strong className="rp-pdf-doctitle">PROJECT COMPLETION REPORT</strong>
+          <em className="rp-pdf-note">[To be submitted to CSRC after completion of Each funded project]</em>
         </div>
-        <hr />
-        <h3>A. Investigators Details</h3>
-        {[
-          ["Project Title", form.projectTitle],
-          ["Funding Agency", form.fundingAgency],
-          ["National/International", form.national],
-          ["Principal Investigator", form.pi],
-          ["PI Designation", form.piDesignation],
-          ["Co-PI 1", form.coPI1],
-          ["Co-PI 2", form.coPI2],
-          ["Co-PI 3", form.coPI3],
-          ["External Collaborators", form.externalCollaborators],
-          ["MOA/MOU Signed", form.moaSigned],
-        ].map(([k, v]) => v ? <p key={k}><strong>{k}:</strong> {v}</p> : null)}
-        <h3>B. Project Details</h3>
-        {[
-          ["Sanction Reference No.", form.sanctionRef],
-          ["Project Duration", form.projectDuration],
-          ["Budget Sanctioned", "₹" + form.budgetSanctioned],
-          ["I Instalment Amount", form.installment1Amount],
-          ["I Instalment Date", form.installment1Date],
-          ["II Instalment Amount", form.installment2Amount],
-          ["II Instalment Date", form.installment2Date],
-          ["III Instalment Amount", form.installment3Amount],
-          ["III Instalment Date", form.installment3Date],
-          ["Major Equipment", form.majorEquipment],
-          ["Extension Obtained", form.extensionObtained],
-          ["Utilization I Year", form.utilizationI],
-          ["Utilization II Year", form.utilizationII],
-          ["Utilization III Year", form.utilizationIII],
-        ].map(([k, v]) => v ? <p key={k}><strong>{k}:</strong> {v}</p> : null)}
-        <h3>Closure Details</h3>
-        {[
-          ["Unspent Money Returned", form.unspentReturned],
-          ["Unspent Amount", form.unspentAmount],
-          ["Mode of Return", form.unspentMode],
-          ["Audit Objection", form.auditObjection],
-          ["Closure Report Submitted", form.completionReportSubmitted],
-          ["Closure Certificate Received", form.closureCertificateReceived],
-          ["TRL Level", form.trlLevel],
-          ["PI Interested in Continuing", form.piInterestedContinue],
-        ].map(([k, v]) => v ? <p key={k}><strong>{k}:</strong> {v}</p> : null)}
-        <p><strong>Outcome:</strong>{form.outcomeProduct ? " Product" : ""}{form.outcomePatent ? " Patent" : ""}{form.outcomePublications ? " Publications" : ""}{form.outcomePhD ? " Ph.D" : ""}</p>
-        <h3>Checklist – Documents Enclosed</h3>
-        <table border="1" cellPadding="6" style={{ borderCollapse: "collapse", width: "100%" }}>
-          <thead><tr><th>Document</th><th>Yes</th><th>No</th><th>NA</th></tr></thead>
+
+        {/* A. Investigators Details — table layout mirroring the paper form */}
+        <table className="rp-pdf-table">
           <tbody>
-            {[
-              ["Project Sanction copy", form.docProjectSanction],
-              ["CTDT proceedings", form.docCTDTProceedings],
-              ["Project Extension letter", form.docExtensionLetter],
-              ["Utilization certificate copies (year wise)", form.docUCYearwise],
-              ["Utilization certificate copy Final", form.docUCFinal],
-              ["Reply to audit objection", form.docAuditReply],
-              ["Project Closure Report", form.docCompletionReport],
-              ["Unspent money return details", form.docUnspentReturn],
-              ["Publication", form.docPublication],
-              ["Patent details", form.docPatent],
-              ["Conference/Seminar presented", form.docConference],
-              ["Project closure certificate", form.docClosureCert],
-              ["Equipment stock register entry", form.docStockRegister],
-            ].map(([doc, val]) => (
-              <tr key={doc}>
-                <td>{doc}</td>
-                <td style={{ textAlign: "center" }}>{val === "yes" ? "✓" : ""}</td>
-                <td style={{ textAlign: "center" }}>{val === "no" ? "✓" : ""}</td>
-                <td style={{ textAlign: "center" }}>{val === "na" ? "✓" : ""}</td>
+            <tr><td className="rp-pdf-section" colSpan={2}>A Investigators Details</td></tr>
+            <tr><td className="rp-pdf-key">1. Project Title</td><td className="rp-pdf-val">{form.projectTitle}</td></tr>
+            <tr><td className="rp-pdf-key">2. Funding Agency</td><td className="rp-pdf-val">{form.fundingAgency}</td></tr>
+            <tr><td className="rp-pdf-key">3. National /International</td><td className="rp-pdf-val">{form.national === "international" ? "International" : "National"}</td></tr>
+            <tr>
+              <td className="rp-pdf-key">4. Principal Investigator<br />Designation and address</td>
+              <td className="rp-pdf-val">
+                {form.piName}{form.piDesignation ? `, ${form.piDesignation}` : ""}{form.piAddress ? `, ${form.piAddress}` : ""}
+              </td>
+            </tr>
+            <tr>
+              <td className="rp-pdf-key">5. Co-Principal Investigator(s)<br />Designation and address</td>
+              <td className="rp-pdf-val">
+                Co-PI 1: {form.coPI1Name}{form.coPI1Designation ? `, ${form.coPI1Designation}` : ""}{form.coPI1Address ? `, ${form.coPI1Address}` : ""}<br />
+                Co-PI 2: {form.coPI2Name}{form.coPI2Designation ? `, ${form.coPI2Designation}` : ""}{form.coPI2Address ? `, ${form.coPI2Address}` : ""}<br />
+                Co-PI 3: {form.coPI3Name}{form.coPI3Designation ? `, ${form.coPI3Designation}` : ""}{form.coPI3Address ? `, ${form.coPI3Address}` : ""}
+              </td>
+            </tr>
+            <tr><td className="rp-pdf-key">6. Any external collaborators involved in the project</td><td className="rp-pdf-val">{form.externalCollaborators === "yes" ? "Yes" : "No"}</td></tr>
+            <tr><td className="rp-pdf-key">7. Any MOA/MOU signed</td><td className="rp-pdf-val">{form.moaSigned === "yes" ? "Yes" : "No"}</td></tr>
+          </tbody>
+        </table>
+
+        {/* B. Project Details */}
+        <table className="rp-pdf-table rp-mt-table">
+          <tbody>
+            <tr><td className="rp-pdf-section" colSpan={2}>B Project Details</td></tr>
+            <tr><td className="rp-pdf-key">1. Project sanction reference no</td><td className="rp-pdf-val">{form.sanctionRef}</td></tr>
+            <tr><td className="rp-pdf-key">2. Project Duration</td><td className="rp-pdf-val">{form.projectDuration}</td></tr>
+            <tr><td className="rp-pdf-key">3. Budget Sanctioned</td><td className="rp-pdf-val">₹{form.budgetSanctioned}</td></tr>
+            <tr>
+              <td className="rp-pdf-key">4. Budget Released</td>
+              <td className="rp-pdf-val">
+                <table className="rp-pdf-subtable">
+                  <thead>
+                    <tr>
+                      <th>Instalment</th><th>Date of release</th><th>Amount</th><th>CTDT proc no</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>I</td><td>{form.installment1Date}</td><td>{form.installment1Amount}</td><td>{form.installment1Ctdt}</td></tr>
+                    <tr><td>II</td><td>{form.installment2Date}</td><td>{form.installment2Amount}</td><td>{form.installment2Ctdt}</td></tr>
+                    <tr><td>III</td><td>{form.installment3Date}</td><td>{form.installment3Amount}</td><td>{form.installment3Ctdt}</td></tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td className="rp-pdf-key">5. Any major Equipment purchased (costing more than 10 lakhs)</td>
+              <td className="rp-pdf-val">
+                {form.majorEquipment === "yes" ? "Yes" : "No"}
+                {form.majorEquipment === "yes" && (
+                  <>
+                    <br />Cost of the Equipment: {form.equipmentCost}
+                    <br />Equipment entry details in department stock register (Enclose the copy of the stock register with this report):
+                    <br />S.No: {form.stockEntrySNo} &nbsp;&nbsp; Pg.No: {form.stockEntryPgNo}
+                  </>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="rp-pdf-key">6. Any Extension obtained from funding agency</td>
+              <td className="rp-pdf-val">{form.extensionObtained === "yes" ? `Yes — ${form.extensionAgency}` : "No"}</td>
+            </tr>
+            <tr><td className="rp-pdf-key">7. Utilization Certificate</td><td className="rp-pdf-val">{form.utilizationCertificate === "yes" ? "Yes" : "No"}</td></tr>
+            <tr>
+              <td className="rp-pdf-key">8. Percentage of Fund Utilization (based on the amount received)</td>
+              <td className="rp-pdf-val">
+                I year: {form.utilizationI || "—"} &nbsp;&nbsp; II Year: {form.utilizationII || "—"} &nbsp;&nbsp; III Year: {form.utilizationIII || "—"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Closure details 9–15 */}
+        <table className="rp-pdf-table rp-mt-table">
+          <tbody>
+            <tr>
+              <td className="rp-pdf-key">9. Any unspent money returned to the funding agency</td>
+              <td className="rp-pdf-val">
+                {form.unspentReturned === "yes"
+                  ? `Yes — Amount: ${form.unspentAmount || "—"}, Mode of return: ${form.unspentMode || "—"}`
+                  : "No"}
+              </td>
+            </tr>
+            <tr><td className="rp-pdf-key">10. Any audit objection received</td><td className="rp-pdf-val">{form.auditObjection === "yes" ? "Yes" : "No"}</td></tr>
+            <tr><td className="rp-pdf-key">11. Whether the project completion report submitted to the funding agency</td><td className="rp-pdf-val">{form.completionReportSubmitted === "yes" ? "Yes" : "No"}</td></tr>
+            <tr><td className="rp-pdf-key">12. Whether project closure certificate received from funding agency</td><td className="rp-pdf-val">{form.closureCertificateReceived === "yes" ? "Yes" : "No"}</td></tr>
+            <tr>
+              <td className="rp-pdf-key">13. Outcome of the project</td>
+              <td className="rp-pdf-val">
+                {[
+                  form.outcomeProduct && "Product",
+                  form.outcomePatent && "Patent",
+                  form.outcomePublications && "Publications",
+                  form.outcomePhD && "Ph.D",
+                ].filter(Boolean).join(", ") || "—"}
+              </td>
+            </tr>
+            <tr><td className="rp-pdf-key">14. The TRL level of the Project outcome</td><td className="rp-pdf-val">{form.trlLevel || "—"}</td></tr>
+            <tr>
+              <td className="rp-pdf-key">15. Whether the PI is interested in continuing the project to improve the TRL?</td>
+              <td className="rp-pdf-val">{form.piInterestedContinue === "na" ? "NA" : form.piInterestedContinue === "yes" ? "Yes" : "No"}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p className="rp-pdf-certify">
+          It is certified that the project has been completed and the proposed objective are met. The received
+          fund has been utilized as per the Funding agency/Anna University norms. There is no unspent money
+          left in the project. The project completion report and final UC have been submitted to the funding
+          agency.
+        </p>
+
+        <div className="rp-pdf-sig-row">
+          <div className="rp-pdf-sig-box">Name and Signature of PI</div>
+          <div className="rp-pdf-sig-box">Name and Signature of Co-PIs</div>
+        </div>
+        <div className="rp-pdf-sig-center">
+          <div className="rp-pdf-sig-box">Signature of the Director/HOD of the PI with seal and Date</div>
+        </div>
+
+        <div className="rp-pdf-office">
+          <strong>Office Use</strong>
+          <p>Verified the submitted documents &nbsp;&nbsp; REMARKS: ……………………………………</p>
+          <div className="rp-pdf-office-row">
+            <span>Dealing hand</span>
+            <span>Superintendent</span>
+            <span>Director CSRC</span>
+          </div>
+        </div>
+
+        {/* Checklist page — own page in the PDF */}
+        <div className="rp-pdf-pagebreak" />
+        <div className="rp-pdf-header rp-pdf-header-2">
+          <strong className="rp-pdf-org">CENTRE FOR SPONSORED RESEARCH AND CONSULTANCY</strong>
+          <strong className="rp-pdf-univ">ANNA UNIVERSITY</strong>
+          <strong className="rp-pdf-doctitle">CHECKLIST:: PROJECT COMPLETION REPORT</strong>
+        </div>
+        <table className="rp-pdf-table">
+          <tbody>
+            <tr><td className="rp-pdf-key">1. Project Title</td><td className="rp-pdf-val">{form.projectTitle}</td></tr>
+            <tr><td className="rp-pdf-key">2. Funding Agency</td><td className="rp-pdf-val">{form.fundingAgency}</td></tr>
+            <tr>
+              <td className="rp-pdf-key">4. Principal Investigators</td>
+              <td className="rp-pdf-val">
+                PI: {form.piName}<br />
+                Co-PI 1: {form.coPI1Name}<br />
+                Co-PI 2: {form.coPI2Name}<br />
+                Co-PI 3: {form.coPI3Name}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table className="rp-pdf-checklist">
+          <thead>
+            <tr>
+              <th>S No</th><th>Documents Enclosed</th><th>Yes</th><th>No</th><th>NA</th><th>Files attached</th>
+            </tr>
+          </thead>
+          <tbody>
+            {DOC_CHECKLIST.map((d) => (
+              <tr key={d.key}>
+                <td>{d.no}</td>
+                <td className="rp-pdf-doclabel">{d.label}</td>
+                <td className="rp-pdf-center">{form[d.key] === "yes" ? "✓" : ""}</td>
+                <td className="rp-pdf-center">{form[d.key] === "no" ? "✓" : ""}</td>
+                <td className="rp-pdf-center">{form[d.key] === "na" ? "✓" : ""}</td>
+                <td className="rp-pdf-files">{(form.uploadsByDoc[d.key] || []).join(", ") || "—"}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div style={{ marginTop: 40 }}>
-          <p>It is certified that the project has been closed and the proposed objectives are met. The received fund has been utilized as per the Funding agency/Anna University norms.</p>
+
+        <div className="rp-pdf-sig-row rp-mt-table">
+          <div className="rp-pdf-sig-box">Name and Signature of PI</div>
+          <div className="rp-pdf-sig-box">Name and Signature of Co-PIs</div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 40 }}>
-          <div style={{ borderTop: "1px solid #000", width: 200, paddingTop: 4, textAlign: "center" }}>Name and Signature of PI</div>
-          <div style={{ borderTop: "1px solid #000", width: 200, paddingTop: 4, textAlign: "center" }}>Name and Signature of Co-PIs</div>
-        </div>
-        <div style={{ textAlign: "center", marginTop: 32 }}>
-          <div style={{ borderTop: "1px solid #000", width: 260, margin: "0 auto", paddingTop: 4 }}>Signature of the Director/HOD with seal and Date</div>
-        </div>
-        <div style={{ marginTop: 40, borderTop: "2px solid #000", paddingTop: 10 }}>
-          <strong>Office Use</strong><br />
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
+        <div className="rp-pdf-office">
+          <strong>Office Use</strong>
+          <p>Verified the submitted documents</p>
+          <div className="rp-pdf-office-row">
             <span>Dealing hand</span>
             <span>Superintendent</span>
             <span>Director CSRC</span>
