@@ -45,26 +45,10 @@ const cards = [
   },
   {
     id: 'zbaslip',
-    title: 'ZBA Slip',
-    desc: 'Generate and manage Zero Balance Account slips.',
+    title: 'Claim Bills',
+    desc: 'Manage Bill Claims',
     color: '#818cf8',
     glow: 'rgba(129,140,248,0.3)',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>,
-  },
-  {
-    id: 'tsaslip',
-    title: 'TSA(H) Slip',
-    desc: 'Manage Treasury Single Account (Head) slip submissions.',
-    color: '#4ade80',
-    glow: 'rgba(74,222,128,0.3)',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>,
-  },
-  {
-    id: 'cmrgslip',
-    title: 'CMRG Slip',
-    desc: 'Handle Contingency Meeting & Research Grant slip records.',
-    color: '#fbbf24',
-    glow: 'rgba(251,191,36,0.3)',
     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>,
   },
 ];
