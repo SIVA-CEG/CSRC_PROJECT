@@ -22,9 +22,7 @@ const navItems = [
       { id: 'projectstaff', label: 'Project Staff' },
       { id: 'requestforms', label: 'Request Forms' },
       { id: 'paymentclaims', label: 'Payment Claims' },
-      { id: 'zbaslip', label: 'ZBA Slip' },
-      { id: 'tsaslip', label: 'TSA(H) Slip' },
-      { id: 'cmrgslip', label: 'CMRG Slip' },
+      { id: 'zbaslip', label: 'Claim Bills' },
       {
   id: 'seuc',
   label: 'SE - UC'

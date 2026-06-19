@@ -8,7 +8,6 @@ const TABS = [
   { key: "advance", label: "Advance Payments" },
   { key: "reimbursements", label: "Reimbursements" },
   { key: "supplier", label: "Supplier Claims" },
-  { key: "salary", label: "Staff Salary Claims" },
 ];
 
 export default function PaymentClaimsPage() {
