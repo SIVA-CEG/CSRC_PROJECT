@@ -24,8 +24,8 @@ const navItems = [
       { id: 'paymentclaims', label: 'Payment Claims' },
       { id: 'zbaslip', label: 'Claim Bills' },
       {
-  id: 'seuc',
-  label: 'SE - UC'
+  id: 'statementofexpenditure',
+  label: 'Statement Of Expenditure'
 },
       {
   id: 'reports',

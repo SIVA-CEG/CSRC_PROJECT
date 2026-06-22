@@ -321,7 +321,7 @@ const DocumentViewer = ({ contract, onBack }) => (
     </div>
     <div className="ps-form-panel">
       {contract.documents.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255,255,255,0.3)', fontFamily: 'DM Sans, sans-serif' }}>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#9ca3af', fontFamily: 'DM Sans, sans-serif' }}>
           No documents uploaded for this contract.
         </div>
       ) : (
@@ -332,9 +332,9 @@ const DocumentViewer = ({ contract, onBack }) => (
           <tbody>
             {contract.documents.map((doc, i) => (
               <tr key={doc.id}>
-                <td style={{ textAlign: 'center', color: 'rgba(255,255,255,0.35)', width: 60 }}>{i + 1}</td>
-                <td style={{ fontWeight: 500, color: 'rgba(255,255,255,0.8)' }}>{doc.name}</td>
-                <td style={{ color: 'rgba(255,255,255,0.45)', fontVariantNumeric: 'tabular-nums' }}>{doc.date}</td>
+                <td style={{ textAlign: 'center', color: '#9ca3af', width: 60 }}>{i + 1}</td>
+                <td style={{ fontWeight: 500, color: '#1f2937' }}>{doc.name}</td>
+                <td style={{ color: '#6b7280', fontVariantNumeric: 'tabular-nums' }}>{doc.date}</td>
                 <td><a href="#" className="ps-file-link">{doc.file}</a></td>
                 <td><span className="ps-badge verified"><span className="ps-badge-dot"/>{doc.status}</span></td>
                 <td>
@@ -450,7 +450,7 @@ const SubmittedAppointmentsList = ({ items, onPreview }) => {
     <div style={{ marginTop: 32 }}>
       {/* Outer card — matches ps-sub-card visual language */}
       <div style={{
-        background: 'rgba(255,255,255,0.03)',
+        background: '#ffffff',
         border: '1px solid rgba(251,146,60,0.25)',
         borderRadius: 18,
         overflow: 'hidden',
@@ -477,10 +477,10 @@ const SubmittedAppointmentsList = ({ items, onPreview }) => {
               </svg>
             </div>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
+              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#111827' }}>
                 Pending Uploads — New Appointments
               </div>
-              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>
+              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#6b7280', marginTop: 3 }}>
                 {items.length} order{items.length !== 1 ? 's' : ''} submitted
                 {pendingCount > 0 && <span style={{ marginLeft: 8, color: '#fb923c' }}>· {pendingCount} awaiting upload{pendingCount !== 1 ? 's' : ''}</span>}
               </div>
@@ -497,7 +497,7 @@ const SubmittedAppointmentsList = ({ items, onPreview }) => {
                 ✓ All uploaded
               </span>
             )}
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2" style={{ width: 16, height: 16, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" style={{ width: 16, height: 16, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}>
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </div>
@@ -525,10 +525,10 @@ const SubmittedAppointmentsList = ({ items, onPreview }) => {
                   <tr key={item.id}>
                     <td className="ps-sl-num">{i + 1}</td>
                     <td className="ps-name-cell">{item.staffName || '—'}</td>
-                    <td style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>{item.appointmentOrderNo || '—'}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.contractFrom) || '—'}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.contractTo) || '—'}</td>
-                    <td style={{ color: 'rgba(255,255,255,0.7)' }}>₹{parseInt(item.fixedSalary || 0).toLocaleString('en-IN')}</td>
+                    <td style={{ color: '#6b7280', fontSize: 12 }}>{item.appointmentOrderNo || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#6b7280' }}>{fmtDate(item.contractFrom) || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#6b7280' }}>{fmtDate(item.contractTo) || '—'}</td>
+                    <td style={{ color: '#374151' }}>₹{parseInt(item.fixedSalary || 0).toLocaleString('en-IN')}</td>
                     <td>
                       <button onClick={() => onPreview(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 12px', fontSize: 12, borderRadius: 8, whiteSpace: 'nowrap', background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.22)', color: '#00b4ff', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif' }}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 12, height: 12 }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -568,7 +568,7 @@ const SubmittedExtensionsList = ({ items, onPreview }) => {
     <div style={{ marginTop: 32 }}>
       {/* Outer card */}
       <div style={{
-        background: 'rgba(255,255,255,0.03)',
+        background: '#ffffff',
         border: '1px solid rgba(167,139,250,0.25)',
         borderRadius: 18,
         overflow: 'hidden',
@@ -595,10 +595,10 @@ const SubmittedExtensionsList = ({ items, onPreview }) => {
               </svg>
             </div>
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
+              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#111827' }}>
                 Pending Uploads — Extensions
               </div>
-              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>
+              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#6b7280', marginTop: 3 }}>
                 {items.length} extension{items.length !== 1 ? 's' : ''} submitted
                 {pendingCount > 0 && <span style={{ marginLeft: 8, color: '#a78bfa' }}>· {pendingCount} awaiting upload{pendingCount !== 1 ? 's' : ''}</span>}
               </div>
@@ -615,7 +615,7 @@ const SubmittedExtensionsList = ({ items, onPreview }) => {
                 ✓ All uploaded
               </span>
             )}
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2" style={{ width: 16, height: 16, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" style={{ width: 16, height: 16, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease' }}>
               <polyline points="6 9 12 15 18 9"/>
             </svg>
           </div>
@@ -643,10 +643,10 @@ const SubmittedExtensionsList = ({ items, onPreview }) => {
                   <tr key={item.id}>
                     <td className="ps-sl-num">{i + 1}</td>
                     <td className="ps-name-cell">{item.staffName || '—'}</td>
-                    <td style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>{item.extnOrderNo || '—'}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.extnFrom) || '—'}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.5)' }}>{fmtDate(item.extnTo) || '—'}</td>
-                    <td style={{ color: 'rgba(255,255,255,0.7)' }}>₹{parseInt(item.fixedSalary || 0).toLocaleString('en-IN')}</td>
+                    <td style={{ color: '#6b7280', fontSize: 12 }}>{item.extnOrderNo || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#6b7280' }}>{fmtDate(item.extnFrom) || '—'}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#6b7280' }}>{fmtDate(item.extnTo) || '—'}</td>
+                    <td style={{ color: '#374151' }}>₹{parseInt(item.fixedSalary || 0).toLocaleString('en-IN')}</td>
                     <td>
                       <button onClick={() => onPreview(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 12px', fontSize: 12, borderRadius: 8, whiteSpace: 'nowrap', background: 'rgba(0,180,255,0.08)', border: '1px solid rgba(0,180,255,0.22)', color: '#00b4ff', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif' }}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 12, height: 12 }}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -791,8 +791,8 @@ const NewContractForm = ({ projectId, facultyId, staffName, designation, onSave,
               <svg viewBox="0 0 24 24" fill="none" stroke="#00b4ff" strokeWidth="2" style={{ width: 16, height: 16 }}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             <div>
-              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.85)' }}>{faculty.name}</div>
-              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{faculty.dept}</div>
+              <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 13, fontWeight: 700, color: '#111827' }}>{faculty.name}</div>
+              <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 11, color: '#6b7280' }}>{faculty.dept}</div>
             </div>
           </div>
         )}
@@ -903,19 +903,19 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
           <div className="ps-inner-sub">{project ? `${project.code} — ${project.name}` : ''}</div>
         </div>
         <div style={{ position: 'relative' }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: 'rgba(255,255,255,0.3)' }}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#9ca3af' }}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input className="ps-input" style={{ paddingLeft: 32, width: 200 }} placeholder="Search staff name..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
         </div>
       </div>
       <div style={{ marginBottom: 24 }}>
-        <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 11, fontWeight: 700, letterSpacing: '1.1px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 11, fontWeight: 700, letterSpacing: '1.1px', textTransform: 'uppercase', color: '#9ca3af', marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid #e5e7eb' }}>
           Faculty / Principal Investigators
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {projectFaculty.map(faculty => (
             <div key={faculty.id} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
+              background: '#ffffff', border: '1px solid #e5e7eb',
               borderRadius: 14, padding: '14px 20px', flexWrap: 'wrap', gap: 12,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -923,8 +923,8 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
                   <svg viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2" style={{ width: 18, height: 18 }}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>{faculty.name}</div>
-                  <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>{faculty.role} · {faculty.dept.replace('DEPARTMENT OF ', '')}</div>
+                  <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 15, fontWeight: 700, color: '#111827' }}>{faculty.name}</div>
+                  <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#6b7280', marginTop: 2 }}>{faculty.role} · {faculty.dept.replace('DEPARTMENT OF ', '')}</div>
                 </div>
               </div>
               <button className="ps-btn-primary orange" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 18px', fontSize: 13 }} onClick={() => onAddAppointment(faculty)}>
@@ -937,7 +937,7 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
       </div>
       <div className="ps-table-card">
         {total === 0 ? (
-          <div style={{ textAlign: 'center', padding: '48px 20px', color: 'rgba(255,255,255,0.25)', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
+          <div style={{ textAlign: 'center', padding: '48px 20px', color: '#9ca3af', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
             No appointment orders for this project yet.
           </div>
         ) : (
@@ -963,9 +963,9 @@ const FacultyStaffTable = ({ contracts, projectId, onAddAppointment, onDocs, onA
                     <td className="ps-sl-num">{(page - 1) * PER_PAGE + i + 1}</td>
                     <td className="ps-name-cell">{c.staffName} ({c.id})</td>
                     <td>{c.designation}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{c.contractFrom}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{c.contractTo}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{c.joinDueDate}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#4b5563' }}>{c.contractFrom}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#4b5563' }}>{c.contractTo}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#4b5563' }}>{c.joinDueDate}</td>
                     <td>
                       <button className="ps-icon-btn doc" title="View Documents" onClick={() => onDocs(c)}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -1241,7 +1241,7 @@ const NewAppointmentFlow = ({ onBack, onPreviewReport }) => {
           {projectFaculty.map(faculty => (
             <div key={faculty.id} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
+              background: '#ffffff', border: '1px solid #e5e7eb',
               borderRadius: 14, padding: '18px 22px', flexWrap: 'wrap', gap: 12,
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -1249,9 +1249,9 @@ const NewAppointmentFlow = ({ onBack, onPreviewReport }) => {
                   <svg viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2" style={{ width: 20, height: 20 }}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>{faculty.name}</div>
-                  <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 3 }}>{faculty.role}</div>
-                  <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 1 }}>{faculty.dept}</div>
+                  <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 16, fontWeight: 700, color: '#111827' }}>{faculty.name}</div>
+                  <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#6b7280', marginTop: 3 }}>{faculty.role}</div>
+                  <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 11, color: '#9ca3af', marginTop: 1 }}>{faculty.dept}</div>
                 </div>
               </div>
               <button
@@ -1341,8 +1341,7 @@ const ExtensionProjectView = ({
           setSubmittedExtensions(prev => [newExt, ...prev]);
 
 setShowExtnForm(false);
-setView('entry');
-setScreen('pending-extension');
+onBack();
         }}
         onBack={() => setShowExtnForm(false)}
       />
@@ -1363,8 +1362,8 @@ setScreen('pending-extension');
       </div>
       <div className="ps-project-selector-bar" style={{ marginBottom: 24 }}>
         <div className="ps-project-selector-inner">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 16, height: 16, color: 'rgba(255,255,255,0.4)', flexShrink: 0 }}><path d="M3 7a2 2 0 012-2h4l2 3H19a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
-          <label style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap' }}>Select Project</label>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 16, height: 16, color: '#6b7280', flexShrink: 0 }}><path d="M3 7a2 2 0 012-2h4l2 3H19a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+          <label style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: '#6b7280', whiteSpace: 'nowrap' }}>Select Project</label>
           <select className="ps-select" style={{ flex: 1, maxWidth: 420 }} value={selectedProject} onChange={e => setSelectedProject(e.target.value)}>
             <option value="">-- Choose a Project --</option>
             {PROJECTS.map(p => <option key={p.id} value={p.id}>{p.code} — {p.name}</option>)}
@@ -1374,7 +1373,7 @@ setScreen('pending-extension');
       {selectedProject ? (
         <div className="ps-table-card">
           {contracts.filter(c => c.projectId === selectedProject).length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '48px', color: 'rgba(255,255,255,0.25)', fontFamily: 'DM Sans, sans-serif' }}>No contracts found for this project.</div>
+            <div style={{ textAlign: 'center', padding: '48px', color: '#9ca3af', fontFamily: 'DM Sans, sans-serif' }}>No contracts found for this project.</div>
           ) : (
             <div className="ps-table-wrap">
               <table className="ps-table">
@@ -1395,8 +1394,8 @@ setScreen('pending-extension');
                       <td className="ps-sl-num">{i + 1}</td>
                       <td className="ps-name-cell">{c.staffName}</td>
                       <td>{c.designation}</td>
-                      <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{c.contractFrom}</td>
-                      <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{c.contractTo}</td>
+                      <td style={{ fontVariantNumeric: 'tabular-nums', color: '#4b5563' }}>{c.contractFrom}</td>
+                      <td style={{ fontVariantNumeric: 'tabular-nums', color: '#4b5563' }}>{c.contractTo}</td>
                       <td><span className={`ps-badge ${c.status === 'VERIFIED' ? 'verified' : 'pending'}`}><span className="ps-badge-dot"/>{c.status}</span></td>
                       <td>
                         <button className="ps-icon-btn ext" title="Add Extension" onClick={() => handleExtn(c)}>
@@ -1412,7 +1411,7 @@ setScreen('pending-extension');
         </div>
       ) : (
         <div className="ps-table-card" style={{ padding: '48px 20px', textAlign: 'center' }}>
-          <div style={{ color: 'rgba(255,255,255,0.2)', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>Please select a project to view staff contracts.</div>
+          <div style={{ color: '#9ca3af', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>Please select a project to view staff contracts.</div>
         </div>
       )}
 
@@ -1552,17 +1551,20 @@ const [submittedExtensions, setSubmittedExtensions] = useState([
       )}
 
       {/* CHANGED: ExtensionProjectView now manages its own submitted list and calls onPreviewReport */}
-      {view === 'extn-flow' && (
-        <ExtensionProjectView
-  contracts={contracts}
-  submittedExtensions={submittedExtensions}
-  setSubmittedExtensions={setSubmittedExtensions}
-  onBack={() => setView('entry')}
-  onPreviewReport={(data, type, pid, fid) =>
-    handlePreviewReport(data, type, pid, fid, 'extn-flow')
-  }
-/>
-      )}
+{view === 'extn-flow' && (
+  <ExtensionProjectView
+    contracts={contracts}
+    submittedExtensions={submittedExtensions}
+    setSubmittedExtensions={setSubmittedExtensions}
+    onBack={() => {
+      setView('entry');
+      setScreen('pending-extension'); // ← land on pending uploads after submit
+    }}
+    onPreviewReport={(data, type, pid, fid) =>
+      handlePreviewReport(data, type, pid, fid, 'extn-flow')
+    }
+  />
+)}
 
       {view === 'report' && reportData && (
         <AppointmentReport

@@ -66,8 +66,15 @@ const emptyForm = {
 const ProjectSelector = ({ selectedProject, onChange }) => (
   <div className="ps-project-selector-bar">
     <div className="ps-project-selector-inner">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 16, height: 16, color: 'rgba(255,255,255,0.4)', flexShrink: 0 }}><path d="M3 7a2 2 0 012-2h4l2 3H19a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
-      <label style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap' }}>Select Project</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ width: 16, height: 16, color: '#6b7280', flexShrink: 0 }}><path d="M3 7a2 2 0 012-2h4l2 3H19a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg>
+      <label
+  style={{
+    fontFamily: 'DM Sans, sans-serif',
+    fontSize: 13,
+    color: '#6b7280',
+    whiteSpace: 'nowrap'
+  }}
+> Select Project</label>
       <select
         className="ps-select"
         style={{ flex: 1, maxWidth: 420 }}
@@ -108,7 +115,7 @@ const StaffList = ({ staff, projectId, onAdd, onEdit, onDelete }) => {
 
       <div className="ps-table-card">
         {total === 0 ? (
-          <div style={{ textAlign: 'center', padding: '48px 20px', color: 'rgba(255,255,255,0.25)', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
+          <div style={{ textAlign: 'center', padding: '48px 20px', color: '#9ca3af', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
             No staff assigned to this project yet.
           </div>
         ) : (
@@ -131,8 +138,8 @@ const StaffList = ({ staff, projectId, onAdd, onEdit, onDelete }) => {
                     <td className="ps-sl-num">{(page - 1) * PER_PAGE + i + 1}</td>
                     <td className="ps-name-cell">{s.salutation} {s.name} {s.initial}</td>
                     <td>{s.designation}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums', color: 'rgba(255,255,255,0.55)' }}>{s.mobile}</td>
-                    <td style={{ color: 'rgba(255,255,255,0.55)', fontVariantNumeric: 'tabular-nums' }}>{s.startDate}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums', color: '#4b5563' }}>{s.mobile}</td>
+                    <td style={{ color: '#4b5563', fontVariantNumeric: 'tabular-nums' }}>{s.startDate}</td>
                     <td>
                       <span className={`ps-badge ${s.status === 'Service' ? 'verified' : 'pending'}`}>
                         <span className="ps-badge-dot"/>
@@ -401,10 +408,17 @@ const StaffDetails = ({ onBack }) => {
               onDelete={handleDelete}
             />
           ) : (
-            <div className="ps-table-card" style={{ padding: '48px 20px', textAlign: 'center' }}>
-              <div style={{ color: 'rgba(255,255,255,0.2)', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
-                Please select a project above to view its staff.
-              </div>
+            <div
+  className="ps-table-card"
+  style={{
+    padding: '48px 20px',
+    textAlign: 'center',
+    minHeight: '180px'
+  }}
+>
+              <div style={{ color: '#6b7280', fontFamily: 'DM Sans, sans-serif', fontSize: 14 }}>
+  Please select a project above to view its staff.
+</div>
             </div>
           )}
         </>

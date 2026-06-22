@@ -2135,14 +2135,14 @@ export default function ZBASlipPage() {
   /* ── Projects ── */
   const renderProjects = () => (
     <div className="slip-table-card">
-      <h2>ZBA Slip — Projects</h2>
+      <h2>Projects</h2>
       <div className="slip-table-wrap">
         <table>
-          <thead><tr><th>Project ID</th><th>Project Title</th><th>PI</th><th>Dept.</th><th>Sanctioned</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Project No.</th><th>Scheme</th><th>Project Title</th><th>PI</th><th>Dept.</th><th>Sanctioned</th><th>Actions</th></tr></thead>
           <tbody>
             {PROJECTS.map(p => (
               <tr key={p.id}>
-                <td>{p.id}</td><td>{p.title}</td><td>{p.pi}</td><td>{p.department}</td><td>{fmt(p.sanctionedAmount)}</td>
+                <td>{p.projectNo}</td><td>{p.scheme}</td><td>{p.title}</td><td>{p.pi}</td><td>{p.department}</td><td>{fmt(p.sanctionedAmount)}</td>
                 <td style={{ display: "flex", gap: 0 }}>
                   <button className="slip-view-btn" onClick={() => { setSelectedProject(p); setScreen("headType"); }}>Update Claim</button>
                   <button className="settled-btn" onClick={() => { setSettledProject(p); setSettledTab(p.id); }}>📋 Settled Bills</button>
@@ -2306,7 +2306,7 @@ export default function ZBASlipPage() {
             <div className="settled-tabs">
               {PROJECTS.map(p => (
                 <button key={p.id} className={`settled-tab ${settledTab === p.id ? "active" : ""}`} onClick={() => setSettledTab(p.id)}>
-                  {p.id} — {p.title}
+                  {p.projectNo} — {p.title}
                   {projectClaims(p.id).filter(c => c.status === "approved").length > 0 && <span style={{ marginLeft: 6, background: "rgba(34,197,94,0.15)", color: "#22c55e", borderRadius: 999, padding: "1px 7px", fontSize: 10, fontWeight: 700 }}>{projectClaims(p.id).filter(c => c.status === "approved").length}</span>}
                 </button>
               ))}

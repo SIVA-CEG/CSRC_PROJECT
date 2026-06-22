@@ -16,8 +16,6 @@ import ProjectStaffPage     from './pages/projects/projectstaff/ProjectStaffPage
 import RequestFormsPage     from './pages/projects/requestforms/RequestFormsPage';
 import PaymentClaimsPage    from './pages/projects/paymentclaims/PaymentClaimsPage';
 import ZBASlipPage          from './pages/projects/zbaslip/ZBASlipPage';
-import TSASlipPage          from './pages/projects/tsaslip/TSASlipPage';
-import CMRGSlipPage         from './pages/projects/cmrgslip/CMRGSlipPage';
 import ConsultanciesPage    from './pages/consultancies/ConsultanciesPage';
 import TestingPage          from './pages/testing/TestingPage';
 import TrainingPage         from './pages/training/TrainingPage';
@@ -30,7 +28,7 @@ import ProjectExtensionHistory from './pages/projects/requestforms/ProjectExtens
 import ProjectExtensionPage from './pages/projects/requestforms/ProjectExtensionPage';
 
 
-import SEUC from './pages/projects/SEUC';
+import StatementOfExpenditure from './pages/projects/StatementOfExpenditure';
 import Reports from './pages/projects/Reports';   // ← NEW
 
 function App() {
@@ -86,9 +84,7 @@ function App() {
 
       case 'paymentclaims':     return <PaymentClaimsPage   onNavigate={navigate} />;
       case 'zbaslip':           return <ZBASlipPage          onNavigate={navigate} />;
-      case 'tsaslip':           return <TSASlipPage          onNavigate={navigate} />;
-      case 'cmrgslip':          return <CMRGSlipPage         onNavigate={navigate} />;
-      case 'seuc':              return <SEUC                  onNavigate={navigate} />;
+      case 'statementofexpenditure':              return <StatementOfExpenditure                  onNavigate={navigate} />;
       case 'reports':           return <Reports               onNavigate={navigate} />;  // ← NEW
       case 'consultancies':     return <ConsultanciesPage    onNavigate={navigate} />;
       case 'testing':           return <TestingPage />;
