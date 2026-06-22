@@ -55,22 +55,34 @@ function App() {
       case 'requestforms':      return <RequestFormsPage    onNavigate={navigate} />;
 
       case 'reappropriationdashboard':
-  return <ReappropriationDashboard onNavigate={navigate} />;
+        return <ReappropriationDashboard onNavigate={navigate} />;
 
-  case 'project-reappropriation-request':
-  return <ReappropriationPage onNavigate={navigate} />;
+      // Type (with / without instalment) is now chosen ONLY on the
+      // Dashboard above, which routes here with the type baked into
+      // the route name — no more in-page type-selection screen.
+      case 'reappropriation-without':
+        return <ReappropriationPage claimType="without" onNavigate={navigate} />;
 
-case 'reappropriationhistory':
-  return <ReappropriationHistory onNavigate={navigate} />;
+      case 'reappropriation-with':
+        return <ReappropriationPage claimType="with" onNavigate={navigate} />;
 
-  case 'project-extension-dashboard':
-  return <ProjectExtensionDashboard onNavigate={navigate} />;
+      case 'reappropriationhistory':
+        return <ReappropriationHistory onNavigate={navigate} />;
 
-case 'project-extension':
-  return <ProjectExtensionPage onNavigate={navigate} />;
+      case 'project-extension-dashboard':
+        return <ProjectExtensionDashboard onNavigate={navigate} />;
 
-case 'project-extension-history':
-  return <ProjectExtensionHistory onNavigate={navigate} />;
+      // Type (without / with new grant) is chosen ONLY on the Dashboard
+      // above, which routes here with the type baked into the route name —
+      // same convention as reappropriation-without / reappropriation-with.
+      case 'project-extension-without':
+        return <ProjectExtensionPage extensionType="without" onNavigate={navigate} />;
+
+      case 'project-extension-with':
+        return <ProjectExtensionPage extensionType="with" onNavigate={navigate} />;
+
+      case 'project-extension-history':
+        return <ProjectExtensionHistory onNavigate={navigate} />;
 
       case 'paymentclaims':     return <PaymentClaimsPage   onNavigate={navigate} />;
       case 'zbaslip':           return <ZBASlipPage          onNavigate={navigate} />;

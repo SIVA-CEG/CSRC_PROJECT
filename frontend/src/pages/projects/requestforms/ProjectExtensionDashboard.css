@@ -131,3 +131,93 @@
     font-size: 20px;
   }
 }
+/* ProjectExtensionDashboard.css — mirrors ReappropriationDashboard.css */
+
+.ped-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Header */
+.ped-header { text-align: center; margin-bottom: 36px; }
+.ped-eyebrow {
+  font-size: 11px; font-weight: 700; color: #94a3b8;
+  text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;
+}
+.ped-title { font-size: 28px; font-weight: 800; color: #0f172a; margin: 0 0 10px; }
+.ped-sub   { font-size: 15px; color: #64748b; margin: 0; }
+
+/* Stats */
+.ped-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 36px;
+}
+.ped-stat-card {
+  background: var(--sb); border: 1px solid var(--sbr);
+  border-radius: 14px; padding: 16px 18px;
+}
+.ped-stat-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; }
+.ped-stat-value { font-size: 28px; font-weight: 800; color: var(--sc); margin-top: 4px; line-height: 1; }
+
+/* Divider */
+.ped-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px; color: #94a3b8; font-size: 12px; font-weight: 600;
+}
+.ped-divider::before, .ped-divider::after {
+  content: ""; flex: 1; height: 1px; background: #e2e8f0;
+}
+
+/* Cards */
+.ped-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+.ped-card {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: #fff; border: 2px solid var(--ab);
+  border-radius: 16px; padding: 22px 20px;
+  text-align: left; cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.ped-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  border-color: var(--ac);
+}
+
+.ped-card-icon-wrap {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: var(--al); display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.ped-card-icon { font-size: 26px; }
+
+.ped-card-body { flex: 1; }
+.ped-card-title { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.ped-card-desc  { font-size: 13px; color: #64748b; line-height: 1.6; margin: 0 0 10px; }
+.ped-card-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ped-chip {
+  font-size: 10px; font-weight: 700; padding: 3px 9px;
+  border-radius: 999px; background: var(--al); color: var(--ac);
+  border: 1px solid var(--ab);
+}
+.ped-card-arrow {
+  font-size: 20px; color: var(--ac); align-self: center; flex-shrink: 0;
+}
+
+/* Info strip */
+.ped-info-strip {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 12px; padding: 14px 18px;
+  font-size: 12px; color: #64748b; line-height: 1.6;
+}
+.ped-info-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+@media (max-width: 640px) {
+  .ped-stats { grid-template-columns: repeat(2, 1fr); }
+  .ped-title { font-size: 22px; }
+}

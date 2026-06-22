@@ -1,688 +1,1221 @@
-import React, { useState, useRef } from "react";
+// PATH: frontend/src/pages/projects/requestforms/ProjectExtensionPage.jsx
+import React, { useState, useEffect, useRef } from "react";
 import "./ProjectExtensionPage.css";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import html2pdf from "html2pdf.js";
+import { useProjectContext } from "../requestforms/ProjectContext";
+/* ─── Static lookup data ───────────────────────────────────────────────────── */
+const FUNDING_AGENCIES = [
+  "AICTE", "ANRF", "BIRAC", "CSIR", "DBT", "DBT-BIRAC", "DRDO", "DST", "ICMR",
+  "ICSSR", "ISRO", "MeitY", "MNRE", "NABARD", "NCERT", "SERB", "SERB POWER",
+  "SERB-SURE", "SPARC", "SURE", "TANGEDCO", "TNSCST", "UGC", "UGC-DAE CSR",
+  "Anusandhan National Research Foundation",
+  "Biotechnology Industry Research Assistance Council (BIRAC)",
+  "Council of Scientific and Industrial Research",
+  "Defence Research and Development Organisation",
+  "Department of Biotechnology",
+  "Department of Science and Technology",
+  "Indian Council of Medical Research",
+  "Indian Space Research Organisation",
+  "Ministry of Education (MoE)",
+  "Ministry of Electronics and Information Technology",
+  "Ministry of New and Renewable Energy (MNRE)",
+  "Science and Engineering Research Board, New Delhi",
+  "Tamil Nadu State Council for Science and Technology",
+  "Other (specify manually)",
+].sort();
 
-/* ─── Dummy project data ─────────────────────────────────── */
-const DUMMY_PROJECTS = [
-  {
-    id: "P001",
-    title: "Development of Ti(C,N) based cermets modified by Si3N4, B4C and Cr3C2",
-    pi: "Dr. S. Balasivanandha Prabu",
-    department: "Department of Mechanical Engineering, CEG Campus",
-    agency: "SERB",
-    procNo: "2433/CTDT-2/2020, dated 10-12-2020",
-    sanctionedDate: "10-12-2020",
-    originalEndDate: "09-12-2023",
-    duration: "3 Years",
-    status: "Active",
-  },
-  {
-    id: "P002",
-    title: "Design and Development of Smart Sensor Networks for Structural Health Monitoring",
-    pi: "Dr. K. Rajeswari",
-    department: "Department of Electronics & Communication Engineering, CEG Campus",
-    agency: "DST",
-    procNo: "1892/CTDT-5/2021, dated 15-03-2021",
-    sanctionedDate: "15-03-2021",
-    originalEndDate: "14-03-2024",
-    duration: "3 Years",
-    status: "Active",
-  },
-  {
-    id: "P003",
-    title: "AI-driven Drug Discovery Framework for Tropical Disease Management",
-    pi: "Dr. P. Anbalagan",
-    department: "Department of Biotechnology, ACT Campus",
-    agency: "DBT",
-    procNo: "3011/CTDT-1/2022, dated 22-07-2022",
-    sanctionedDate: "22-07-2022",
-    originalEndDate: "21-07-2025",
-    duration: "3 Years",
-    status: "Active",
-  },
-  {
-    id: "P004",
-    title: "Renewable Energy Integration in Microgrids: Stability and Control",
-    pi: "Dr. T. Vijayakumar",
-    department: "Department of Electrical Engineering, CEG Campus",
-    agency: "MNRE",
-    procNo: "0774/CTDT-3/2020, dated 05-09-2020",
-    sanctionedDate: "05-09-2020",
-    originalEndDate: "04-09-2023",
-    duration: "3 Years",
-    status: "Completed",
-  },
+const PROJECT_SCHEMES = [
+  "CRG", "SRG", "POWER", "TEC", "SURE", "ECR", "MATRICS",
+  "Core Research Grant", "Start-up Research Grant", "EYUVA",
+  "Other (specify manually)",
 ];
 
-/* ─── Helpers ─────────────────────────────────────────────── */
-const today = () =>
-  new Date().toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+const PI_DIRECTORY = [
+  { name: "Dr. S. Balasivanandha Prabu", desig: "Professor", dept: "Department of Mechanical Engineering", campus: "CEG Campus" },
+  { name: "Dr. K. Rajeswari",            desig: "Professor", dept: "Department of Electronics & Communication Engineering", campus: "CEG Campus" },
+  { name: "Dr. P. Anbalagan",            desig: "Associate Professor", dept: "Department of Biotechnology", campus: "ACT Campus" },
+  { name: "Dr. T. Vijayakumar",          desig: "Professor", dept: "Department of Electrical Engineering", campus: "CEG Campus" },
+  { name: "Dr. P. Varalakshmi",          desig: "Director", dept: "Centre for Artificial Intelligence and Data Science Research & Applications", campus: "CEG Campus" },
+  { name: "Dr. R. Karthikeyan",          desig: "Professor", dept: "Department of Computer Science and Engineering", campus: "CEG Campus" },
+  { name: "Other (specify manually)",    desig: "", dept: "", campus: "" },
+];
 
-// Parse dd-mm-yyyy to Date object
-const parseDMY = (dateStr) => {
-  if (!dateStr) return null;
-  const parts = dateStr.split("-");
-  if (parts.length !== 3) return null;
-  return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+const PI_DESIGNATIONS = [
+  "Professor", "Associate Professor", "Assistant Professor",
+  "Director", "Coordinator", "Principal Investigator", "Other (specify manually)",
+];
+
+const DEPARTMENTS = [
+  "Department of Biotechnology",
+  "Department of Chemical Engineering",
+  "Department of Civil Engineering",
+  "Department of Computer Science and Engineering",
+  "Department of Electrical Engineering",
+  "Department of Electrical and Electronics Engineering",
+  "Department of Electronics & Communication Engineering",
+  "Department of Mechanical Engineering",
+  "Centre for Artificial Intelligence and Data Science Research & Applications",
+  "Technology Enabling Centre",
+  "Other (specify manually)",
+];
+
+const CAMPUSES = [
+  "CEG Campus", "MIT Campus", "ACT Campus", "SAP Campus", "Other (specify manually)",
+];
+
+const BANK_NAMES = [
+  "Union Bank of India", "State Bank of India", "Canara Bank",
+  "Indian Bank", "Other (specify manually)",
+];
+
+
+/* ─── Helpers ──────────────────────────────────────────────────────────────── */
+const todayDMY = () => {
+  const d = new Date();
+  return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
 };
 
-// Format Date to dd-mm-yyyy
+const parseDMY = (str) => {
+  if (!str) return null;
+  const [d, m, y] = str.split("-");
+  return new Date(+y, +m - 1, +d);
+};
+
 const formatDMY = (date) => {
   if (!date) return "";
-  const d = String(date.getDate()).padStart(2, "0");
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const y = date.getFullYear();
+  return `${String(date.getDate()).padStart(2, "0")}-${String(date.getMonth() + 1).padStart(2, "0")}-${date.getFullYear()}`;
+};
+
+const formatLong = (date) => {
+  if (!date) return "";
+  return date.toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+};
+
+const durationBetween = (startDMY, endDate) => {
+  const start = parseDMY(startDMY);
+  if (!start || !endDate) return "";
+  const diffMs   = endDate - start;
+  if (diffMs <= 0) return "";
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  const months   = Math.round(diffDays / 30.44);
+  if (months >= 12) {
+    const y = Math.floor(months / 12);
+    const m = months % 12;
+    return m ? `${y} Year${y > 1 ? "s" : ""} ${m} Month${m > 1 ? "s" : ""}` : `${y} Year${y > 1 ? "s" : ""}`;
+  }
+  return `${months} Month${months > 1 ? "s" : ""}`;
+};
+
+// Add this helper near the top with other helpers:
+const dmyToISO = (dmy) => {
+  if (!dmy) return "";
+  const [d, m, y] = dmy.split("-");
+  return `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+};
+const isoToDMY = (iso) => {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-");
   return `${d}-${m}-${y}`;
 };
 
-// Format Date to "DD Month YYYY" (long)
-const formatLong = (date) => {
-  if (!date) return "";
-  return date.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-};
+/* ─── Number → Indian Words ────────────────────────────────────────────────── */
+const ONES_W = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+  "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+const TENS_W = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
 
-// Convert dd-mm-yyyy to yyyy-mm-dd for input[type=date]
-const toInputDate = (dmyStr) => {
-  if (!dmyStr) return "";
-  const parts = dmyStr.split("-");
-  if (parts.length !== 3) return "";
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
-};
-
-// Compute human-readable duration between two dates
-const durationBetween = (startStr, endDate) => {
-  const start = parseDMY(startStr);
-  if (!start || !endDate) return "";
-  let months =
-    (endDate.getFullYear() - start.getFullYear()) * 12 +
-    (endDate.getMonth() - start.getMonth());
-  if (endDate.getDate() < start.getDate()) months -= 1;
-  if (months <= 0) return "";
-  const years = Math.floor(months / 12);
-  const rem = months % 12;
+function twoDigitWords(n) {
+  if (n < 20) return ONES_W[n];
+  return TENS_W[Math.floor(n / 10)] + (n % 10 ? " " + ONES_W[n % 10] : "");
+}
+function threeDigitWords(n) {
+  const h = Math.floor(n / 100), r = n % 100;
+  return (h ? ONES_W[h] + " Hundred" : "") + (r ? (h ? " " : "") + twoDigitWords(r) : "");
+}
+function numberToIndianWords(num) {
+  let n = Math.round(parseFloat(num));
+  if (!n || isNaN(n) || n <= 0) return "";
+  const crore    = Math.floor(n / 10000000); n %= 10000000;
+  const lakh     = Math.floor(n / 100000);   n %= 100000;
+  const thousand = Math.floor(n / 1000);     n %= 1000;
   const parts = [];
-  if (years > 0) parts.push(`${years} Year${years > 1 ? "s" : ""}`);
-  if (rem > 0) parts.push(`${rem} Month${rem > 1 ? "s" : ""}`);
-  return "+" + parts.join(" ");
-};
-
-/* ─── Status Badge ────────────────────────────────────────── */
-function StatusBadge({ status }) {
-  return (
-    <span className={`pe-status-badge ${status === "Active" ? "active" : "completed"}`}>
-      <span className="pe-status-dot" />
-      {status}
-    </span>
-  );
+  if (crore)    parts.push(threeDigitWords(crore) + " Crore");
+  if (lakh)     parts.push(threeDigitWords(lakh) + " Lakh");
+  if (thousand) parts.push(threeDigitWords(thousand) + " Thousand");
+  if (n)        parts.push(threeDigitWords(n));
+  return parts.join(" ") + " Rupees Only";
 }
 
-/* ─── Report Generator ────────────────────────────────────── */
-function generateReport({ project, revisedEndDate, revisedEndDateLong, extensionLabel, reason }) {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8">
-<title>Project Extension Request</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"Times New Roman",serif;font-size:12px;color:#000;background:#fff;}
-.page{width:210mm;min-height:297mm;padding:20mm 22mm;position:relative;}
-h2{font-size:14px;text-align:center;font-weight:bold;margin-bottom:2px;}
-h3{font-size:12px;text-align:center;font-weight:bold;margin-bottom:12px;}
-table{width:100%;border-collapse:collapse;margin:12px 0;}
-th,td{border:1px solid #555;padding:6px 10px;font-size:11.5px;vertical-align:top;}
-th{background:#f0f0f0;font-weight:bold;text-align:left;}
-.info-table td{border:none;padding:4px 6px;vertical-align:top;}
-.info-table td:first-child{font-weight:bold;width:230px;white-space:nowrap;}
-p{margin:10px 0;text-align:justify;line-height:1.75;font-size:12px;}
-.sig-row{display:flex;justify-content:space-between;margin-top:55px;}
-.sig-box{text-align:center;width:40%;}
-.sig-line{border-top:1px solid #000;padding-top:6px;font-size:11.5px;}
-.to-block{margin-top:36px;font-size:12px;line-height:2;}
-.print-btn{position:fixed;top:10px;right:10px;padding:9px 20px;background:#1a237e;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;z-index:9999;letter-spacing:.3px;}
-@media print{.print-btn{display:none;}}
-</style></head>
-<body>
-<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
-<div class="page">
-<h2>CENTRE FOR SPONSORED RESEARCH AND CONSULTANCY</h2>
-<h2>ANNA UNIVERSITY, CHENNAI – 600 025</h2>
-<h3 style="margin-top:12px;text-decoration:underline;">REQUEST FOR PROJECT EXTENSION</h3>
+/* ─── SearchableSelect ─────────────────────────────────────────────────────── */
+function SearchableSelect({ options, value, onChange, placeholder = "Select…" }) {
+  const [open, setOpen] = useState(false);
+  const [q, setQ]       = useState("");
+  const ref             = useRef();
 
-<table class="info-table" style="border:none;margin-top:4px;">
-  <tr><td>Funding Agency</td><td>: ${project.agency}</td></tr>
-  <tr><td>Project Title</td><td>: ${project.title}</td></tr>
-  <tr><td>Principal Investigator</td><td>: ${project.pi}</td></tr>
-  <tr><td>Department &amp; Campus</td><td>: ${project.department}</td></tr>
-  <tr><td>CTDT Procs. No. &amp; Date</td><td>: ${project.procNo}</td></tr>
-  <tr><td>Date of Sanction</td><td>: ${project.sanctionedDate}</td></tr>
-  <tr><td>Original Project Duration</td><td>: ${project.duration}</td></tr>
-  <tr><td>Original End Date</td><td>: ${project.originalEndDate}</td></tr>
-  <tr><td>Extension Period</td><td>: <strong>${extensionLabel}</strong></td></tr>
-  <tr><td>Proposed Revised End Date</td><td>: <strong>${revisedEndDateLong}</strong></td></tr>
-  <tr><td>Date of Request</td><td>: ${today()}</td></tr>
-</table>
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
 
-<p style="margin-top:20px;">
-  The Principal Investigator respectfully requests the Director, Centre for Sponsored Research and Consultancy,
-  Anna University, Chennai – 600 025, to kindly consider and accord sanction for a <strong>no-cost extension</strong>
-  of the above-mentioned project, thereby extending the project completion date from
-  <strong>${project.originalEndDate}</strong> to <strong>${revisedEndDateLong}</strong>.
-</p>
-
-${reason ? `<h3 style="margin-top:22px;font-size:12px;text-align:left;">Reason for Extension</h3>
-<p>${reason}</p>` : ""}
-
-<p style="margin-top:20px;">
-  It is certified that:
-</p>
-<ol style="font-size:12px;line-height:2;padding-left:22px;margin-top:6px;">
-  <li>No additional funds are being requested along with this extension.</li>
-  <li>The project objectives remain unchanged.</li>
-  <li>The extension is essential to complete all deliverables and submit the final report.</li>
-  <li>The funding agency has been / will be duly informed about this extension request.</li>
-</ol>
-
-<div class="sig-row">
-  <div class="sig-box">
-    <div class="sig-line">Signature of Principal Investigator</div>
-    <div style="font-size:10.5px;margin-top:5px;">${project.pi}</div>
-    <div style="font-size:10.5px;">${project.department}</div>
-    <div style="font-size:10.5px;margin-top:4px;">Date: ________________</div>
-  </div>
-  <div class="sig-box">
-    <div class="sig-line">Signature of Professor &amp; Head / Dean</div>
-    <div style="font-size:10.5px;margin-top:5px;">Date: ________________</div>
-  </div>
-</div>
-
-<div class="to-block">
-  <div style="margin-top:44px;"><strong>To</strong></div>
-  <div>The Director,</div>
-  <div>Centre for Sponsored Research and Consultancy,</div>
-  <div>Anna University, Chennai – 600 025.</div>
-  <div style="margin-top:10px;"><strong>Encl:</strong> Project Extension Request Letter from Funding Agency (if applicable)</div>
-  <div style="margin-top:6px;"><strong>Copy to:</strong> Project File / CTDT File</div>
-</div>
-</div></body></html>`;
-}
-
-/* ─── Main Component ──────────────────────────────────────── */
-export default function ProjectExtensionPage({ onNavigate }) {
-  const [step, setStep] = useState(1);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [searchQ, setSearchQ] = useState("");
-
-  // Step 2 fields
-  const [revisedEndDateInput, setRevisedEndDateInput] = useState(""); // yyyy-mm-dd for input
-  const [reason, setReason] = useState("");
-  const [requestLetter, setRequestLetter] = useState(null);
-  const [requestStatus] = useState("Under Review");
-
-  // Step 3 — approval status (simulated)
-
-  const STEPS = [
-  "Select Project",
-  "Extension Details",
-  "Review & Submit",
-  "Status"
-];
-
-  const filteredProjects = DUMMY_PROJECTS.filter(
-    (p) =>
-      p.title.toLowerCase().includes(searchQ.toLowerCase()) ||
-      p.pi.toLowerCase().includes(searchQ.toLowerCase()) ||
-      p.agency.toLowerCase().includes(searchQ.toLowerCase())
-  );
-
-  // Compute revised end date objects from input
-  const revisedEndDateObj = revisedEndDateInput ? new Date(revisedEndDateInput) : null;
-  const revisedEndDateDMY = revisedEndDateObj ? formatDMY(revisedEndDateObj) : "";
-  const revisedEndDateLong = revisedEndDateObj ? formatLong(revisedEndDateObj) : "";
-
-  // Compute extension label (e.g. "+6 Months") between original end and revised end
-  const extensionLabel = selectedProject && revisedEndDateObj
-    ? durationBetween(selectedProject.originalEndDate, revisedEndDateObj)
-    : "";
-
-  // Min date for date picker = day after original end date
-  const minDateForPicker = selectedProject
-    ? (() => {
-        const d = parseDMY(selectedProject.originalEndDate);
-        if (!d) return "";
-        d.setDate(d.getDate() + 1);
-        return d.toISOString().split("T")[0];
-      })()
-    : "";
-
-  const goStep2 = () => {
-    if (!selectedProject) return alert("Please select a project.");
-    setStep(2);
-  };
-
-  const goStep3 = () => {
-    if (!revisedEndDateInput) return alert("Please select a revised end date.");
-    if (!revisedEndDateObj || (minDateForPicker && revisedEndDateInput < minDateForPicker))
-      return alert("Revised end date must be after the original end date.");
-    setStep(3);
-  };
-
-  const createPdf = async (mode) => {
-  const html = generateReport({
-    project: selectedProject,
-    revisedEndDate: revisedEndDateDMY,
-    revisedEndDateLong,
-    extensionLabel,
-    reason,
-  });
-
-  const temp = document.createElement("div");
-  temp.innerHTML = html;
-  temp.style.position = "fixed";
-  temp.style.left = "-9999px";
-  temp.style.top = "0";
-  temp.style.width = "210mm";
-  document.body.appendChild(temp);
-
-  const page = temp.querySelector(".page");
-
-  const canvas = await html2canvas(page, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: "#ffffff",
-  });
-
-  const imgData = canvas.toDataURL("image/png");
-
-  const pdf = new jsPDF("p", "mm", "a4");
-  const pdfWidth = 210;
-  const pdfHeight = 297;
-
-  const imgWidth = pdfWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-  let heightLeft = imgHeight;
-  let position = 0;
-
-  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  heightLeft -= pdfHeight;
-
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-  }
-
-  document.body.removeChild(temp);
-
-  const fileName = `extension_${selectedProject.id}_${revisedEndDateDMY.replace(/\//g, "-")}.pdf`;
-
-  if (mode === "preview") {
-    const pdfBlob = pdf.output("blob");
-    const url = URL.createObjectURL(pdfBlob);
-    window.open(url, "_blank");
-  } else {
-    pdf.save(fileName);
-  }
-};
-
-const handlePreview = () => {
-  createPdf("preview");
-};
-
-const handleDownload = () => {
-  createPdf("download");
-};
-
+  const filtered = options.filter((o) => o.toLowerCase().includes(q.toLowerCase()));
 
   return (
-    <div className="pe-page">
-      {/* Header */}
-      <div className="pe-header">
-        <div className="page-breadcrumb">
-          Home /{" "}
-          <span onClick={() => onNavigate && onNavigate("projects")}>My Projects</span> /{" "}
-          <span onClick={() => onNavigate && onNavigate("requestforms")}>Request Forms</span> /{" "}
-          <span>Project Extension</span>
+    <div className={`ext-ss ${open ? "ext-ss-open" : ""}`} ref={ref}>
+      <div className="ext-ss-trigger" onClick={() => setOpen(!open)}>
+        <span className={value ? "ext-ss-val" : "ext-ss-ph"}>{value || placeholder}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="ext-ss-chevron">
+          <polyline points={open ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
+        </svg>
+      </div>
+      {open && (
+        <div className="ext-ss-drop">
+          <input className="ext-ss-search" placeholder="Search…" value={q}
+            onChange={(e) => setQ(e.target.value)} autoFocus />
+          <div className={`ext-ss-opt ${!value ? "active" : ""}`}
+            onClick={() => { onChange(""); setOpen(false); setQ(""); }}>— Select —</div>
+          {filtered.map((o) => (
+            <div key={o} className={`ext-ss-opt ${value === o ? "active" : ""}`}
+              onClick={() => { onChange(o); setOpen(false); setQ(""); }}>{o}</div>
+          ))}
         </div>
-        <h1 className="page-title">Project Extension Request</h1>
-        <p className="page-subtitle">Apply for a no-cost timeline extension for your sponsored project</p>
+      )}
+    </div>
+  );
+}
+
+/* ─── Step Bar ─────────────────────────────────────────────────────────────── */
+function StepBar({ steps, current }) {
+  return (
+    <div className="ext-stepbar">
+      {steps.map((s, i) => (
+        <React.Fragment key={i}>
+          <div className={`ext-step ${current === i + 1 ? "active" : current > i + 1 ? "done" : ""}`}>
+            <div className="ext-step-circle">
+              {current > i + 1
+                ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                : i + 1}
+            </div>
+            <div className="ext-step-label">{s}</div>
+          </div>
+          {i < steps.length - 1 && <div className={`ext-step-line ${current > i + 1 ? "done" : ""}`} />}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Field wrapper ────────────────────────────────────────────────────────── */
+const Field = ({ label, children, required, hint, span }) => (
+  <div className={`ext-field${span ? " ext-span" : ""}`}>
+    <label className="ext-label">
+      {label}{required && <span className="ext-req">*</span>}
+    </label>
+    {children}
+    {hint && <div className="ext-hint">{hint}</div>}
+  </div>
+);
+
+/* ─── Computed (read-only) field ───────────────────────────────────────────── */
+const ComputedField = ({ value, placeholder }) => (
+  <div className="ext-computed">
+    {value || <span className="ext-computed-ph">{placeholder}</span>}
+  </div>
+);
+
+/* ─── Reference list editor ────────────────────────────────────────────────── */
+function RefEditor({ refs, onChange, editable }) {
+  const patch = (i, val) => onChange(refs.map((r, idx) => idx === i ? { ...r, text: val } : r));
+  const add   = () => onChange([...refs, { no: refs.length + 1, text: "" }]);
+  const del   = (i) => onChange(refs.filter((_, idx) => idx !== i).map((r, ix) => ({ ...r, no: ix + 1 })));
+
+  return (
+    <div className="ext-ref-list">
+      {refs.map((r, i) => (
+        <div key={i} className="ext-ref-row">
+          <span className="ext-ref-no">{r.no}.</span>
+          {editable ? (
+            <>
+              <textarea
+                value={r.text}
+                onChange={(e) => patch(i, e.target.value)}
+                rows={2}
+                className="ext-ref-ta"
+                placeholder="Reference text…"
+              />
+              <button className="ext-ref-del" onClick={() => del(i)} title="Remove">✕</button>
+            </>
+          ) : (
+            <span className="ext-ref-text">{r.text || <em>—</em>}</span>
+          )}
+        </div>
+      ))}
+      {editable && (
+        <button className="ext-add-btn" onClick={add}>＋ Add Reference</button>
+      )}
+    </div>
+  );
+}
+
+/* ─── Previous Extensions editor ───────────────────────────────────────────── */
+function PrevExtEditor({ items, onChange }) {
+  const patch = (i, p) => onChange(items.map((r, idx) => idx === i ? { ...r, ...p } : r));
+  const add   = () => onChange([...items, { period: "", approval: "" }]);
+  const del   = (i) => onChange(items.filter((_, idx) => idx !== i));
+
+  return (
+    <div className="ext-prev-editor">
+      <table className="ext-prev-table">
+        <thead>
+          <tr>
+            <th>Sl.</th>
+            <th>Extension Period (up to)</th>
+            <th>Funding Agency Approval</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, i) => (
+            <tr key={i}>
+              <td className="ext-prev-sl">{i + 1}</td>
+              <td>
+                <input
+                  value={item.period}
+                  onChange={(e) => patch(i, { period: e.target.value })}
+                  placeholder="e.g. 31-12-2025"
+                  className="ext-prev-inp"
+                />
+              </td>
+              <td>
+                <input
+                  value={item.approval}
+                  onChange={(e) => patch(i, { approval: e.target.value })}
+                  placeholder="e.g. email from agency, 28-10-2025"
+                  className="ext-prev-inp"
+                />
+              </td>
+              <td>
+                <button className="ext-ref-del" onClick={() => del(i)}>🗑</button>
+              </td>
+            </tr>
+          ))}
+          {items.length === 0 && (
+            <tr><td colSpan={4} className="ext-prev-empty">No previous extensions added</td></tr>
+          )}
+        </tbody>
+      </table>
+      <button className="ext-add-btn ext-mt8" onClick={add}>＋ Add Previous Extension</button>
+    </div>
+  );
+}
+
+/* ─── LIVE REPORT PREVIEW (matches OfficeProjectExtensionPage's ExtensionReport) ── */
+function ExtensionReportPreview({ draft }) {
+  const isWith = draft.extensionType === "with";
+  const piName  = typeof draft.pi === "object" ? draft.pi?.name        : draft.pi;
+  const piDesig = typeof draft.pi === "object" ? draft.pi?.designation : draft.piDesig || "";
+  const piDept  = typeof draft.pi === "object" ? draft.pi?.department  : draft.piDept || "";
+  const piCampus= typeof draft.pi === "object" ? draft.pi?.campus      : draft.piCampus || "";
+
+  const S = {
+    page: { width: "210mm", background: "#fff", margin: "0 auto", padding: "14mm 16mm", boxSizing: "border-box", fontFamily: "Times New Roman, serif", fontSize: "11pt", color: "#000", lineHeight: 1.5 },
+    center: { textAlign: "center" },
+    bold: { fontWeight: "bold" },
+    body: { textAlign: "justify", marginBottom: "10px" },
+    sig: { textAlign: "right", marginTop: "36px", fontWeight: "bold" },
+    ref: { textAlign: "left", marginBottom: "10px", lineHeight: "1.7" },
+    to:  { marginTop: "24px", textAlign: "left" },
+    copy:{ marginTop: "16px", textAlign: "left" },
+    th: { border: "1px solid #000", padding: "5px 10px", textAlign: "center", fontWeight: "bold", background: "#f5f5f5" },
+    td: { border: "1px solid #000", padding: "5px 10px" },
+    tdC: { border: "1px solid #000", padding: "5px 10px", textAlign: "center" },
+    table: { width: "100%", borderCollapse: "collapse", margin: "10px 0 14px", fontSize: "10.5pt" },
+  };
+
+  return (
+    <div style={S.page}>
+      <div style={{ ...S.center, marginBottom: "6px" }}>
+        <div style={{ ...S.bold, fontSize: "13pt" }}>Centre for Sponsored Research and Consultancy (CSRC)</div>
+        <div style={{ fontStyle: "italic" }}>(formerly known as CTDT)</div>
+        <div>Anna University, Chennai - 600 025.</div>
       </div>
 
-      {/* Step Bar */}
-      <div className="pe-stepbar">
-        {STEPS.map((s, i) => (
-          <div key={i} className={`pe-step ${step === i + 1 ? "active" : step > i + 1 ? "done" : ""}`}>
-            <div className="pe-step-circle">
-              {step > i + 1 ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-              ) : (i + 1)}
-            </div>
-            <div className="pe-step-label">{s}</div>
-            {i < STEPS.length - 1 && <div className="pe-step-line" />}
-          </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+        <div><span style={S.bold}>Proceedings No. {draft.proceedingNo || "CSRC/EXT/____/____"}</span></div>
+        <div>{draft.proceedingDate || todayDMY()}</div>
+      </div>
+
+      <div style={{ marginBottom: "10px", lineHeight: "1.6" }}>
+        <span style={S.bold}>Sub: </span>Anna University – {draft.agency || "——"} Project –{" "}
+        <span style={S.bold}>{draft.projectTitle || "——"}</span> by{" "}
+        <span style={S.bold}>Extension of Project period</span>
+        {isWith ? " with additional grant" : ""} – Sanction – Accorded
+      </div>
+
+      <div style={{textAlign: "left", marginBottom: "10px", lineHeight: "1.7" }}>
+        <span style={S.bold}>Ref: </span>
+        {(draft.references || []).map((r, i) => (
+          <div key={i}>{r.no}. {r.text}</div>
         ))}
       </div>
 
-      {/* ── STEP 1: Select Project ── */}
-      {step === 1 && (
-        <div className="pe-animate">
-          <div className="pe-card">
-            <div className="pe-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M8 14h8M8 17h5" /></svg>
-              Select Project for Extension
-            </div>
+      <div style={{ textAlign: "center", margin: "8px 0" }}>* * * * *</div>
 
-            {/* Search */}
-            <div className="pe-search-wrap">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="pe-search-icon">
-                <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                className="pe-search-input"
-                placeholder="Search by project title, PI, or funding agency..."
-                value={searchQ}
-                onChange={(e) => setSearchQ(e.target.value)}
-              />
-            </div>
-
-            {/* Project Cards */}
-            <div className="pe-project-list">
-              {filteredProjects.map((p) => {
-                return (
-                  <div
-                    key={p.id}
-                    className={`pe-project-card ${selectedProject?.id === p.id ? "selected" : ""}`}
-                    onClick={() => setSelectedProject(p)}
-                  >
-                    <div className="pe-project-card-top">
-                      <div className="pe-project-id">{p.id}</div>
-                      <div className="pe-project-badges">
-                        <StatusBadge status={p.status} />
-                      </div>
-                    </div>
-                    <div className="pe-project-title">{p.title}</div>
-                    <div className="pe-project-meta">
-                      <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        {p.pi}
-                      </span>
-                      <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-                        {p.department.split(",")[0]}
-                      </span>
-                      <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-                        {p.agency}
-                      </span>
-                      <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                        Ends: {p.originalEndDate}
-                      </span>
-                    </div>
-                    {selectedProject?.id === p.id && (
-                      <div className="pe-project-check">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-              {filteredProjects.length === 0 && (
-                <div className="pe-empty">No projects found matching your search.</div>
-              )}
-            </div>
-          </div>
-
-
-          <div className="pe-actions">
-            <button className="pe-btn pe-btn-primary" onClick={goStep2} disabled={!selectedProject}>
-              Continue
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── STEP 2: Extension Details ── */}
-      {step === 2 && (
-        <div className="pe-animate">
-          {/* Project summary strip */}
-          <div className="pe-card pe-project-strip">
-            <div className="pe-ps-label">Selected Project</div>
-            <div className="pe-ps-title">{selectedProject.title}</div>
-            <div className="pe-ps-meta">
-              <span>{selectedProject.pi}</span>
-              <span>·</span>
-              <span>{selectedProject.agency}</span>
-              <span>·</span>
-              <span>Ends {selectedProject.originalEndDate}</span>
-            </div>
-          </div>
-
-          <div className="pe-card">
-            <div className="pe-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M12 14v4M10 16h4" /></svg>
-              Extension Details
-            </div>
-
-            {/* Date Picker Row */}
-            <div className="pe-field-row">
-              <div className="pe-field">
-                <label>Revised End Date</label>
-                <div className="pe-date-picker-wrap">
-                  <svg className="pe-date-picker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-                  </svg>
-                  <input
-                    type="date"
-                    className="pe-date-input"
-                    value={revisedEndDateInput}
-                    min={minDateForPicker}
-                    onChange={(e) => setRevisedEndDateInput(e.target.value)}
-                  />
-                </div>
-                {selectedProject && (
-                  <div className="pe-date-hint">
-                    Original end date: <strong>{selectedProject.originalEndDate}</strong>
-                  </div>
-                )}
-              </div>
-
-              <div className="pe-field pe-field-info">
-                <label>Extension Period</label>
-                <div className="pe-date-display">
-                  {revisedEndDateInput && extensionLabel ? (
-                    <>
-                      <span className="pe-date-val">{revisedEndDateLong}</span>
-                      <span className="pe-date-pill">{extensionLabel}</span>
-                    </>
-                  ) : revisedEndDateInput ? (
-                    <span className="pe-date-val">{revisedEndDateLong}</span>
-                  ) : (
-                    <span className="pe-date-placeholder">Select revised end date to calculate</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Reason — simple optional textarea */}
-            <div className="pe-field">
-              <label>
-                Reason for Extension <span className="pe-optional">(Optional)</span>
-              </label>
-              <textarea
-                className="pe-input pe-textarea"
-                rows={4}
-                placeholder="Briefly describe the reason for requesting this extension..."
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-              />
-            </div>
-
-            {/* Upload */}
-            <div className="pe-field">
-              <label>Extension Request Letter from Funding Agency <span className="pe-optional">(Optional)</span></label>
-              <div className={`pe-file-upload ${requestLetter ? "has-file" : ""}`}>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                  onChange={(e) => { if (e.target.files[0]) setRequestLetter(e.target.files[0]); }}
-                />
-                <div className="pe-file-icon">
-                  {requestLetter ? (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="12" y1="18" x2="12" y2="12" /><line x1="9" y1="15" x2="15" y2="15" /></svg>
-                  )}
-                </div>
-                <div className="pe-file-text">
-                  <strong>{requestLetter ? requestLetter.name : "Click to upload request letter"}</strong>
-                  {!requestLetter && <span className="pe-file-hint">PDF, DOC, DOCX, JPG, PNG accepted</span>}
-                  {requestLetter && <span className="pe-file-hint">{(requestLetter.size / 1024).toFixed(1)} KB · Attached</span>}
-                </div>
-                {requestLetter && (
-                  <button className="pe-file-remove" onClick={(e) => { e.stopPropagation(); setRequestLetter(null); }}>
-                    Remove
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="pe-actions pe-actions-between">
-            <button className="pe-btn pe-btn-ghost" onClick={() => setStep(1)}>← Back</button>
-            <button className="pe-btn pe-btn-primary" onClick={goStep3}>
-              Continue to Review
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── STEP 3: Review & Submit ── */}
-      {step === 3 && (
-        <div className="pe-animate">
-          <div className="pe-card">
-            <div className="pe-card-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><line x1="10" y1="9" x2="8" y2="9" /></svg>
-              Extension Request Summary
-            </div>
-
-            {/* Timeline Visual */}
-            <div className="pe-timeline-visual">
-              <div className="pe-tl-block original">
-                <div className="pe-tl-label">Sanctioned</div>
-                <div className="pe-tl-date">{selectedProject.sanctionedDate}</div>
-              </div>
-              <div className="pe-tl-arrow">
-                <div className="pe-tl-bar" />
-                <div className="pe-tl-dur">{selectedProject.duration}</div>
-              </div>
-              <div className="pe-tl-block end">
-                <div className="pe-tl-label">Original End</div>
-                <div className="pe-tl-date">{selectedProject.originalEndDate}</div>
-              </div>
-              <div className="pe-tl-arrow ext">
-                <div className="pe-tl-bar ext-bar" />
-                <div className="pe-tl-dur ext-dur">{extensionLabel}</div>
-              </div>
-              <div className="pe-tl-block revised">
-                <div className="pe-tl-label">Revised End</div>
-                <div className="pe-tl-date">{revisedEndDateDMY}</div>
-              </div>
-            </div>
-
-            {/* Details Grid */}
-            <div className="pe-summary-grid">
-              <div><span>Project ID</span><strong>{selectedProject.id}</strong></div>
-              <div><span>Funding Agency</span><strong>{selectedProject.agency}</strong></div>
-              <div><span>Principal Investigator</span><strong>{selectedProject.pi}</strong></div>
-              <div><span>Department</span><strong>{selectedProject.department.split(",")[0]}</strong></div>
-              <div><span>Original End Date</span><strong>{selectedProject.originalEndDate}</strong></div>
-              <div><span>Extension Period</span><strong>{extensionLabel || "—"}</strong></div>
-              <div><span>Revised End Date</span><strong className="pe-highlight">{revisedEndDateDMY}</strong></div>
-              <div><span>Reason</span><strong>{reason || "Not specified"}</strong></div>
-              <div><span>Request Letter</span><strong>{requestLetter ? requestLetter.name : "Not attached"}</strong></div>
-            </div>
-
-
-          </div>
-
-          <div className="pe-report-actions">
-  <button
-    className="pe-btn pe-btn-primary"
-    onClick={() => setStep(4)}
-  >
-    Submit Request
-  </button>
-
-  <button
-    className="pe-btn pe-btn-ghost"
-    onClick={() => setStep(2)}
-  >
-    ← Back
-  </button>
-</div>
-        </div>
-      )}
-
-      
-
-
-      {step === 4 && (
-  <div className="pe-animate">
-    <div className="pe-card">
-      <div className="pe-card-title">
-        Request Status
+      <div style={S.body}>
+        The {draft.agency || "——"} has sanctioned a project entitled{" "}
+        <span style={S.bold}>"{draft.projectTitle || "——"}"</span>{" "}
+        {draft.projectScheme ? <> under <span style={S.bold}>"{draft.projectScheme}"</span> </> : ""}
+        to <span style={S.bold}>{piName || "——"}</span>,{" "}
+        {piDesig ? <span>{piDesig}, </span> : null}
+        {piDept}{piCampus ? `, ${piCampus}` : ""}, as the Principal Investigator for the period of{" "}
+        <span style={S.bold}>{draft.duration || "——"}</span> from{" "}
+        <span style={S.bold}>{draft.sanctionedDate || "——"}</span> to{" "}
+        <span style={S.bold}>{draft.originalEndDate || "——"}</span>
+        {draft.totalCost ? <> at a total cost of <span style={S.bold}>Rs.{draft.totalCost}/- </span></> : ""}{" "}
+        vide reference second cited above.
       </div>
 
-      <div
-        style={{
-          textAlign: "center",
-          padding: "40px 20px"
-        }}
-      >
-        <h2 style={{ color: "#f59e0b" }}>
-          {requestStatus}
-        </h2>
+      {(draft.previousExtensions || []).length > 0 && (
+        <>
+          <div style={S.body}>
+            Further, the funding agency has already extended the tenure of the above mentioned project as per the details given below:
+          </div>
+          <table style={S.table}>
+            <thead>
+              <tr>
+                <th style={S.th}>Extension Period</th>
+                <th style={S.th}>Funding agency approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              {draft.previousExtensions.map((ext, i) => (
+                <tr key={i}>
+                  <td style={S.tdC}>{ext.period}</td>
+                  <td style={S.td}>{ext.approval}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
 
-        <p style={{ marginTop: 10 }}>
-          Your project extension request has been submitted and is under review.
-        </p>
+      <div style={S.body}>
+        Now, the funding agency has <span style={S.bold}>extended the duration of the above mentioned
+        project up to {draft.revisedEndDate || "——"}</span>,{" "}
+        {isWith
+          ? <>with an additional grant of <span style={S.bold}>Rs.{draft.grantAmount || "——"}/- ({draft.grantAmountWords || "——"})</span> (vide reference {draft.grantRefNo || "cited above"}). </>
+          : "without any additional grant (vide reference third cited). "}
+        In this connection, permission is hereby accorded to the Principal Investigator,{" "}
+        {piName || "——"}, {piDesig ? `${piDesig}, ` : ""}{piDept}
+        {piCampus ? `, ${piCampus}` : ""}, to carry out the project till{" "}
+        <span style={S.bold}>{draft.revisedEndDate || "——"}</span>.
+      </div>
 
-        <div
-          className="pe-report-actions"
-          style={{
-            justifyContent: "center",
-            marginTop: 25
-          }}
-        >
-          <button
-            className="pe-btn pe-btn-preview"
-            onClick={handlePreview}
-          >
-            Preview Letter
-          </button>
-
-          <button
-            className="pe-btn pe-btn-download"
-            onClick={handleDownload}
-          >
-            Download Letter
-          </button>
+      {isWith && draft.bankAccount && (
+        <div style={S.body}>
+          The expenditure for the above project will be debitable under M.H.No. {draft.mhNo || "——"}.
+          The amount may be credited to the Bank Account No. <span style={S.bold}>{draft.bankAccount}</span>,
+          IFSC Code: <span style={S.bold}>{draft.ifscCode}</span>, {draft.bankBranch}.
         </div>
+      )}
+
+      {draft.remarks && (
+        <div style={{ ...S.body, fontStyle: "italic" }}>
+          <span style={S.bold}>Note: </span>{draft.remarks}
+        </div>
+      )}
+
+      <div style={S.sig}>{draft.directorName || "DIRECTOR, CSRC"}</div>
+
+      <div style={S.to}>
+        <div style={S.bold}>To</div>
+        <div>The {piDesig || "Director"},</div>
+        <div>{piDept},</div>
+        {piCampus && <div>{piCampus},</div>}
+        <div>Anna University, Chennai – 600 025.</div>
+      </div>
+
+      <div style={S.copy}>
+        <div style={S.bold}>Copy to :</div>
+        <div>1. {piName}, {piDesig ? `${piDesig}, ` : ""}{piDept}{piCampus ? `, ${piCampus}` : ""} – MENT.</div>
+        <div>2. CSRC – 3</div>
+        <div>3. CSRC – 4</div>
       </div>
     </div>
-  </div>
-)}
+  );
+}
+
+/* ─── Default form state factories ────────────────────────────────────────── */
+function defaultWithout() {
+  return {
+    extensionType: "without",
+    // Project info
+    agency: "", agencyCustom: "",
+    projectTitle: "", projectTitleCustom: "",
+    projectScheme: "", projectSchemeCustom: "",
+    piName: "", piDesig: "", piDept: "", piCampus: "",
+    totalCost: "",
+    // Timeline
+    sanctionedDate: "", originalEndDate: "", duration: "", revisedEndDate: "",
+    // References & history
+    references: [
+      { no: 1, text: "Syndicate Resolution No.172.5.2 dt: 28.12.2005." },
+      { no: 2, text: "" },
+      { no: 3, text: "" },
+    ],
+    previousExtensions: [],
+    // Proceedings
+    proceedingNo: "", proceedingDate: todayDMY(), directorName: "DIRECTOR, CSRC",
+    // Reason
+    reason: "",
+    // Supporting doc
+    supportingDoc: null,
+    submittedOn: todayDMY(),
+    status: "PENDING",
+  };
+}
+
+function defaultWith() {
+  return {
+    extensionType: "with",
+    // Project info
+    agency: "", agencyCustom: "",
+    projectTitle: "", projectTitleCustom: "",
+    projectScheme: "", projectSchemeCustom: "",
+    piName: "", piDesig: "", piDept: "", piCampus: "",
+    totalCost: "",
+    // Timeline
+    sanctionedDate: "", originalEndDate: "", duration: "", revisedEndDate: "",
+    // Grant details
+    grantAmount: "", grantAmountWords: "",
+    grantRefNo: "", mhNo: "",
+    // Bank details
+    bankName: "", bankNameCustom: "",
+    bankAccount: "", ifscCode: "", bankBranch: "",
+    // References & history
+    references: [
+      { no: 1, text: "Syndicate Resolution No.172.5.2 dt: 28.12.2005." },
+      { no: 2, text: "" },
+      { no: 3, text: "" },
+    ],
+    previousExtensions: [],
+    // Proceedings
+    proceedingNo: "", proceedingDate: todayDMY(), directorName: "DIRECTOR, CSRC",
+    // Reason
+    reason: "",
+    // Supporting doc
+    supportingDoc: null,
+    submittedOn: todayDMY(),
+    status: "PENDING",
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM: Without Financial Support (4 steps)
+═══════════════════════════════════════════════════════════════════════════ */
+function FormWithout({ onSubmit, onBack }) {
+  const [step, setStep] = useState(1);
+  const [data, setData] = useState(defaultWithout);
+  const reportRef = useRef(null);
+  const s = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
+
+  const effAgency  = data.agency  === "Other (specify manually)" ? data.agencyCustom  : data.agency;
+  const effTitle   = data.projectTitle === "Other (specify manually)" ? data.projectTitleCustom : data.projectTitle;
+  const effScheme  = data.projectScheme === "Other (specify manually)" ? data.projectSchemeCustom : data.projectScheme;
+
+  // Computed fields
+  const revisedEndDateObj = data.revisedEndDate ? parseDMY(data.revisedEndDate) : null;
+  const extensionPeriod   = data.originalEndDate && revisedEndDateObj
+    ? durationBetween(data.originalEndDate, revisedEndDateObj) : "";
+
+  // Min date for revised end
+  const minRevisedDate = (() => {
+    const d = parseDMY(data.originalEndDate);
+    if (!d) return "";
+    d.setDate(d.getDate() + 1);
+    return formatDMY(d);
+  })();
+
+  const selectPI = (name) => {
+    if (name === "Other (specify manually)") {
+      setData((d) => ({ ...d, piName: name, piDesig: "", piDept: "", piCampus: "" }));
+      return;
+    }
+    const rec = PI_DIRECTORY.find((p) => p.name === name);
+    setData((d) => ({
+      ...d, piName: name,
+      piDesig: rec ? rec.desig : d.piDesig,
+      piDept:  rec ? rec.dept  : d.piDept,
+      piCampus: rec ? rec.campus : d.piCampus,
+    }));
+  };
+
+  const validate = (st) => {
+    if (st === 1) {
+      if (!effAgency) return "Please select a Funding Agency.";
+      if (!effTitle)  return "Please enter the Project Title.";
+      if (!data.piName) return "Please select the Principal Investigator.";
+    }
+    if (st === 2) {
+      if (!data.sanctionedDate)  return "Please enter the Sanctioned Date.";
+      if (!data.originalEndDate) return "Please enter the Original End Date.";
+      if (!data.revisedEndDate)  return "Please enter the Revised End Date.";
+    }
+    if (st === 3) {
+      if (data.references.some((r) => !r.text.trim())) return "Please fill all reference entries or remove empty ones.";
+    }
+    return null;
+  };
+
+  const next = () => { const e = validate(step); if (e) { alert(e); return; } setStep((s) => s + 1); };
+  const back = () => setStep((s) => s - 1);
+
+  const downloadPDF = () => {
+    if (!reportRef.current) return;
+    html2pdf().set({
+      margin: [8, 8, 8, 8],
+      filename: `Extension_Without_${effAgency || "Request"}.pdf`,
+      image: { type: "jpeg", quality: 1 },
+      html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    }).from(reportRef.current).save();
+  };
+
+  const buildDraft = () => ({
+    ...data,
+    extensionType: "without",
+    agency: effAgency, projectTitle: effTitle, projectScheme: effScheme,
+    pi: { name: data.piName, designation: data.piDesig, department: data.piDept, campus: data.piCampus },
+    extensionPeriod,
+    hasLetter: !!data.supportingDoc,
+  });
+
+  const STEPS = ["Project & PI Info", "Timeline Details", "References & History", "Preview & Submit"];
+
+  return (
+    <div className="ext-form-wrap">
+      <StepBar steps={STEPS} current={step} />
+
+      {/* ── STEP 1: Project & PI Info ── */}
+      {step === 1 && (
+        <div className="ext-card ext-animate">
+          <div className="ext-card-head"><span className="ext-card-icon">📋</span>Project & Principal Investigator</div>
+          <div className="ext-grid-2">
+            <Field label="Funding Agency" required span>
+              <SearchableSelect options={FUNDING_AGENCIES} value={data.agency} onChange={s("agency")} placeholder="Select agency…" />
+              {data.agency === "Other (specify manually)" && (
+                <input className="ext-input ext-mt8" placeholder="Type agency name…" value={data.agencyCustom} onChange={(e) => s("agencyCustom")(e.target.value)} />
+              )}
+            </Field>
+
+            <Field label="Project Title" required span>
+              <input className="ext-input" placeholder="Full project title…" value={data.projectTitle} onChange={(e) => s("projectTitle")(e.target.value)} />
+            </Field>
+
+            <Field label="Project Scheme" hint="e.g. CRG, SRG, EYUVA…">
+              <SearchableSelect options={PROJECT_SCHEMES} value={data.projectScheme} onChange={s("projectScheme")} placeholder="Select scheme…" />
+              {data.projectScheme === "Other (specify manually)" && (
+                <input className="ext-input ext-mt8" placeholder="Type scheme…" value={data.projectSchemeCustom} onChange={(e) => s("projectSchemeCustom")(e.target.value)} />
+              )}
+            </Field>
+
+            <Field label="Total Project Cost (₹)">
+              <input className="ext-input" type="number" placeholder="e.g. 2500000" value={data.totalCost} onChange={(e) => s("totalCost")(e.target.value)} />
+            </Field>
+
+            <Field label="PI Name" required>
+              <SearchableSelect options={PI_DIRECTORY.map((p) => p.name)} value={data.piName} onChange={selectPI} placeholder="Select PI…" />
+            </Field>
+
+            <Field label="PI Designation">
+              <SearchableSelect options={PI_DESIGNATIONS} value={data.piDesig} onChange={s("piDesig")} placeholder="Select designation…" />
+            </Field>
+
+            <Field label="Department / Centre" span>
+              <SearchableSelect options={DEPARTMENTS} value={data.piDept} onChange={s("piDept")} placeholder="Select department…" />
+            </Field>
+
+            <Field label="Campus">
+              <SearchableSelect options={CAMPUSES} value={data.piCampus} onChange={s("piCampus")} placeholder="Select campus…" />
+            </Field>
+
+            <Field label="Supporting Document (Extension Letter from Agency)" hint="PDF, DOC, DOCX, JPG accepted" span>
+              <input className="ext-file" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                onChange={(e) => s("supportingDoc")(e.target.files[0])} />
+              {data.supportingDoc && <div className="ext-file-name">📎 {data.supportingDoc.name}</div>}
+            </Field>
+          </div>
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-ghost" onClick={onBack}>← Back</button>
+            <button className="ext-btn ext-btn-primary" onClick={next}>Continue →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 2: Timeline Details ── */}
+      {step === 2 && (
+        <div className="ext-card ext-animate">
+          <div className="ext-card-head"><span className="ext-card-icon">📅</span>Extension Timeline</div>
+
+          <div className="ext-timeline-strip">
+            <div className="ext-tl-node">
+              <div className="ext-tl-dot ext-tl-dot-blue" />
+              <div className="ext-tl-label">Sanctioned</div>
+              <div className="ext-tl-date">{data.sanctionedDate || "—"}</div>
+            </div>
+            <div className="ext-tl-bar ext-tl-bar-blue">
+  <span>{durationBetween(data.sanctionedDate, parseDMY(data.originalEndDate)) || "Duration"}</span>
+</div>
+            <div className="ext-tl-node">
+              <div className="ext-tl-dot ext-tl-dot-amber" />
+              <div className="ext-tl-label">Original End</div>
+              <div className="ext-tl-date">{data.originalEndDate || "—"}</div>
+            </div>
+            <div className="ext-tl-bar ext-tl-bar-green">
+              <span>{extensionPeriod || "Extension"}</span>
+            </div>
+            <div className="ext-tl-node">
+              <div className="ext-tl-dot ext-tl-dot-green" />
+              <div className="ext-tl-label">Revised End</div>
+              <div className="ext-tl-date">{data.revisedEndDate || "—"}</div>
+            </div>
+          </div>
+
+          <div className="ext-grid-2">
+<Field label="Sanctioned / Start Date" required hint="Pick from calendar">
+  <input
+    className="ext-input"
+    type="date"
+    value={dmyToISO(data.sanctionedDate)}
+    onChange={(e) => s("sanctionedDate")(isoToDMY(e.target.value))}
+  />
+</Field>
+
+<Field label="Original End Date" required hint="Pick from calendar">
+  <input
+    className="ext-input"
+    type="date"
+    value={dmyToISO(data.originalEndDate)}
+    min={dmyToISO(data.sanctionedDate)}
+    onChange={(e) => s("originalEndDate")(isoToDMY(e.target.value))}
+  />
+</Field>
+
+<Field label="Original Duration" hint="Auto-calculated">
+  <ComputedField
+    value={durationBetween(data.sanctionedDate, parseDMY(data.originalEndDate))}
+    placeholder="Pick start & end dates…"
+  />
+</Field>
+
+<Field label="Revised End Date" required hint="Pick from calendar">
+  <input
+    className="ext-input"
+    type="date"
+    value={dmyToISO(data.revisedEndDate)}
+    min={dmyToISO(data.originalEndDate)}
+    onChange={(e) => s("revisedEndDate")(isoToDMY(e.target.value))}
+  />
+</Field>
+
+            <Field label="Extension Period" hint="Auto-calculated">
+              <ComputedField value={extensionPeriod} placeholder="Fill dates above to calculate…" />
+            </Field>
+          </div>
+
+          <Field label="Reason for Extension" hint="Briefly explain why the extension is needed" span>
+            <textarea className="ext-input ext-textarea" rows={4}
+              placeholder="The funding agency has extended the duration of the above mentioned project without any additional grant..."
+              value={data.reason} onChange={(e) => s("reason")(e.target.value)} />
+          </Field>
+
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-ghost" onClick={back}>← Back</button>
+            <button className="ext-btn ext-btn-primary" onClick={next}>Continue →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 3: References & History ── */}
+      {step === 3 && (
+        <div className="ext-card ext-animate">
+          <div className="ext-card-head"><span className="ext-card-icon">📚</span>References & Extension History</div>
+
+          <div className="ext-section-label">References (Ref: list in CSRC proceedings)</div>
+          <RefEditor refs={data.references} onChange={s("references")} editable />
+
+          <div className="ext-section-label" style={{ marginTop: "24px" }}>Previous Extensions (if any)</div>
+          <PrevExtEditor items={data.previousExtensions} onChange={s("previousExtensions")} />
+
+          <div className="ext-section-label" style={{ marginTop: "24px" }}>Proceedings Details</div>
+          <div className="ext-grid-2">
+            <Field label="Proceeding No.">
+              <input className="ext-input" placeholder="e.g. CSRC/EXT/2026/001" value={data.proceedingNo}
+                onChange={(e) => s("proceedingNo")(e.target.value)} />
+            </Field>
+            <Field label="Proceeding Date" hint="DD-MM-YYYY">
+              <input className="ext-input" placeholder={todayDMY()} value={data.proceedingDate}
+                onChange={(e) => s("proceedingDate")(e.target.value)} />
+            </Field>
+            <Field label="Director Name">
+              <input className="ext-input" placeholder="DIRECTOR, CSRC" value={data.directorName}
+                onChange={(e) => s("directorName")(e.target.value)} />
+            </Field>
+          </div>
+
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-ghost" onClick={back}>← Back</button>
+            <button className="ext-btn ext-btn-primary" onClick={next}>Preview Report →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 4: Preview & Submit ── */}
+      {step === 4 && (
+        <div className="ext-animate">
+          <div className="ext-preview-toolbar">
+            <button className="ext-btn ext-btn-ghost" onClick={back}>← Back</button>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button className="ext-btn ext-btn-download" onClick={downloadPDF}>📄 Download PDF</button>
+              <button className="ext-btn ext-btn-primary" onClick={() => onSubmit(buildDraft())}>✓ Submit Request</button>
+            </div>
+          </div>
+          <div className="ext-report-shadow">
+            <div ref={reportRef}><ExtensionReportPreview draft={buildDraft()} /></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM: With Financial Support (4 steps)
+═══════════════════════════════════════════════════════════════════════════ */
+function FormWith({ onSubmit, onBack }) {
+  const [step, setStep] = useState(1);
+  const [data, setData] = useState(defaultWith);
+  const reportRef = useRef(null);
+  const s = (k) => (v) => setData((d) => ({ ...d, [k]: v }));
+
+  const effAgency  = data.agency  === "Other (specify manually)" ? data.agencyCustom  : data.agency;
+  const effTitle   = data.projectTitle === "Other (specify manually)" ? data.projectTitleCustom : data.projectTitle;
+  const effScheme  = data.projectScheme === "Other (specify manually)" ? data.projectSchemeCustom : data.projectScheme;
+  const effBank    = data.bankName === "Other (specify manually)" ? data.bankNameCustom : data.bankName;
+
+  // Computed fields
+  const revisedEndDateObj = data.revisedEndDate ? parseDMY(data.revisedEndDate) : null;
+  const extensionPeriod   = data.originalEndDate && revisedEndDateObj
+    ? durationBetween(data.originalEndDate, revisedEndDateObj) : "";
+
+  // Auto-compute grant words
+  useEffect(() => {
+    setData((d) => ({ ...d, grantAmountWords: numberToIndianWords(d.grantAmount) }));
+  }, [data.grantAmount]);
+
+  const selectPI = (name) => {
+    if (name === "Other (specify manually)") {
+      setData((d) => ({ ...d, piName: name, piDesig: "", piDept: "", piCampus: "" }));
+      return;
+    }
+    const rec = PI_DIRECTORY.find((p) => p.name === name);
+    setData((d) => ({
+      ...d, piName: name,
+      piDesig:  rec ? rec.desig  : d.piDesig,
+      piDept:   rec ? rec.dept   : d.piDept,
+      piCampus: rec ? rec.campus : d.piCampus,
+    }));
+  };
+
+  const validate = (st) => {
+    if (st === 1) {
+      if (!effAgency)   return "Please select a Funding Agency.";
+      if (!effTitle)    return "Please enter the Project Title.";
+      if (!data.piName) return "Please select the Principal Investigator.";
+    }
+    if (st === 2) {
+      if (!data.sanctionedDate)  return "Please enter the Sanctioned Date.";
+      if (!data.originalEndDate) return "Please enter the Original End Date.";
+      if (!data.revisedEndDate)  return "Please enter the Revised End Date.";
+      if (!data.grantAmount)     return "Please enter the Grant Amount released with this extension.";
+      if (!effBank)              return "Please select/enter the Bank Name.";
+      if (!data.bankAccount)     return "Please enter the Bank Account Number.";
+    }
+    if (st === 3) {
+      if (data.references.some((r) => !r.text.trim())) return "Please fill all reference entries or remove empty ones.";
+    }
+    return null;
+  };
+
+  const next = () => { const e = validate(step); if (e) { alert(e); return; } setStep((s) => s + 1); };
+  const back = () => setStep((s) => s - 1);
+
+  const downloadPDF = () => {
+    if (!reportRef.current) return;
+    html2pdf().set({
+      margin: [8, 8, 8, 8],
+      filename: `Extension_With_Grant_${effAgency || "Request"}.pdf`,
+      image: { type: "jpeg", quality: 1 },
+      html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    }).from(reportRef.current).save();
+  };
+
+  const buildDraft = () => ({
+    ...data,
+    extensionType: "with",
+    agency: effAgency, projectTitle: effTitle, projectScheme: effScheme,
+    bankName: effBank,
+    pi: { name: data.piName, designation: data.piDesig, department: data.piDept, campus: data.piCampus },
+    extensionPeriod,
+    hasLetter: !!data.supportingDoc,
+  });
+
+  const STEPS = ["Project & PI Info", "Timeline & Grant Details", "References & History", "Preview & Submit"];
+
+  return (
+    <div className="ext-form-wrap">
+      <StepBar steps={STEPS} current={step} />
+
+      {/* ── STEP 1: Project & PI Info ── */}
+      {step === 1 && (
+        <div className="ext-card ext-animate">
+          <div className="ext-card-head"><span className="ext-card-icon">📋</span>Project & Principal Investigator</div>
+          <div className="ext-grid-2">
+            <Field label="Funding Agency" required span>
+              <SearchableSelect options={FUNDING_AGENCIES} value={data.agency} onChange={s("agency")} placeholder="Select agency…" />
+              {data.agency === "Other (specify manually)" && (
+                <input className="ext-input ext-mt8" placeholder="Type agency name…" value={data.agencyCustom} onChange={(e) => s("agencyCustom")(e.target.value)} />
+              )}
+            </Field>
+
+            <Field label="Project Title" required span>
+              <input className="ext-input" placeholder="Full project title…" value={data.projectTitle} onChange={(e) => s("projectTitle")(e.target.value)} />
+            </Field>
+
+            <Field label="Project Scheme" hint="e.g. CRG, SRG, EYUVA…">
+              <SearchableSelect options={PROJECT_SCHEMES} value={data.projectScheme} onChange={s("projectScheme")} placeholder="Select scheme…" />
+              {data.projectScheme === "Other (specify manually)" && (
+                <input className="ext-input ext-mt8" placeholder="Type scheme…" value={data.projectSchemeCustom} onChange={(e) => s("projectSchemeCustom")(e.target.value)} />
+              )}
+            </Field>
+
+            <Field label="Total Project Cost (₹)">
+              <input className="ext-input" type="number" placeholder="e.g. 2500000" value={data.totalCost} onChange={(e) => s("totalCost")(e.target.value)} />
+            </Field>
+
+            <Field label="PI Name" required>
+              <SearchableSelect options={PI_DIRECTORY.map((p) => p.name)} value={data.piName} onChange={selectPI} placeholder="Select PI…" />
+            </Field>
+
+            <Field label="PI Designation">
+              <SearchableSelect options={PI_DESIGNATIONS} value={data.piDesig} onChange={s("piDesig")} placeholder="Select designation…" />
+            </Field>
+
+            <Field label="Department / Centre" span>
+              <SearchableSelect options={DEPARTMENTS} value={data.piDept} onChange={s("piDept")} placeholder="Select department…" />
+            </Field>
+
+            <Field label="Campus">
+              <SearchableSelect options={CAMPUSES} value={data.piCampus} onChange={s("piCampus")} placeholder="Select campus…" />
+            </Field>
+
+            <Field label="Supporting Document (Extension Letter from Agency)" hint="PDF, DOC, DOCX, JPG accepted" span>
+              <input className="ext-file" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                onChange={(e) => s("supportingDoc")(e.target.files[0])} />
+              {data.supportingDoc && <div className="ext-file-name">📎 {data.supportingDoc.name}</div>}
+            </Field>
+          </div>
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-ghost" onClick={onBack}>← Back</button>
+            <button className="ext-btn ext-btn-primary" onClick={next}>Continue →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 2: Timeline & Grant Details ── */}
+      {step === 2 && (
+        <div className="ext-card ext-animate">
+          <div className="ext-card-head"><span className="ext-card-icon">💰</span>Timeline & Additional Grant Details</div>
+
+          <div className="ext-timeline-strip">
+            <div className="ext-tl-node">
+              <div className="ext-tl-dot ext-tl-dot-blue" />
+              <div className="ext-tl-label">Sanctioned</div>
+              <div className="ext-tl-date">{data.sanctionedDate || "—"}</div>
+            </div>
+            <div className="ext-tl-bar ext-tl-bar-blue">
+  <span>{durationBetween(data.sanctionedDate, parseDMY(data.originalEndDate)) || "Duration"}</span>
+</div>
+            <div className="ext-tl-node">
+              <div className="ext-tl-dot ext-tl-dot-amber" />
+              <div className="ext-tl-label">Original End</div>
+              <div className="ext-tl-date">{data.originalEndDate || "—"}</div>
+            </div>
+            <div className="ext-tl-bar ext-tl-bar-green">
+              <span>{extensionPeriod || "Extension"}</span>
+            </div>
+            <div className="ext-tl-node">
+              <div className="ext-tl-dot ext-tl-dot-green" />
+              <div className="ext-tl-label">Revised End</div>
+              <div className="ext-tl-date">{data.revisedEndDate || "—"}</div>
+            </div>
+          </div>
+
+          <div className="ext-section-label">Timeline</div>
+          <div className="ext-grid-2">
+            <Field label="Sanctioned / Start Date" required hint="Pick from calendar">
+  <input
+    className="ext-input"
+    type="date"
+    value={dmyToISO(data.sanctionedDate)}
+    onChange={(e) => s("sanctionedDate")(isoToDMY(e.target.value))}
+  />
+</Field>
+<Field label="Original End Date" required hint="Pick from calendar">
+  <input
+    className="ext-input"
+    type="date"
+    value={dmyToISO(data.originalEndDate)}
+    min={dmyToISO(data.sanctionedDate)}
+    onChange={(e) => s("originalEndDate")(isoToDMY(e.target.value))}
+  />
+</Field>
+            <Field label="Original Duration" hint="Auto-calculated">
+  <ComputedField value={durationBetween(data.sanctionedDate, parseDMY(data.originalEndDate))} placeholder="Fill start & end dates…" />
+</Field>
+            <Field label="Revised End Date" required hint="DD-MM-YYYY">
+  <input
+    className="ext-input"
+    type="date"
+    value={dmyToISO(data.revisedEndDate)}
+    min={dmyToISO(data.originalEndDate)}
+    onChange={(e) => s("revisedEndDate")(isoToDMY(e.target.value))}
+  />
+</Field>
+            <Field label="Extension Period" hint="Auto-calculated">
+              <ComputedField value={extensionPeriod} placeholder="Fill dates above to calculate…" />
+            </Field>
+          </div>
+
+          <div className="ext-section-label" style={{ marginTop: "20px" }}>Additional Grant Details</div>
+          <div className="ext-grid-2">
+            <Field label="Grant Amount Released (₹)" required>
+              <input className="ext-input" type="number" placeholder="e.g. 1500000" value={data.grantAmount}
+                onChange={(e) => s("grantAmount")(e.target.value)} />
+            </Field>
+            <Field label="Amount in Words" hint="Auto-calculated">
+              <ComputedField value={data.grantAmountWords} placeholder="Calculated automatically…" />
+            </Field>
+            <Field label="Grant Reference No." hint="Reference citing this grant release">
+              <input className="ext-input" placeholder="e.g. vide reference third cited" value={data.grantRefNo}
+                onChange={(e) => s("grantRefNo")(e.target.value)} />
+            </Field>
+            <Field label="M.H. No. (Account Head)">
+              <input className="ext-input" placeholder="e.g. M.H.No.15.1.34" value={data.mhNo}
+                onChange={(e) => s("mhNo")(e.target.value)} />
+            </Field>
+          </div>
+
+          <div className="ext-section-label" style={{ marginTop: "20px" }}>Bank Details</div>
+          <div className="ext-grid-2">
+            <Field label="Bank Name" required>
+              <SearchableSelect options={BANK_NAMES} value={data.bankName} onChange={s("bankName")} placeholder="Select bank…" />
+              {data.bankName === "Other (specify manually)" && (
+                <input className="ext-input ext-mt8" placeholder="Type bank name…" value={data.bankNameCustom}
+                  onChange={(e) => s("bankNameCustom")(e.target.value)} />
+              )}
+            </Field>
+            <Field label="Bank Branch">
+              <input className="ext-input" placeholder="e.g. Anna University Branch" value={data.bankBranch}
+                onChange={(e) => s("bankBranch")(e.target.value)} />
+            </Field>
+            <Field label="Account Number" required>
+              <input className="ext-input" placeholder="e.g. 123456789012" value={data.bankAccount}
+                onChange={(e) => s("bankAccount")(e.target.value)} />
+            </Field>
+            <Field label="IFSC Code">
+              <input className="ext-input" placeholder="e.g. UBIN0567890" value={data.ifscCode}
+                onChange={(e) => s("ifscCode")(e.target.value)} />
+            </Field>
+          </div>
+
+          <Field label="Reason for Extension" hint="Briefly explain the reason" span>
+            <textarea className="ext-input ext-textarea" rows={3}
+              placeholder="The funding agency has extended the duration of the project with an additional grant…"
+              value={data.reason} onChange={(e) => s("reason")(e.target.value)} />
+          </Field>
+
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-ghost" onClick={back}>← Back</button>
+            <button className="ext-btn ext-btn-primary" onClick={next}>Continue →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 3: References & History ── */}
+      {step === 3 && (
+        <div className="ext-card ext-animate">
+          <div className="ext-card-head"><span className="ext-card-icon">📚</span>References & Extension History</div>
+
+          <div className="ext-section-label">References (Ref: list in CSRC proceedings)</div>
+          <RefEditor refs={data.references} onChange={s("references")} editable />
+
+          <div className="ext-section-label" style={{ marginTop: "24px" }}>Previous Extensions (if any)</div>
+          <PrevExtEditor items={data.previousExtensions} onChange={s("previousExtensions")} />
+
+          <div className="ext-section-label" style={{ marginTop: "24px" }}>Proceedings Details</div>
+          <div className="ext-grid-2">
+            <Field label="Proceeding No.">
+              <input className="ext-input" placeholder="e.g. CSRC/EXT/2026/001" value={data.proceedingNo}
+                onChange={(e) => s("proceedingNo")(e.target.value)} />
+            </Field>
+            <Field label="Proceeding Date" hint="DD-MM-YYYY">
+              <input className="ext-input" placeholder={todayDMY()} value={data.proceedingDate}
+                onChange={(e) => s("proceedingDate")(e.target.value)} />
+            </Field>
+            <Field label="Director Name">
+              <input className="ext-input" placeholder="DIRECTOR, CSRC" value={data.directorName}
+                onChange={(e) => s("directorName")(e.target.value)} />
+            </Field>
+          </div>
+
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-ghost" onClick={back}>← Back</button>
+            <button className="ext-btn ext-btn-primary" onClick={next}>Preview Report →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 4: Preview & Submit ── */}
+      {step === 4 && (
+        <div className="ext-animate">
+          <div className="ext-preview-toolbar">
+            <button className="ext-btn ext-btn-ghost" onClick={back}>← Back</button>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button className="ext-btn ext-btn-download" onClick={downloadPDF}>📄 Download PDF</button>
+              <button className="ext-btn ext-btn-primary" onClick={() => onSubmit(buildDraft())}>✓ Submit Request</button>
+            </div>
+          </div>
+          <div className="ext-report-shadow">
+            <div ref={reportRef}><ExtensionReportPreview draft={buildDraft()} /></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN EXPORT
+   extensionType is passed from the dashboard route:
+     "project-extension-without" → extensionType="without"
+     "project-extension-with"    → extensionType="with"
+═══════════════════════════════════════════════════════════════════════════ */
+export default function ProjectExtensionPage({ extensionType, onNavigate }) {
+  const ctx = useProjectContext();
+  const [submitted, setSubmitted]     = useState(false);
+  const [submittedData, setSubmitted2] = useState(null);
+
+  const handleSubmit = (data) => {
+    try {
+      const newItem = {
+        ...data,
+        id: `EXT-${Date.now()}`,
+        submittedOn: todayDMY(),
+        status: "PENDING",
+        remarks: "",
+        transferHistory: [],
+        currentHolder: null,
+        signatures: {},
+      };
+      // Push into shared context so office pages see it immediately
+      ctx.setExtActive((prev) => [...prev, newItem]);
+      setSubmitted2(newItem);
+      setSubmitted(true);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleBack = () => onNavigate && onNavigate("project-extension-dashboard");
+
+  /* Success screen */
+  if (submitted && submittedData) {
+    return (
+      <div className="ext-page">
+        <div className="ext-success-card">
+          <div className="ext-success-icon">✅</div>
+          <h2 className="ext-success-title">Request Submitted!</h2>
+          <p className="ext-success-sub">
+            Your project extension request has been submitted to CSRC for processing.
+          </p>
+          <div className="ext-success-meta">
+            <div><span>Request ID</span><strong>{submittedData.id}</strong></div>
+            <div><span>Type</span><strong>{submittedData.extensionType === "with" ? "With Financial Support" : "Without Financial Support"}</strong></div>
+            <div><span>Agency</span><strong>{submittedData.agency}</strong></div>
+            <div><span>Revised End Date</span><strong>{submittedData.revisedEndDate}</strong></div>
+            <div><span>Extension Period</span><strong>{submittedData.extensionPeriod}</strong></div>
+            <div><span>Submitted On</span><strong>{submittedData.submittedOn}</strong></div>
+            <div><span>Status</span><strong className="ext-status-pending">Under Review</strong></div>
+          </div>
+          <div className="ext-success-actions">
+            <button className="ext-btn ext-btn-ghost"
+              onClick={() => onNavigate && onNavigate("project-extension-history")}>
+              View History →
+            </button>
+            <button className="ext-btn ext-btn-primary" onClick={handleBack}>
+              ← Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ext-page">
+      {/* Page header */}
+      <div className="ext-page-header">
+        <div className="ext-breadcrumb">
+          <span
+            className="ext-bc-link"
+            onClick={() => onNavigate && onNavigate("project-extension-dashboard")}
+          >
+            Extension Dashboard
+          </span>
+          <span className="ext-bc-sep">/</span>
+          <span>
+            {extensionType === "with" ? "With Financial Support" : "Without Financial Support"}
+          </span>
+        </div>
+        <h1 className="ext-page-title">
+          {extensionType === "with"
+            ? "💰 Project Extension with Financial Support"
+            : "📅 Project Extension without Financial Support"}
+        </h1>
+        <p className="ext-page-sub">
+          {extensionType === "with"
+            ? "Request a timeline extension alongside an additional grant instalment released by the funding agency"
+            : "Apply for a no-cost timeline extension for your sponsored project"}
+        </p>
+      </div>
+
+      {extensionType === "without" && (
+        <FormWithout onSubmit={handleSubmit} onBack={handleBack} />
+      )}
+      {extensionType === "with" && (
+        <FormWith onSubmit={handleSubmit} onBack={handleBack} />
+      )}
+      {!extensionType && (
+        <div className="ext-card">
+          <p>No extension type specified. Please go back to the dashboard and select a type.</p>
+          <div className="ext-actions">
+            <button className="ext-btn ext-btn-primary" onClick={handleBack}>
+              ← Back to Dashboard
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

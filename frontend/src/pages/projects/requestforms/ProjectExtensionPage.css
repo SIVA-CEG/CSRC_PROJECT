@@ -686,3 +686,548 @@
 .pe-field-row {
   overflow: visible !important;
 }
+/* ─── ADD-ONS for ProjectExtensionPage.css ──────────────────────────────────
+   Append to your existing ProjectExtensionPage.css. Mirrors the rp-computed
+   pattern from ReappropriationPage.css so both modules look consistent. ──── */
+
+.pe-computed {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: rgba(241, 245, 249, 0.7);
+  color: #111827;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.pe-computed-ph {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.pe-section-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 24px 0 12px;
+}
+
+.pe-mt8 { margin-top: 8px; }
+/* ─── REPLACEMENT/ADDITIONS for ProjectExtensionDashboard.css ───────────────
+   The dashboard now uses the same stat-card + 3-card-grid layout as
+   ReappropriationDashboard.css (rad-* classes), just with ped-* prefixes.
+   Append these rules; they don't depend on anything in the old file. ─────── */
+
+.ped-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.ped-header { text-align: center; margin-bottom: 28px; }
+.ped-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #1d4ed8;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.ped-title {
+  font-family: "Instrument Serif", serif;
+  font-size: 34px;
+  color: #111827;
+  margin-bottom: 8px;
+}
+.ped-sub { color: #6b7280; font-size: 15px; }
+
+.ped-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.ped-stat-card {
+  background: var(--sb);
+  border: 1px solid var(--sbr);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.ped-stat-label { font-size: 13px; color: #6b7280; margin-bottom: 6px; }
+.ped-stat-value { font-size: 28px; font-weight: 700; color: var(--sc); }
+
+.ped-divider {
+  text-align: center;
+  margin: 24px 0;
+  color: #6b7280;
+  font-size: 14px;
+  position: relative;
+}
+
+.ped-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.ped-card {
+  background: var(--al);
+  border: 1.5px solid var(--ab);
+  border-radius: 18px;
+  padding: 22px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
+}
+.ped-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.ped-card-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.ped-card-body h3 {
+  font-size: 17px;
+  color: #111827;
+  margin-bottom: 6px;
+}
+.ped-card-body p {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.ped-card-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ped-chip {
+  font-size: 11.5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.85);
+  color: #374151;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.ped-card-arrow {
+  align-self: flex-end;
+  font-size: 18px;
+  color: var(--ac);
+}
+
+.ped-info-strip {
+  margin-top: 28px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #475569;
+}
+
+@media (max-width: 900px) {
+  .ped-stats, .ped-grid { grid-template-columns: 1fr; }
+}
+/* ─── ADD-ONS for ProjectExtensionHistory.css ───────────────────────────────
+   Office-side history page now has tabs, a Track timeline modal, a View
+   report modal (iframe), and status/type pills. Append these rules. ──────── */
+
+.peh-header { margin-bottom: 18px; }
+.peh-header h1 { font-family: "Instrument Serif", serif; font-size: 26px; color: #111827; }
+.peh-header p { color: #6b7280; font-size: 14px; margin-top: 4px; }
+
+.peh-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.peh-tab {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.peh-tab.active {
+  color: #1d4ed8;
+  border-bottom-color: #1d4ed8;
+}
+
+.peh-id { font-weight: 600; color: #1d4ed8; font-size: 12.5px; }
+
+.peh-type-pill {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.peh-type-pill.without { background: #f5f3ff; color: #7c3aed; }
+.peh-type-pill.with    { background: #f0f9ff; color: #0369a1; }
+
+.peh-status-pill {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.peh-status-pill.pending,
+.peh-status-pill.transferred { background: #fffbeb; color: #b45309; }
+.peh-status-pill.completed   { background: #f0fdf4; color: #15803d; }
+
+.peh-empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 30px 0;
+  font-style: italic;
+}
+
+/* Modals (Track / View) */
+.peh-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+.peh-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px 22px;
+}
+.peh-modal-wide { max-width: 880px; padding: 0; }
+.peh-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 16px 20px 0;
+}
+.peh-modal-wide .peh-modal-head { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; margin-bottom: 0; }
+.peh-modal-head h3 { font-size: 16px; color: #111827; }
+.peh-modal-close {
+  border: none;
+  background: #f1f5f9;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  color: #475569;
+}
+
+.peh-report-frame {
+  width: 100%;
+  height: 75vh;
+  border: none;
+}
+
+.peh-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 20px 20px;
+}
+.peh-timeline-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13.5px;
+}
+.peh-timeline-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #1d4ed8;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.peh-timeline-dot.done { background: #15803d; }
+.peh-timeline-meta { color: #6b7280; font-size: 12px; margin-top: 2px; }
+.peh-timeline-empty { color: #9ca3af; font-style: italic; font-size: 13px; padding: 0 20px 20px; }
+
+/* ProjectExtensionPage.css — mirrors ReappropriationPage.css */
+
+.ext-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Page header */
+.ext-page-header { margin-bottom: 28px; }
+.ext-breadcrumb  { font-size: 12px; color: #94a3b8; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.ext-bc-link     { cursor: pointer; color: #1d4ed8; font-weight: 600; }
+.ext-bc-link:hover { text-decoration: underline; }
+.ext-bc-sep      { color: #cbd5e1; }
+.ext-page-title  { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 8px; }
+.ext-page-sub    { font-size: 14px; color: #64748b; margin: 0; }
+
+/* Step bar */
+.ext-stepbar {
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 4px;
+}
+.ext-step { display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+.ext-step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+  background: #f1f5f9; color: #94a3b8; border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+.ext-step-circle svg { width: 16px; height: 16px; }
+.ext-step.active .ext-step-circle { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+.ext-step.done   .ext-step-circle { background: #dcfce7; color: #15803d; border-color: #15803d; }
+.ext-step-label  { font-size: 11px; font-weight: 600; color: #94a3b8; text-align: center; white-space: nowrap; }
+.ext-step.active .ext-step-label  { color: #1d4ed8; }
+.ext-step.done   .ext-step-label  { color: #15803d; }
+.ext-step-line   { flex: 1; height: 2px; background: #e2e8f0; width: 48px; margin: 0 4px; align-self: center; margin-bottom: 22px; }
+.ext-step-line.done { background: #15803d; }
+
+/* Cards */
+.ext-card {
+  background: #fff; border: 1px solid #e2e8f0;
+  border-radius: 16px; padding: 28px; margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.ext-card-head {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 16px; font-weight: 800; color: #0f172a;
+  margin-bottom: 24px; padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+}
+.ext-card-icon { font-size: 20px; }
+
+/* Grid */
+.ext-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ext-span   { grid-column: 1 / -1; }
+
+/* Fields */
+.ext-field  { display: flex; flex-direction: column; gap: 6px; }
+.ext-label  { font-size: 12px; font-weight: 600; color: #475569; }
+.ext-req    { color: #ef4444; margin-left: 2px; }
+.ext-hint   { font-size: 11px; color: #94a3b8; }
+
+.ext-input {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  border: 1px solid #e2e8f0; font-size: 13px;
+  color: #1e293b; background: #fff; outline: none;
+  box-sizing: border-box; font-family: inherit;
+  transition: border-color 0.15s;
+}
+.ext-input:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.08); }
+.ext-textarea { resize: vertical; min-height: 88px; }
+.ext-mt8 { margin-top: 8px; }
+
+/* Computed (auto-filled) */
+.ext-computed {
+  padding: 9px 12px; border-radius: 8px;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  font-size: 13px; color: #1e293b; min-height: 38px;
+}
+.ext-computed-ph { color: #94a3b8; font-style: italic; }
+
+/* File upload */
+.ext-file { font-size: 13px; cursor: pointer; }
+.ext-file-name { font-size: 12px; color: #15803d; margin-top: 6px; font-weight: 600; }
+
+/* SearchableSelect */
+.ext-ss { position: relative; }
+.ext-ss-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border-radius: 8px; border: 1px solid #e2e8f0;
+  background: #fff; cursor: pointer; font-size: 13px; color: #1e293b;
+  user-select: none; transition: border-color 0.15s;
+}
+.ext-ss-trigger:hover { border-color: #1d4ed8; }
+.ext-ss-open .ext-ss-trigger { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.08); }
+.ext-ss-ph { color: #94a3b8; }
+.ext-ss-chevron { width: 14px; height: 14px; color: #94a3b8; flex-shrink: 0; }
+.ext-ss-drop {
+  position: absolute; z-index: 1000; top: calc(100% + 4px); left: 0; right: 0;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12); max-height: 240px; overflow-y: auto;
+}
+.ext-ss-search {
+  width: 100%; padding: 8px 12px; border: none; border-bottom: 1px solid #f1f5f9;
+  font-size: 13px; color: #1e293b; outline: none; box-sizing: border-box;
+}
+.ext-ss-opt {
+  padding: 9px 14px; font-size: 13px; cursor: pointer; color: #374151;
+  transition: background 0.1s;
+}
+.ext-ss-opt:hover { background: #f0f9ff; }
+.ext-ss-opt.active { background: #eff6ff; color: #1d4ed8; font-weight: 600; }
+
+/* Section label */
+.ext-section-label {
+  font-size: 12px; font-weight: 700; color: #64748b;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin: 20px 0 10px; padding-bottom: 8px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+/* Timeline strip */
+.ext-timeline-strip {
+  display: flex; align-items: center;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 12px; padding: 16px 20px;
+  margin-bottom: 20px; overflow-x: auto; gap: 0;
+}
+.ext-tl-node { text-align: center; min-width: 80px; }
+.ext-tl-dot  {
+  width: 14px; height: 14px; border-radius: 50%;
+  margin: 0 auto 6px; border: 3px solid;
+}
+.ext-tl-dot-blue  { background: #1d4ed8; border-color: #bfdbfe; }
+.ext-tl-dot-amber { background: #f59e0b; border-color: #fde68a; }
+.ext-tl-dot-green { background: #15803d; border-color: #bbf7d0; }
+.ext-tl-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+.ext-tl-date  { font-size: 12px; font-weight: 700; color: #1e293b; margin-top: 2px; }
+
+.ext-tl-bar {
+  flex: 1; position: relative; height: 40px; min-width: 60px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ext-tl-bar::before {
+  content: ""; position: absolute; top: 50%; left: 0; right: 0;
+  height: 4px; border-radius: 2px; transform: translateY(-50%);
+}
+.ext-tl-bar-blue::before  { background: #93c5fd; }
+.ext-tl-bar-green::before { background: #86efac; }
+.ext-tl-bar span { font-size: 10px; font-weight: 700; position: relative; z-index: 1; }
+.ext-tl-bar-blue  span { color: #1d4ed8; }
+.ext-tl-bar-green span { color: #15803d; }
+
+/* Reference editor */
+.ext-ref-list { display: flex; flex-direction: column; gap: 8px; }
+.ext-ref-row  { display: flex; align-items: flex-start; gap: 10px; }
+.ext-ref-no   { color: #94a3b8; font-weight: 700; min-width: 22px; font-size: 13px; padding-top: 8px; }
+.ext-ref-ta   {
+  flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid #e2e8f0;
+  font-size: 13px; resize: vertical; min-height: 56px; color: #1e293b;
+  font-family: inherit; outline: none;
+}
+.ext-ref-ta:focus { border-color: #1d4ed8; }
+.ext-ref-del  {
+  padding: 5px 9px; border-radius: 6px; border: 1px solid #fecaca;
+  background: #fef2f2; color: #b91c1c; cursor: pointer; font-size: 11px;
+  flex-shrink: 0; margin-top: 4px;
+}
+.ext-ref-text { font-size: 13px; color: #374151; padding-top: 8px; flex: 1; }
+.ext-add-btn  {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px; border: 1px solid #bfdbfe;
+  background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600;
+  cursor: pointer; margin-top: 8px;
+}
+.ext-add-btn:hover { background: #dbeafe; }
+.ext-mt8 { margin-top: 8px; }
+
+/* Previous extensions table */
+.ext-prev-editor { overflow-x: auto; margin-bottom: 8px; }
+.ext-prev-table  { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ext-prev-table th {
+  padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700;
+  color: #64748b; text-transform: uppercase; letter-spacing: 0.4px;
+  background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+}
+.ext-prev-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+.ext-prev-sl     { color: #94a3b8; font-weight: 700; width: 36px; }
+.ext-prev-inp    {
+  width: 100%; padding: 7px 10px; border-radius: 7px; border: 1px solid #e2e8f0;
+  font-size: 13px; outline: none; font-family: inherit; box-sizing: border-box;
+}
+.ext-prev-inp:focus { border-color: #1d4ed8; }
+.ext-prev-empty  { text-align: center; color: #94a3b8; font-size: 12px; padding: 16px; }
+
+/* Actions row */
+.ext-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 24px; padding-top: 20px; border-top: 1px solid #f1f5f9;
+}
+
+/* Buttons */
+.ext-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border-radius: 10px; font-size: 14px;
+  font-weight: 700; cursor: pointer; border: none; transition: all 0.15s;
+  font-family: inherit;
+}
+.ext-btn-primary  { background: #1d4ed8; color: #fff; }
+.ext-btn-primary:hover  { background: #1e40af; }
+.ext-btn-ghost    { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+.ext-btn-ghost:hover    { background: #f1f5f9; }
+.ext-btn-download { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.ext-btn-download:hover { background: #dcfce7; }
+
+/* Preview toolbar */
+.ext-preview-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding: 14px 18px;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+}
+
+/* Report shadow wrapper */
+.ext-report-shadow {
+  background: #e5e7eb; border-radius: 12px; padding: 24px;
+  overflow: auto;
+}
+
+/* Animation */
+.ext-animate { animation: extFadeIn 0.25s ease; }
+@keyframes extFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Success screen */
+.ext-success-card {
+  max-width: 540px; margin: 60px auto;
+  background: #fff; border: 1px solid #e2e8f0;
+  border-radius: 20px; padding: 40px; text-align: center;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+}
+.ext-success-icon  { font-size: 48px; margin-bottom: 16px; }
+.ext-success-title { font-size: 22px; font-weight: 800; color: #0f172a; margin: 0 0 8px; }
+.ext-success-sub   { font-size: 14px; color: #64748b; margin: 0 0 24px; }
+.ext-success-meta  {
+  background: #f8fafc; border-radius: 12px; padding: 20px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  text-align: left; margin-bottom: 28px;
+}
+.ext-success-meta div { display: flex; flex-direction: column; gap: 3px; }
+.ext-success-meta span { font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; }
+.ext-success-meta strong { font-size: 13px; color: #1e293b; font-weight: 700; }
+.ext-status-pending { color: #b45309 !important; }
+.ext-success-actions { display: flex; gap: 12px; justify-content: center; }
+
+@media (max-width: 640px) {
+  .ext-grid-2     { grid-template-columns: 1fr; }
+  .ext-span       { grid-column: 1; }
+  .ext-page       { padding: 20px 16px 40px; }
+  .ext-success-meta { grid-template-columns: 1fr; }
+}
