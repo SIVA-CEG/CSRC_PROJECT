@@ -859,7 +859,19 @@ export default function StatementOfExpenditure() {
         </>
       )}
 
-      {selectedProject && <SoEDocument project={selectedProject} />}
+      {selectedProject && (
+  <div className="soe-doc-modal-overlay" onClick={() => setSelectedProjectId(null)}>
+    <div className="soe-doc-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="soe-doc-modal-header">
+        <span>{selectedProject.fileNo} — {selectedProject.title}</span>
+        <button className="soe-doc-modal-close" onClick={() => setSelectedProjectId(null)}>✕</button>
+      </div>
+      <div className="soe-doc-modal-body">
+        <SoEDocument project={selectedProject} />
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

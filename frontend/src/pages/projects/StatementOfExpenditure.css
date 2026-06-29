@@ -540,7 +540,10 @@
 /* ── PDF Preview Modal ── */
 .soe-modal-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 280px; /* match your sidebar's actual width */
   background: rgba(10, 20, 40, 0.72);
   z-index: 1000;
   display: flex;
@@ -632,4 +635,84 @@
   width: 100%;
   border: none;
   background: #f0f2f5;
+}
+/* ── Document Modal (wraps SoEDocument) ── */
+.soe-doc-modal-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 280px; /* match your sidebar's actual width */
+  background: rgba(10, 20, 40, 0.72);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(3px);
+  animation: soe-fade-in 0.18s ease;
+}
+
+.soe-doc-modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1400px;
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  overflow: hidden;
+  animation: soe-slide-up 0.2s ease;
+}
+
+.soe-doc-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #1e3a5f, #2d5fa8);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  gap: 16px;
+}
+
+.soe-doc-modal-header span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.soe-doc-modal-close {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.soe-doc-modal-close:hover {
+  background: rgba(255,255,255,0.32);
+}
+
+.soe-doc-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  background: #f5f6f8;
+}
+
+/* inside the modal, the document wrapper shouldn't add its own outer page margins */
+.soe-doc-modal-body .soe-document-wrapper {
+  margin: 0;
 }

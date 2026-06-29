@@ -420,6 +420,16 @@ function parseDateStr(str) { if (!str) return null; const [d, m, y] = str.split(
 function daysBetween(from, upto) { const a = parseDateStr(from), b = parseDateStr(upto); if (!a || !b) return 0; return Math.round((b - a) / 86400000) + 1; }
 function calcNetSalary(from, upto, salaryPerMonth, cl, lop) { const days = daysBetween(from, upto); if (!days) return 0; const dailyRate = salaryPerMonth / 30; return Math.round(dailyRate * days - lop * dailyRate); }
 function fmtAmt(n) { return n.toLocaleString("en-IN", { minimumFractionDigits: 2 }); }
+function computeOverhead(project) {
+  const total = Math.round(project.sanctionedAmount * 0.15);
+  return {
+    registrar: Math.round(project.sanctionedAmount * 0.05),
+    csrcRevenue: Math.round(project.sanctionedAmount * 0.04),
+    dean: Math.round(project.sanctionedAmount * 0.04),
+    pi: Math.round(project.sanctionedAmount * 0.02),
+    total,
+  };
+}
 function toIndianWords(num) {
   const a = ["","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
   const b = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
@@ -741,6 +751,48 @@ function generateContingencyCoverPage(formData, project) {
     projectRows,
     piRows,
     claimantSectionTitle: "EXPENDITURE DETAILS",
+    claimantRows,
+    certBlock,
+    sigBlock: STD_SIG_BLOCK,
+    officeBlock: STD_OFFICE_BLOCK,
+  });
+}
+
+
+/* ════════════════════════════════════
+   COVER PAGE: OVERHEAD
+════════════════════════════════════ */
+function generateOverheadCoverPage(overhead, project) {
+  const td = todayDMY();
+  const expHead = `Overhead Charges (15% of Sanctioned Cost)`;
+
+  const projectRows = buildProjectRows(project, expHead, project.csrcProcNo, "As per sanction order");
+  const piRows = buildPIRows(project);
+
+  const claimantRows = `
+    <tr><td>Total Sanctioned Cost</td><td>Rs.${fmtAmt(project.sanctionedAmount)}/-</td></tr>
+    <tr><td>Overhead Rate</td><td>15% of Total Sanctioned Cost</td></tr>
+    <tr><td>Total Overhead Amount</td><td class="bold">Rs.${fmtAmt(overhead.total)}/-</td></tr>
+    <tr><td>(i) The Registrar A/C, Chennai (5%)</td><td>Rs.${fmtAmt(overhead.registrar)}/-</td></tr>
+    <tr><td>(ii) CSRC Revenue, Chennai (4%)</td><td>Rs.${fmtAmt(overhead.csrcRevenue)}/-</td></tr>
+    <tr><td>(iii) The Dean, Campus A/C (4%)</td><td>Rs.${fmtAmt(overhead.dean)}/-</td></tr>
+    <tr><td>(iv) The Principal Investigator PDF (2%)</td><td>Rs.${fmtAmt(overhead.pi)}/-</td></tr>
+    <tr><td>Total Amount Claimed</td><td class="bold">Rs.${fmtAmt(overhead.total)}/- (Rupees ${toIndianWords(overhead.total)})</td></tr>
+  `;
+
+  const certBlock = `
+    <p class="cert-text">Certified that the overhead charges shown above are computed as per the approved percentage distribution on the total sanctioned cost of the project and are debited to the respective heads accordingly.</p>
+    <div style="text-align:right;margin-top:18px;font-size:11px;">Signature of the Principal Investigator</div>
+    <p class="cert-text" style="margin-top:28px;">Certified that the claim is in order and may be admitted.</p>
+  `;
+
+  return coverPageShell({
+    headingLine: "REQUEST FOR OVERHEAD CLAIM IN PROJECT FUND",
+    subLine: `OVERHEAD DISTRIBUTION FOR PROJECT NO. ${project.projectNo}`,
+    dateStr: td,
+    projectRows,
+    piRows,
+    claimantSectionTitle: "OVERHEAD DISTRIBUTION DETAILS",
     claimantRows,
     certBlock,
     sigBlock: STD_SIG_BLOCK,
@@ -1190,6 +1242,69 @@ p.para.indent{text-indent:20px;}
 </div></body></html>`;
 }
 
+function generateOverheadPDF(overhead, project) {
+  const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Overhead Proceedings</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"Times New Roman",serif;font-size:18px;background:#fff;color:#000;}
+.page{width:210mm;min-height:297mm;padding:22mm 22mm 22mm 22mm;background:#fff;}
+@media print{.print-btn{display:none;}}
+.hdr-wrap{display:flex;align-items:center;gap:12px;margin-bottom:4px;}
+.hdr-logo{width:80px;height:80px;flex-shrink:0;}
+.hdr-text{text-align:center;flex:1;}
+.hdr-text .dept,.hdr-text .college,.hdr-text .univ{font-size:16px;font-weight:bold;}
+.meta-row{display:flex;justify-content:space-between;margin-top:4px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #000;font-size:18px;}
+.proc-line{display:flex;justify-content:space-between;margin:5px 0;font-size:18px;}
+.sub-ref-table{width:100%;border-collapse:collapse;margin:5px 0;}
+.sub-ref-table td{padding:3px 0;vertical-align:top;font-size:18px;}
+.sub-ref-table td:first-child{width:50px;font-weight:bold;}
+.stars{text-align:center;margin:3px 0;font-size:13px;font-weight:bold;}
+p.para{text-align:justify;line-height:1.6;margin:8px 0;font-size:18px;}
+p.para.indent{text-indent:20px;}
+table.oh-tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:17px;}
+table.oh-tbl,table.oh-tbl th,table.oh-tbl td{border:1px solid #000;}
+table.oh-tbl th{padding:7px 10px;background:#e8e8e8;font-weight:bold;text-align:left;}
+table.oh-tbl td{padding:7px 10px;}
+table.oh-tbl td.amt{text-align:right;}
+table.oh-tbl tr.total-row td{font-weight:bold;background:#f3f3f3;}
+.hod-sig{text-align:right;font-weight:bold;font-size:15px;margin-top:45px;margin-bottom:8px;}
+.to-section{font-size:18px;line-height:1.4;}
+.copy-section{font-size:18px;margin-top:12px;}
+</style></head><body>
+<div class="page">
+  <div class="hdr-wrap">
+    <img class="hdr-logo" src="src/assets/anna-university-logo.png" alt="AU Logo" onerror="this.style.display='none'" />
+    <div class="hdr-text">
+      <div class="dept">DEPARTMENT OF ${project.departmentFull.replace("Department of","").trim().toUpperCase()}</div>
+      <div class="college">COLLEGE OF ENGINEERING, GUINDY</div>
+      <div class="univ">ANNA UNIVERSITY, CHENNAI – 25</div>
+    </div>
+  </div>
+  <div class="meta-row"><strong>Professor &amp; Head</strong><span>Phone: 2235 7744</span></div>
+  <div class="proc-line"><span>Proceeding No. ${project.csrcProcNo}</span><span>Date: ${td}</span></div>
+  <table class="sub-ref-table">
+    <tr><td>Sub:</td><td>${project.departmentFull.replace("Department on","").trim()} – ${project.scheme} - Overhead Charges – Distribution – Sanction Accorded – Reg.</td></tr>
+    <tr><td>Ref:</td><td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td></tr>
+  </table>
+  <div class="stars">*****</div>
+  <p class="para indent">The project titled "<strong>${project.title}</strong>" under ${project.scheme} Scheme – Project No. ${project.projectNo}, sanctioned to <strong>${project.pi}, ${project.piDesignation}</strong>, ${project.departmentFull}, ${project.campus}, Anna University, Chennai, carries a Total Sanctioned Cost of <strong>Rs.${Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</strong>.</p>
+  <p class="para indent">Sanction is hereby accorded to distribute the Overhead Charges amounting to <strong>Rs.${fmtAmt(overhead.total)}/- (Rupees ${toIndianWords(overhead.total)})</strong>, computed at 15% of the Total Sanctioned Cost, as detailed below:</p>
+  <table class="oh-tbl">
+    <thead><tr><th style="width:40px;">Sl.</th><th>Head of Account</th><th style="width:140px;">Amount (Rs.)</th></tr></thead>
+    <tbody>
+      <tr><td>5</td><td>i) The Registrar A/C, Chennai (5%)</td><td class="amt">${fmtAmt(overhead.registrar)}</td></tr>
+      <tr><td>6</td><td>ii) CSRC Revenue, Chennai (4%)</td><td class="amt">${fmtAmt(overhead.csrcRevenue)}</td></tr>
+      <tr><td>7</td><td>iii) The Dean, Campus A/C (4%)</td><td class="amt">${fmtAmt(overhead.dean)}</td></tr>
+      <tr><td>8</td><td>iv) The Principal Investigator PDF (2%)</td><td class="amt">${fmtAmt(overhead.pi)}</td></tr>
+      <tr class="total-row"><td colspan="2" style="text-align:right;">TOTAL OVERHEAD (15%)</td><td class="amt">${fmtAmt(overhead.total)}</td></tr>
+    </tbody>
+  </table>
+  <p class="para indent">The expenditure is debitable as per the overhead distribution heads indicated above for the project – "<strong>${project.title}</strong>".</p>
+  <div class="hod-sig">HOD (${project.department.toUpperCase()})</div>
+  <div class="to-section"><div>To</div><div>${project.pi},</div><div>${project.piDesignation},</div><div>${project.departmentFull},</div><div>Chennai – 600 025</div></div>
+  <div class="copy-section">Copy to: Bill / Stock file</div>
+</div></body></html>`;
+}
+
 function generateNonRecurringPDF(formData, project) {
   const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
   const balance = project.budgetAllotment - (project.amountIncurredSoFar + Number(formData.amount));
@@ -1273,6 +1388,13 @@ function buildCombinedReport(headKey, formData, project, claimData, staff) {
       proceedingsHTML = generateContingencyPDF(formData, project);
       break;
     }
+    case "overhead": {
+      const overhead = computeOverhead(project);
+      coverHTML = generateOverheadCoverPage(overhead, project);
+      proceedingsHTML = generateOverheadPDF(overhead, project);
+      break;
+    }
+
     case "otherExpenses": {
       coverHTML = generateOtherExpensesCoverPage(formData, project);
       proceedingsHTML = generateOtherExpensesPDF(formData, project);
@@ -1925,6 +2047,95 @@ function ContingencyPage({ project, onSubmit, onBack }) {
   );
 }
 
+
+/* ─── OverheadPage — fully auto-fetched, no manual entry ─── */
+function OverheadPage({ project, onSubmit, onBack }) {
+  const [preview, setPreview] = useState(false);
+  const [previewHTML, setPreviewHTML] = useState(null);
+  const overhead = computeOverhead(project);
+
+  const getCombinedHTML = () => buildCombinedReport("overhead", {}, project, null, null);
+
+  const handlePreview = () => { setPreviewHTML(getCombinedHTML()); setPreview(true); };
+
+  const handleDownload = async () => {
+    const html = getCombinedHTML();
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
+    document.body.appendChild(iframe);
+    iframe.contentDocument.open(); iframe.contentDocument.write(html); iframe.contentDocument.close();
+    await new Promise(r => setTimeout(r, 1000));
+    const pages = iframe.contentDocument.querySelectorAll(".page");
+    const pdf = new jsPDF("p", "mm", "a4");
+    for (let i = 0; i < pages.length; i++) {
+      const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      if (i > 0) pdf.addPage();
+      const pw = 210; pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pw, Math.min((canvas.height * pw) / canvas.width, 297));
+    }
+    document.body.removeChild(iframe);
+    pdf.save(`Overhead_${project.id}.pdf`);
+  };
+
+  const handleSubmit = () => {
+    onSubmit({ amount: overhead.total, _reportHTML: getCombinedHTML() }, "Overhead");
+  };
+
+  return (
+    <>
+      <style>{FORM_CSS}</style>
+      <div className="slip-card cons-page" style={{ animation: "slideIn 0.3s ease" }}>
+        <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
+        <div className="cons-header">
+          <h2>🏛️ Overhead — Claim Entry</h2>
+          <p>Auto-computed distribution (15% of Total Sanctioned Cost) — Cover Page + Department Proceedings</p>
+        </div>
+        <ProjectDetailSection project={project} />
+
+        <div className="cons-section">
+          <div className="cons-section-head">
+            <div className="cs-badge" style={{ background: "rgba(167,139,250,0.18)", color: "#a78bfa" }}>2</div>
+            <h3>Overhead Distribution</h3>
+            <span style={{ marginLeft: "auto", fontSize: 11, color: "rgba(20,30,70,0.35)", fontFamily: "DM Sans, sans-serif" }}>Fully auto-computed — no entry required</span>
+          </div>
+          <div className="cons-section-body">
+            <div className="cons-grid-2" style={{ gap: 16, marginBottom: 16 }}>
+              <div className="cons-field"><label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">Rs. {fmtAmt(project.sanctionedAmount)}/-</div></div>
+              <div className="cons-field"><label>Total Overhead (15%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static"><strong>Rs. {fmtAmt(overhead.total)}/-</strong></div></div>
+              <div className="cons-field"><label>i) The Registrar A/C, Chennai (5%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.registrar)}/-</div></div>
+              <div className="cons-field"><label>ii) CSRC Revenue, Chennai (4%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.csrcRevenue)}/-</div></div>
+              <div className="cons-field"><label>iii) The Dean, Campus A/C (4%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.dean)}/-</div></div>
+              <div className="cons-field"><label>iv) The Principal Investigator PDF (2%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.pi)}/-</div></div>
+            </div>
+            <div className="cons-field" style={{ marginBottom: 4 }}>
+              <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
+              <div className="cons-static">Rupees <strong>{toIndianWords(overhead.total)}</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cons-action-row">
+          <div className="cons-action-left">
+            <button className="cons-preview-btn" onClick={handlePreview}>👁 Preview Full Report</button>
+            <button className="cons-download-btn" onClick={handleDownload}>⬇ Download PDF</button>
+          </div>
+          <button className="cons-submit-btn" onClick={handleSubmit}>✓ Submit Claim →</button>
+        </div>
+      </div>
+      {preview && previewHTML && (
+        <div className="cons-preview-overlay" onClick={e => { if (e.target === e.currentTarget) setPreview(false); }}>
+          <div className="cons-preview-box">
+            <div className="cons-preview-head">
+              <span>📄 Overhead Claim — {project.id} (Cover + Proceedings)</span>
+              <div><button className="btn-dl" onClick={handleDownload}>⬇ Download</button><button className="btn-cl" onClick={() => setPreview(false)}>✕ Close</button></div>
+            </div>
+            <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Overhead Full Report" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 /* ─── OtherExpensesPage ─── */
 function OtherExpensesPage({ project, onSubmit, onBack }) {
   const [data, setData] = useState({ proceedingNo: "", amount: "", purchaseOf: "", vendorName: "", vendorCity: "", divisionLabel: "", sanctioningAuthority: "Director of Technical Education (DoTE), Chennai", mhNo: "16.1.17", financialYear: "2025 – 26", sanctionPageNo: "", sanctionSlNo: "" });
@@ -2200,11 +2411,12 @@ export default function ZBASlipPage() {
   );
 
   /* ── Recurring selection ── */
-  const RECURRING_HEADS = [
+const RECURRING_HEADS = [
     { key: "manpower", label: "Manpower", icon: "👥", sub: "Salary claims for JRF/SRF/RA" },
     { key: "consumables", label: "Consumables & Accessories", icon: "🧪", sub: "Lab materials, chemicals, supplies" },
     { key: "travel", label: "Travel", icon: "✈️", sub: "Conference, field work, official visits" },
     { key: "contingency", label: "Contingency", icon: "📦", sub: "Postage, printing, stationery, misc" },
+    { key: "overhead", label: "Overhead", icon: "🏛️", sub: "Auto-computed institutional overhead (15%)" },
     { key: "otherExpenses", label: "Other Expenses", icon: "💰", sub: "Publications, patents, other misc." },
   ];
 
@@ -2236,6 +2448,7 @@ export default function ZBASlipPage() {
     if (recurringHead === "consumables") return <ConsumablesPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
     if (recurringHead === "travel") return <TravelPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
     if (recurringHead === "contingency") return <ContingencyPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
+    if (recurringHead === "overhead") return <OverheadPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
     if (recurringHead === "otherExpenses") return <OtherExpensesPage project={selectedProject} onSubmit={handleRecurringSubmit} onBack={() => setScreen("recurring")} />;
     return null;
   };
