@@ -139,7 +139,7 @@
 /* ── Section labels ── */
 .sidebar-section-label {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 10.5px;
+  font-size: 20px;
   font-weight: 700;
 
   letter-spacing: 2px;
@@ -185,7 +185,7 @@
 
 .sidebar-item-label {
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
 
   color: var(--sb-text-secondary, #4b4d6b);

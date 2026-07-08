@@ -31,6 +31,10 @@ const navItems = [
   id: 'reports',
   label: 'Project Reports'
 },
+      {
+  id: 'projecttransfer',
+  label: 'Project Transfer'
+},
     ],
   },
   {

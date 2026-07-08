@@ -430,6 +430,14 @@ function computeOverhead(project) {
     total,
   };
 }
+function computeOverheadItems(project) {
+  return [
+    { key: "registrar", label: "The Registrar A/C, Chennai", percent: 5, amount: Math.round(project.sanctionedAmount * 0.05) },
+    { key: "csrcRevenue", label: "CSRC Revenue, Chennai", percent: 4, amount: Math.round(project.sanctionedAmount * 0.04) },
+    { key: "dean", label: "The Dean, Campus A/C", percent: 4, amount: Math.round(project.sanctionedAmount * 0.04) },
+    { key: "pi", label: "The Principal Investigator PDF", percent: 2, amount: Math.round(project.sanctionedAmount * 0.02) },
+  ];
+}
 function toIndianWords(num) {
   const a = ["","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
   const b = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
@@ -762,37 +770,33 @@ function generateContingencyCoverPage(formData, project) {
 /* ════════════════════════════════════
    COVER PAGE: OVERHEAD
 ════════════════════════════════════ */
-function generateOverheadCoverPage(overhead, project) {
+function generateOverheadCoverPage(item, project) {
   const td = todayDMY();
-  const expHead = `Overhead Charges (15% of Sanctioned Cost)`;
+  const expHead = `Overhead Charges – ${item.label} (${item.percent}% of Sanctioned Cost)`;
 
   const projectRows = buildProjectRows(project, expHead, project.csrcProcNo, "As per sanction order");
   const piRows = buildPIRows(project);
 
   const claimantRows = `
     <tr><td>Total Sanctioned Cost</td><td>Rs.${fmtAmt(project.sanctionedAmount)}/-</td></tr>
-    <tr><td>Overhead Rate</td><td>15% of Total Sanctioned Cost</td></tr>
-    <tr><td>Total Overhead Amount</td><td class="bold">Rs.${fmtAmt(overhead.total)}/-</td></tr>
-    <tr><td>(i) The Registrar A/C, Chennai (5%)</td><td>Rs.${fmtAmt(overhead.registrar)}/-</td></tr>
-    <tr><td>(ii) CSRC Revenue, Chennai (4%)</td><td>Rs.${fmtAmt(overhead.csrcRevenue)}/-</td></tr>
-    <tr><td>(iii) The Dean, Campus A/C (4%)</td><td>Rs.${fmtAmt(overhead.dean)}/-</td></tr>
-    <tr><td>(iv) The Principal Investigator PDF (2%)</td><td>Rs.${fmtAmt(overhead.pi)}/-</td></tr>
-    <tr><td>Total Amount Claimed</td><td class="bold">Rs.${fmtAmt(overhead.total)}/- (Rupees ${toIndianWords(overhead.total)})</td></tr>
+    <tr><td>Overhead Head</td><td>${item.label}</td></tr>
+    <tr><td>Overhead Rate</td><td>${item.percent}% of Total Sanctioned Cost</td></tr>
+    <tr><td>Total Amount Claimed</td><td class="bold">Rs.${fmtAmt(item.amount)}/- (Rupees ${toIndianWords(item.amount)})</td></tr>
   `;
 
   const certBlock = `
-    <p class="cert-text">Certified that the overhead charges shown above are computed as per the approved percentage distribution on the total sanctioned cost of the project and are debited to the respective heads accordingly.</p>
+    <p class="cert-text">Certified that the overhead charge shown above towards ${item.label} is computed as per the approved percentage distribution on the total sanctioned cost of the project and is debited to the respective head accordingly.</p>
     <div style="text-align:right;margin-top:18px;font-size:11px;">Signature of the Principal Investigator</div>
     <p class="cert-text" style="margin-top:28px;">Certified that the claim is in order and may be admitted.</p>
   `;
 
   return coverPageShell({
     headingLine: "REQUEST FOR OVERHEAD CLAIM IN PROJECT FUND",
-    subLine: `OVERHEAD DISTRIBUTION FOR PROJECT NO. ${project.projectNo}`,
+    subLine: `OVERHEAD TO ${item.label.toUpperCase()} FOR PROJECT NO. ${project.projectNo}`,
     dateStr: td,
     projectRows,
     piRows,
-    claimantSectionTitle: "OVERHEAD DISTRIBUTION DETAILS",
+    claimantSectionTitle: "OVERHEAD CLAIM DETAILS",
     claimantRows,
     certBlock,
     sigBlock: STD_SIG_BLOCK,
@@ -924,6 +928,36 @@ ${procStyles}
 <button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
 ${cleanCoverBody}
 ${cleanProcBody}
+</body></html>`;
+}
+
+function combineMultipleCoverAndProceedings(pairs) {
+  let styles = "";
+  let bodies = "";
+
+  pairs.forEach(({ coverHTML, proceedingsHTML }) => {
+    const coverBodyMatch = coverHTML.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    const coverBody = (coverBodyMatch ? coverBodyMatch[1] : coverHTML).replace(/<button[^>]*print-btn[^>]*>.*?<\/button>/gi, "");
+    const coverStyleMatch = coverHTML.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+    if (coverStyleMatch) styles += coverStyleMatch.join("\n") + "\n";
+
+    const procBodyMatch = proceedingsHTML.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    const procBody = (procBodyMatch ? procBodyMatch[1] : proceedingsHTML).replace(/<button[^>]*print-btn[^>]*>.*?<\/button>/gi, "");
+    const procStyleMatch = proceedingsHTML.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+    if (procStyleMatch) styles += procStyleMatch.join("\n") + "\n";
+
+    bodies += coverBody + procBody;
+  });
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Overhead Claim Report</title>
+${styles}
+<style>
+@media print { .print-btn { display: none !important; } }
+.print-btn { position:fixed;top:10px;right:10px;padding:8px 16px;background:#1976d2;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;z-index:9999; }
+</style>
+</head><body>
+<button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+${bodies}
 </body></html>`;
 }
 
@@ -1242,7 +1276,7 @@ p.para.indent{text-indent:20px;}
 </div></body></html>`;
 }
 
-function generateOverheadPDF(overhead, project) {
+function generateOverheadPDF(item, project) {
   const td = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, ".");
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Overhead Proceedings</title>
 <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"Times New Roman",serif;font-size:18px;background:#fff;color:#000;}
@@ -1282,23 +1316,20 @@ table.oh-tbl tr.total-row td{font-weight:bold;background:#f3f3f3;}
   <div class="meta-row"><strong>Professor &amp; Head</strong><span>Phone: 2235 7744</span></div>
   <div class="proc-line"><span>Proceeding No. ${project.csrcProcNo}</span><span>Date: ${td}</span></div>
   <table class="sub-ref-table">
-    <tr><td>Sub:</td><td>${project.departmentFull.replace("Department on","").trim()} – ${project.scheme} - Overhead Charges – Distribution – Sanction Accorded – Reg.</td></tr>
+    <tr><td>Sub:</td><td>${project.departmentFull.replace("Department on","").trim()} – ${project.scheme} - Overhead Charges to ${item.label} – Sanction Accorded – Reg.</td></tr>
     <tr><td>Ref:</td><td>CSRC Proc. No: ${project.csrcProcNo} &nbsp; dated: ${project.csrcProcDate}</td></tr>
   </table>
   <div class="stars">*****</div>
   <p class="para indent">The project titled "<strong>${project.title}</strong>" under ${project.scheme} Scheme – Project No. ${project.projectNo}, sanctioned to <strong>${project.pi}, ${project.piDesignation}</strong>, ${project.departmentFull}, ${project.campus}, Anna University, Chennai, carries a Total Sanctioned Cost of <strong>Rs.${Number(project.sanctionedAmount).toLocaleString("en-IN")}/-</strong>.</p>
-  <p class="para indent">Sanction is hereby accorded to distribute the Overhead Charges amounting to <strong>Rs.${fmtAmt(overhead.total)}/- (Rupees ${toIndianWords(overhead.total)})</strong>, computed at 15% of the Total Sanctioned Cost, as detailed below:</p>
+  <p class="para indent">Sanction is hereby accorded to release the Overhead Charges amounting to <strong>Rs.${fmtAmt(item.amount)}/- (Rupees ${toIndianWords(item.amount)})</strong>, computed at ${item.percent}% of the Total Sanctioned Cost, towards the head detailed below:</p>
   <table class="oh-tbl">
     <thead><tr><th style="width:40px;">Sl.</th><th>Head of Account</th><th style="width:140px;">Amount (Rs.)</th></tr></thead>
     <tbody>
-      <tr><td>5</td><td>i) The Registrar A/C, Chennai (5%)</td><td class="amt">${fmtAmt(overhead.registrar)}</td></tr>
-      <tr><td>6</td><td>ii) CSRC Revenue, Chennai (4%)</td><td class="amt">${fmtAmt(overhead.csrcRevenue)}</td></tr>
-      <tr><td>7</td><td>iii) The Dean, Campus A/C (4%)</td><td class="amt">${fmtAmt(overhead.dean)}</td></tr>
-      <tr><td>8</td><td>iv) The Principal Investigator PDF (2%)</td><td class="amt">${fmtAmt(overhead.pi)}</td></tr>
-      <tr class="total-row"><td colspan="2" style="text-align:right;">TOTAL OVERHEAD (15%)</td><td class="amt">${fmtAmt(overhead.total)}</td></tr>
+      <tr><td>1</td><td>${item.label} (${item.percent}%)</td><td class="amt">${fmtAmt(item.amount)}</td></tr>
+      <tr class="total-row"><td colspan="2" style="text-align:right;">TOTAL</td><td class="amt">${fmtAmt(item.amount)}</td></tr>
     </tbody>
   </table>
-  <p class="para indent">The expenditure is debitable as per the overhead distribution heads indicated above for the project – "<strong>${project.title}</strong>".</p>
+  <p class="para indent">The expenditure is debitable to ${item.label} for the project – "<strong>${project.title}</strong>".</p>
   <div class="hod-sig">HOD (${project.department.toUpperCase()})</div>
   <div class="to-section"><div>To</div><div>${project.pi},</div><div>${project.piDesignation},</div><div>${project.departmentFull},</div><div>Chennai – 600 025</div></div>
   <div class="copy-section">Copy to: Bill / Stock file</div>
@@ -1364,6 +1395,19 @@ p.para.indent{text-indent:20px;}
    Called from every head's onSubmit, returns combined HTML
 ═══════════════════════════════════════════════════════════════════ */
 function buildCombinedReport(headKey, formData, project, claimData, staff) {
+  if (headKey === "overhead") {
+    const allItems = computeOverheadItems(project);
+    const selected = formData.selectedOverheads && formData.selectedOverheads.length
+      ? formData.selectedOverheads
+      : allItems.map(i => i.key);
+    const items = allItems.filter(i => selected.includes(i.key));
+    const pairs = items.map(item => ({
+      coverHTML: generateOverheadCoverPage(item, project),
+      proceedingsHTML: generateOverheadPDF(item, project),
+    }));
+    return combineMultipleCoverAndProceedings(pairs);
+  }
+
   let coverHTML = "";
   let proceedingsHTML = "";
 
@@ -1388,13 +1432,6 @@ function buildCombinedReport(headKey, formData, project, claimData, staff) {
       proceedingsHTML = generateContingencyPDF(formData, project);
       break;
     }
-    case "overhead": {
-      const overhead = computeOverhead(project);
-      coverHTML = generateOverheadCoverPage(overhead, project);
-      proceedingsHTML = generateOverheadPDF(overhead, project);
-      break;
-    }
-
     case "otherExpenses": {
       coverHTML = generateOtherExpensesCoverPage(formData, project);
       proceedingsHTML = generateOtherExpensesPDF(formData, project);
@@ -2052,19 +2089,32 @@ function ContingencyPage({ project, onSubmit, onBack }) {
 function OverheadPage({ project, onSubmit, onBack }) {
   const [preview, setPreview] = useState(false);
   const [previewHTML, setPreviewHTML] = useState(null);
-  const overhead = computeOverhead(project);
+  const allItems = computeOverheadItems(project);
+  const [selected, setSelected] = useState(allItems.map(i => i.key));
 
-  const getCombinedHTML = () => buildCombinedReport("overhead", {}, project, null, null);
+  const toggle = (key) => {
+    setSelected(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+  };
 
-  const handlePreview = () => { setPreviewHTML(getCombinedHTML()); setPreview(true); };
+  const selectedItems = allItems.filter(i => selected.includes(i.key));
+  const selectedTotal = selectedItems.reduce((s, i) => s + i.amount, 0);
+
+  const getCombinedHTML = () => buildCombinedReport("overhead", { selectedOverheads: selected }, project, null, null);
+
+  const handlePreview = () => {
+    if (selected.length === 0) { alert("Please select at least one overhead head."); return; }
+    setPreviewHTML(getCombinedHTML());
+    setPreview(true);
+  };
 
   const handleDownload = async () => {
+    if (selected.length === 0) { alert("Please select at least one overhead head."); return; }
     const html = getCombinedHTML();
     const iframe = document.createElement("iframe");
     iframe.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:none;";
     document.body.appendChild(iframe);
     iframe.contentDocument.open(); iframe.contentDocument.write(html); iframe.contentDocument.close();
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 1200));
     const pages = iframe.contentDocument.querySelectorAll(".page");
     const pdf = new jsPDF("p", "mm", "a4");
     for (let i = 0; i < pages.length; i++) {
@@ -2077,7 +2127,8 @@ function OverheadPage({ project, onSubmit, onBack }) {
   };
 
   const handleSubmit = () => {
-    onSubmit({ amount: overhead.total, _reportHTML: getCombinedHTML() }, "Overhead");
+    if (selected.length === 0) { alert("Please select at least one overhead head."); return; }
+    onSubmit({ amount: selectedTotal, selectedOverheads: selected, _reportHTML: getCombinedHTML() }, "Overhead");
   };
 
   return (
@@ -2087,28 +2138,43 @@ function OverheadPage({ project, onSubmit, onBack }) {
         <button className="back-btn" onClick={onBack}>← Back to Recurring</button>
         <div className="cons-header">
           <h2>🏛️ Overhead — Claim Entry</h2>
-          <p>Auto-computed distribution (15% of Total Sanctioned Cost) — Cover Page + Department Proceedings</p>
+          <p>Select which overhead head(s) to process. Each selected head generates its own Cover Page + Proceedings (2 pages each).</p>
         </div>
         <ProjectDetailSection project={project} />
 
         <div className="cons-section">
           <div className="cons-section-head">
             <div className="cs-badge" style={{ background: "rgba(167,139,250,0.18)", color: "#a78bfa" }}>2</div>
-            <h3>Overhead Distribution</h3>
-            <span style={{ marginLeft: "auto", fontSize: 11, color: "rgba(20,30,70,0.35)", fontFamily: "DM Sans, sans-serif" }}>Fully auto-computed — no entry required</span>
+            <h3>Select Overhead Head(s)</h3>
+            <span style={{ marginLeft: "auto", fontSize: 11, color: "rgba(20,30,70,0.35)", fontFamily: "DM Sans, sans-serif" }}>Auto-computed — choose which to claim</span>
           </div>
           <div className="cons-section-body">
-            <div className="cons-grid-2" style={{ gap: 16, marginBottom: 16 }}>
-              <div className="cons-field"><label>Total Sanctioned Cost <span className="src-badge src-fetch">Fetched</span></label><div className="cons-static">Rs. {fmtAmt(project.sanctionedAmount)}/-</div></div>
-              <div className="cons-field"><label>Total Overhead (15%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static"><strong>Rs. {fmtAmt(overhead.total)}/-</strong></div></div>
-              <div className="cons-field"><label>i) The Registrar A/C, Chennai (5%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.registrar)}/-</div></div>
-              <div className="cons-field"><label>ii) CSRC Revenue, Chennai (4%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.csrcRevenue)}/-</div></div>
-              <div className="cons-field"><label>iii) The Dean, Campus A/C (4%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.dean)}/-</div></div>
-              <div className="cons-field"><label>iv) The Principal Investigator PDF (2%) <span className="src-badge src-auto">Auto</span></label><div className="cons-static">Rs. {fmtAmt(overhead.pi)}/-</div></div>
+            <div className="cons-grid-2" style={{ gap: 14 }}>
+              {allItems.map((item, idx) => (
+                <label
+                  key={item.key}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 10,
+                    background: selected.includes(item.key) ? "rgba(124,58,237,0.07)" : "rgba(0,100,220,0.03)",
+                    border: selected.includes(item.key) ? "1px solid rgba(124,58,237,0.3)" : "1px solid rgba(0,100,220,0.1)",
+                    borderRadius: 12, padding: "12px 14px", cursor: "pointer", transition: "0.2s",
+                  }}
+                >
+                  <input type="checkbox" checked={selected.includes(item.key)} onChange={() => toggle(item.key)} style={{ width: 16, height: 16, accentColor: "#7c3aed" }} />
+                  <div>
+                    <div style={{ fontFamily: "Syne, sans-serif", fontSize: 13, fontWeight: 800, color: "rgba(20,30,70,0.85)" }}>{idx + 1}) {item.label} ({item.percent}%)</div>
+                    <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 12, color: "#16a34a", fontWeight: 700, marginTop: 2 }}>Rs. {fmtAmt(item.amount)}/-</div>
+                  </div>
+                </label>
+              ))}
             </div>
-            <div className="cons-field" style={{ marginBottom: 4 }}>
-              <label>Amount in Words <span className="src-badge src-auto">Auto</span></label>
-              <div className="cons-static">Rupees <strong>{toIndianWords(overhead.total)}</strong></div>
+            <div className="cons-field" style={{ marginTop: 18 }}>
+              <label>Total Selected Amount <span className="src-badge src-auto">Auto</span></label>
+              <div className="cons-static"><strong>Rs. {fmtAmt(selectedTotal)}/-</strong>{selectedTotal > 0 && <> (Rupees {toIndianWords(selectedTotal)})</>}</div>
+            </div>
+            <div className="cons-field" style={{ marginTop: 10 }}>
+              <label>Pages to be Generated <span className="src-badge src-auto">Auto</span></label>
+              <div className="cons-static">{selected.length} head(s) × 2 pages = <strong>{selected.length * 2} pages</strong></div>
             </div>
           </div>
         </div>
@@ -2125,7 +2191,7 @@ function OverheadPage({ project, onSubmit, onBack }) {
         <div className="cons-preview-overlay" onClick={e => { if (e.target === e.currentTarget) setPreview(false); }}>
           <div className="cons-preview-box">
             <div className="cons-preview-head">
-              <span>📄 Overhead Claim — {project.id} (Cover + Proceedings)</span>
+              <span>📄 Overhead Claim — {project.id} ({selected.length * 2} pages)</span>
               <div><button className="btn-dl" onClick={handleDownload}>⬇ Download</button><button className="btn-cl" onClick={() => setPreview(false)}>✕ Close</button></div>
             </div>
             <iframe className="cons-preview-iframe" srcDoc={previewHTML} title="Overhead Full Report" />

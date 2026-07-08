@@ -26,6 +26,7 @@ import ReappropriationHistory from './pages/projects/requestforms/Reappropriatio
 import ProjectExtensionDashboard from './pages/projects/requestforms/ProjectExtensionDashboard';
 import ProjectExtensionHistory from './pages/projects/requestforms/ProjectExtensionHistory';
 import ProjectExtensionPage from './pages/projects/requestforms/ProjectExtensionPage';
+import ProjectTransfer from './pages/projects/projecttransfer/ProjectTransfer';   // ← NEW
 
 
 import StatementOfExpenditure from './pages/projects/StatementOfExpenditure';
@@ -51,6 +52,7 @@ function App() {
       case 'ctdt':              return <CTDTPage             onNavigate={navigate} />;
       case 'projectstaff':      return <ProjectStaffPage    onNavigate={navigate} />;
       case 'requestforms':      return <RequestFormsPage    onNavigate={navigate} />;
+      case 'projecttransfer':   return <ProjectTransfer      onNavigate={navigate} />;  // ← NEW
 
       case 'reappropriationdashboard':
         return <ReappropriationDashboard onNavigate={navigate} />;
