@@ -9,7 +9,7 @@ const ConsultanciesPage = ({ onNavigate }) => (
       <p className="page-subtitle">Industry consultancy engagements and records</p>
     </div>
     <div style={{
-      background:'rgba(255,255,255,0.03)', border:'1px dashed rgba(255,255,255,0.1)',
+      background:'rgb(255, 255, 255)', border:'1px dashed rgba(255,255,255,0.1)',
       borderRadius:16, padding:'60px 40px', textAlign:'center', color:'rgba(255,255,255,0.3)',
       fontFamily:'DM Sans, sans-serif', fontSize:14
     }}>

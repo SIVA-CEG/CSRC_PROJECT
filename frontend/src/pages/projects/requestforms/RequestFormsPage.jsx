@@ -6,6 +6,7 @@ import ReappropriationDashboard from './ReappropriationDashboard';
 import ReappropriationHistory from './ReappropriationHistory';
 import ProjectExtensionDashboard from './ProjectExtensionDashboard';
 import ProjectExtensionHistory from './ProjectExtensionHistory';
+import AdvanceSanctionsPage from './AdvanceSanctionsPage';
 
 
 const reqCards = [
@@ -16,14 +17,6 @@ const reqCards = [
     color: '#a78bfa',
     glow: 'rgba(167,139,250,0.3)',
     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>,
-  },
-  {
-    id: 'reimbursements',
-    title: 'Reimbursements',
-    desc: 'Submit reimbursement requests for project expenses.',
-    color: '#34d399',
-    glow: 'rgba(52,211,153,0.3)',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>,
   },
   {
     id: 'reappropriation',
@@ -66,6 +59,17 @@ const ReqCard = ({ title, desc, color, glow, icon, onClick }) => (
 
 const RequestFormsPage = ({ onNavigate }) => {
   const [subPage, setSubPage] = useState(null);
+
+  if (subPage === 'advance-sanction') {
+    return (
+      <AdvanceSanctionsPage
+        onNavigate={(target) => {
+          if (target === 'requestforms') setSubPage(null);
+          else onNavigate?.(target);
+        }}
+      />
+    );
+  }
 
   if (subPage === 'reappropriation-dashboard') {
   return (
@@ -153,6 +157,11 @@ if (subPage === 'project-extension-history') {
 }
 
   const handleCardClick = (id) => {
+  if (id === 'advance-sanction') {
+  setSubPage('advance-sanction');
+  return;
+}
+
   if (id === 'reappropriation') {
   setSubPage('reappropriation-dashboard');
   return;

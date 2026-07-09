@@ -26,6 +26,7 @@ import ReappropriationHistory from './pages/projects/requestforms/Reappropriatio
 import ProjectExtensionDashboard from './pages/projects/requestforms/ProjectExtensionDashboard';
 import ProjectExtensionHistory from './pages/projects/requestforms/ProjectExtensionHistory';
 import ProjectExtensionPage from './pages/projects/requestforms/ProjectExtensionPage';
+import AdvanceSanctionsPage from './pages/projects/requestforms/AdvanceSanctionsPage';   // ← NEW
 import ProjectTransfer from './pages/projects/projecttransfer/ProjectTransfer';   // ← NEW
 
 
@@ -53,6 +54,11 @@ function App() {
       case 'projectstaff':      return <ProjectStaffPage    onNavigate={navigate} />;
       case 'requestforms':      return <RequestFormsPage    onNavigate={navigate} />;
       case 'projecttransfer':   return <ProjectTransfer      onNavigate={navigate} />;  // ← NEW
+
+      // Direct entry point for Advance Sanction (also reachable via the
+      // Request Forms card, same convention as reappropriation-* / project-extension-* below).
+      case 'advance-sanction':
+        return <AdvanceSanctionsPage onNavigate={navigate} />;                       // ← NEW
 
       case 'reappropriationdashboard':
         return <ReappropriationDashboard onNavigate={navigate} />;
