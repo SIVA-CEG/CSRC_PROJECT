@@ -1,50 +1,32 @@
 import React, { useState } from 'react';
 
 const styles = {
-  page: {
-    minHeight: '100%',
-    padding: '0 4px',
-  },
+  page: { minHeight: '100%', padding: '0 4px' },
   breadcrumb: {
-    fontFamily: 'DM Sans, sans-serif',
-    fontSize: 13,
-    color: 'rgba(30,41,59,0.45)',
-    marginBottom: 6,
+    fontFamily: 'DM Sans, sans-serif', fontSize: 13,
+    color: 'rgba(30,41,59,0.45)', marginBottom: 6,
   },
-  breadcrumbActive: {
-    color: 'rgba(30,41,59,0.85)',
-    fontWeight: 600,
-  },
+  breadcrumbLink: { cursor: 'pointer' },
+  breadcrumbActive: { color: 'rgba(30,41,59,0.85)', fontWeight: 600 },
   title: {
-    fontFamily: 'DM Sans, sans-serif',
-    fontSize: 28,
-    fontWeight: 700,
-    color: '#1e293b',
-    margin: '0 0 6px 0',
-    letterSpacing: '-0.02em',
+    fontFamily: 'DM Sans, sans-serif', fontSize: 28, fontWeight: 700,
+    color: '#1e293b', margin: '0 0 6px 0', letterSpacing: '-0.02em',
   },
   subtitle: {
-    fontFamily: 'DM Sans, sans-serif',
-    fontSize: 14.5,
-    color: 'rgba(30,41,59,0.55)',
-    margin: '0 0 36px 0',
+    fontFamily: 'DM Sans, sans-serif', fontSize: 14.5,
+    color: 'rgba(30,41,59,0.55)', margin: '0 0 36px 0',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: 24,
-    maxWidth: 860,
+    gap: 24, maxWidth: 860,
   },
   card: (accent, hovered) => ({
     position: 'relative',
-    background: hovered
-      ? 'rgba(255,255,255,0.92)'
-      : 'rgba(255,255,255,0.72)',
+    background: hovered ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.72)',
     backdropFilter: 'blur(18px)',
     WebkitBackdropFilter: 'blur(18px)',
-    border: hovered
-      ? `1px solid ${accent}55`
-      : '1px solid rgba(255,255,255,0.6)',
+    border: hovered ? `1px solid ${accent}55` : '1px solid rgba(255,255,255,0.6)',
     borderRadius: 20,
     padding: '32px 28px',
     cursor: 'pointer',
@@ -56,51 +38,30 @@ const styles = {
     overflow: 'hidden',
   }),
   cardGlow: (accent) => ({
-    position: 'absolute',
-    top: -40,
-    right: -40,
-    width: 140,
-    height: 140,
+    position: 'absolute', top: -40, right: -40, width: 140, height: 140,
     borderRadius: '50%',
     background: `radial-gradient(circle, ${accent}22 0%, transparent 70%)`,
     pointerEvents: 'none',
   }),
   iconWrap: (accent) => ({
-    width: 52,
-    height: 52,
-    borderRadius: 14,
+    width: 52, height: 52, borderRadius: 14,
     background: `linear-gradient(135deg, ${accent} 0%, ${accent}cc 100%)`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-    boxShadow: `0 8px 20px -6px ${accent}88`,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    marginBottom: 20, boxShadow: `0 8px 20px -6px ${accent}88`,
   }),
   cardTitle: {
-    fontFamily: 'DM Sans, sans-serif',
-    fontSize: 17,
-    fontWeight: 700,
-    color: '#1e293b',
-    margin: '0 0 6px 0',
+    fontFamily: 'DM Sans, sans-serif', fontSize: 17, fontWeight: 700,
+    color: '#1e293b', margin: '0 0 6px 0',
   },
   cardDesc: {
-    fontFamily: 'DM Sans, sans-serif',
-    fontSize: 13,
-    color: 'rgba(30,41,59,0.5)',
-    margin: 0,
-    lineHeight: 1.5,
+    fontFamily: 'DM Sans, sans-serif', fontSize: 13,
+    color: 'rgba(30,41,59,0.5)', margin: 0, lineHeight: 1.5,
   },
   arrow: (accent, hovered) => ({
-    position: 'absolute',
-    bottom: 28,
-    right: 28,
-    width: 32,
-    height: 32,
+    position: 'absolute', bottom: 28, right: 28, width: 32, height: 32,
     borderRadius: '50%',
     background: hovered ? accent : 'rgba(30,41,59,0.06)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
     transition: 'all 0.28s ease',
     transform: hovered ? 'translateX(2px)' : 'translateX(0)',
   }),
@@ -120,42 +81,44 @@ const ArrowIcon = ({ color }) => (
 
 const cards = [
   {
-    key: 'department-consultancies',
-    accent: '#6366f1',
-    title: 'Department Consultancies',
-    desc: 'CEG & SAP colleges — consultancy engagements handled at the department level.',
+    key: 'department-consultancy-acceptance',
+    accent: '#10b981',
+    title: 'Acceptance Form Generation',
+    desc: 'Generate the consultancy acceptance form for a department engagement.',
     icon: (
       <>
-        <path d="M3 21h18" />
-        <path d="M5 21V7l7-4 7 4v14" />
-        <path d="M9 9h1M14 9h1M9 13h1M14 13h1" />
+        <path d="M9 12l2 2 4-4" />
+        <circle cx="12" cy="12" r="9" />
       </>
     ),
   },
   {
-    key: 'center-consultancies',
-    accent: '#f97316',
-    title: 'Centre / Other Campuses',
-    desc: 'Consultancy engagements coordinated at the centre / other-campus level.',
+    key: 'department-consultancy-completion',
+    accent: '#8b5cf6',
+    title: 'Upload Completion Letter',
+    desc: 'Upload the signed completion letter for a department consultancy.',
     icon: (
       <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18M3 12h18" />
+        <path d="M12 3v12" />
+        <path d="M7 8l5-5 5 5" />
+        <path d="M5 21h14" />
       </>
     ),
   },
 ];
 
-const ConsultanciesPage = ({ onNavigate }) => {
+const DepartmentConsultancies = ({ onNavigate }) => {
   const [hovered, setHovered] = useState(null);
 
   return (
     <div style={styles.page}>
       <div style={styles.breadcrumb}>
-        <span onClick={() => onNavigate('home')} style={{ cursor: 'pointer' }}>Home</span> / <span style={styles.breadcrumbActive}>Consultancies</span>
+        <span style={styles.breadcrumbLink} onClick={() => onNavigate('home')}>Home</span> /{' '}
+        <span style={styles.breadcrumbLink} onClick={() => onNavigate('consultancies')}>Consultancies</span> /{' '}
+        <span style={styles.breadcrumbActive}>Department</span>
       </div>
-      <h1 style={styles.title}>Consultancies</h1>
-      <p style={styles.subtitle}>Industry consultancy engagements and records</p>
+      <h1 style={styles.title}>Department Consultancies</h1>
+      <p style={styles.subtitle}>CEG & SAP colleges — consultancy engagement actions</p>
 
       <div style={styles.grid}>
         {cards.map((c) => {
@@ -185,4 +148,4 @@ const ConsultanciesPage = ({ onNavigate }) => {
   );
 };
 
-export default ConsultanciesPage;
+export default DepartmentConsultancies;

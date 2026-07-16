@@ -31,7 +31,18 @@ import ProjectTransfer from './pages/projects/projecttransfer/ProjectTransfer'; 
 
 
 import StatementOfExpenditure from './pages/projects/StatementOfExpenditure';
+import PDFRequest from './pages/projects/PDFRequest';
 import Reports from './pages/projects/Reports';   // ← NEW
+
+
+
+
+
+
+import DepartmentConsultancies from './pages/consultancies/DepartmentConsultancies/DepartmentConsultancies';
+import CenterConsultancies     from './pages/consultancies/CenterConsultancies/CenterConsultancies';
+
+
 
 function App() {
   const [page, setPage] = useState('home');
@@ -93,8 +104,15 @@ function App() {
       case 'paymentclaims':     return <PaymentClaimsPage   onNavigate={navigate} />;
       case 'zbaslip':           return <ZBASlipPage          onNavigate={navigate} />;
       case 'statementofexpenditure':              return <StatementOfExpenditure                  onNavigate={navigate} />;
+      case 'pdfrequest': return <PDFRequest onNavigate={navigate} />;
       case 'reports':           return <Reports               onNavigate={navigate} />;  // ← NEW
       case 'consultancies':     return <ConsultanciesPage    onNavigate={navigate} />;
+      case 'department-consultancies': return <DepartmentConsultancies onNavigate={navigate} />;
+      case 'center-consultancies':     return <CenterConsultancies     onNavigate={navigate} />;
+
+
+
+
       case 'testing':           return <TestingPage />;
       case 'training':          return <TrainingPage />;
       case 'workshops':         return <WorkshopsPage />;

@@ -2,16 +2,8 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 
 const navItems = [
-  {
-    id: 'profile',
-    label: 'Profile',
-    icon: '👨‍🔬',
-  },
-  {
-    id: 'endorsements',
-    label: 'Endorsements',
-    icon: '🏅',
-  },
+  { id: 'profile', label: 'Profile', icon: '👨‍🔬' },
+  { id: 'endorsements', label: 'Endorsements', icon: '🏅' },
   {
     id: 'projects',
     label: 'My Projects',
@@ -23,40 +15,16 @@ const navItems = [
       { id: 'requestforms', label: 'Request Forms' },
       { id: 'paymentclaims', label: 'Payment Claims' },
       { id: 'zbaslip', label: 'Claim Bills' },
-      {
-  id: 'statementofexpenditure',
-  label: 'Statement Of Expenditure'
-},
-      {
-  id: 'reports',
-  label: 'Project Reports'
-},
-      {
-  id: 'projecttransfer',
-  label: 'Project Transfer'
-},
+      { id: 'statementofexpenditure', label: 'Statement Of Expenditure' },
+      { id: 'reports', label: 'Project Reports' },
+      { id: 'projecttransfer', label: 'Project Transfer' },
+      { id: 'pdfrequest', label: 'PDF Request' },
     ],
   },
-  {
-    id: 'consultancies',
-    label: 'Consultancies',
-    icon: '💼',
-  },
-  {
-    id: 'testing',
-    label: 'Testing',
-    icon: '🧪',
-  },
-  {
-    id: 'training',
-    label: 'Training',
-    icon: '🎓',
-  },
-  {
-    id: 'workshops',
-    label: 'Workshops',
-    icon: '📅',
-  },
+  { id: 'consultancies', label: 'Consultancies', icon: '💼' },
+  { id: 'testing', label: 'Testing', icon: '🧪' },
+  { id: 'training', label: 'Training', icon: '🎓' },
+  { id: 'workshops', label: 'Workshops', icon: '📅' },
 ];
 
 const Sidebar = ({ activePage, onNavigate }) => {
@@ -82,18 +50,22 @@ const Sidebar = ({ activePage, onNavigate }) => {
           <div
             className={`sidebar-item ${activePage === item.id ? 'active' : ''}`}
             onClick={() => {
-              if (item.sub) toggleSub(item.id);
-              else onNavigate(item.id);
-            }}
+  if (item.sub) {
+    toggleSub(item.id);
+    onNavigate(item.id); // Navigate to ProjectsPage
+  } else {
+    onNavigate(item.id);
+  }
+}}
           >
-            {item.icon}
+            <span className="sidebar-item-icon">{item.icon}</span>
             <span className="sidebar-item-label">{item.label}</span>
             {item.sub && (
               <svg
                 className={`sidebar-chevron ${openSubs[item.id] ? 'open' : ''}`}
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
               >
-                <polyline points="6 9 12 15 18 9"/>
+                <polyline points="6 9 12 15 18 9" />
               </svg>
             )}
           </div>
@@ -118,10 +90,12 @@ const Sidebar = ({ activePage, onNavigate }) => {
       <span className="sidebar-section-label">System</span>
 
       <div className="sidebar-item" onClick={() => onNavigate('home')}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
+        <span className="sidebar-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        </span>
         <span className="sidebar-item-label">Home</span>
       </div>
     </aside>
