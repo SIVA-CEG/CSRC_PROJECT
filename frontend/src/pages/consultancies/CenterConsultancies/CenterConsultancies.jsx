@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BackButton from '../shared/BackButton';
 
 const styles = {
   page: { minHeight: '100%', padding: '0 4px' },
@@ -8,9 +9,10 @@ const styles = {
   },
   breadcrumbLink: { cursor: 'pointer' },
   breadcrumbActive: { color: 'rgba(30,41,59,0.85)', fontWeight: 600 },
+  titleRow: { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 6 },
   title: {
     fontFamily: 'DM Sans, sans-serif', fontSize: 28, fontWeight: 700,
-    color: '#1e293b', margin: '0 0 6px 0', letterSpacing: '-0.02em',
+    color: '#1e293b', margin: 0, letterSpacing: '-0.02em',
   },
   subtitle: {
     fontFamily: 'DM Sans, sans-serif', fontSize: 14.5,
@@ -65,21 +67,6 @@ const styles = {
     transition: 'all 0.28s ease',
     transform: hovered ? 'translateX(2px)' : 'translateX(0)',
   }),
-  comingSoon: {
-    position: 'relative',
-    background: 'rgba(255,255,255,0.35)',
-    border: '1.5px dashed rgba(30,41,59,0.15)',
-    borderRadius: 20,
-    padding: '32px 28px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'rgba(30,41,59,0.35)',
-    fontFamily: 'DM Sans, sans-serif',
-    fontSize: 13,
-    minHeight: 168,
-  },
 };
 
 const Icon = ({ path, color = '#fff' }) => (
@@ -94,9 +81,34 @@ const ArrowIcon = ({ color }) => (
   </svg>
 );
 
+const cards = [
+  {
+    key: 'center-consultancy-acceptance',
+    accent: '#0ea5e9',
+    title: 'Acceptance Form Generation',
+    desc: 'Generate the consultancy acceptance form for a centre / other-campus engagement.',
+    icon: (
+      <>
+        <path d="M9 12l2 2 4-4" />
+        <circle cx="12" cy="12" r="9" />
+      </>
+    ),
+  },
+  {
+    key: 'center-consultancy-status',
+    accent: '#7c3aed',
+    title: 'Acceptance Form Status',
+    desc: 'View all submitted acceptance forms — filter by submitted, accepted, or rejected.',
+    icon: (
+      <>
+        <path d="M4 6h16M4 12h16M4 18h10" />
+      </>
+    ),
+  },
+];
+
 const CenterConsultancies = ({ onNavigate }) => {
-  const [hovered, setHovered] = useState(false);
-  const accent = '#0ea5e9';
+  const [hovered, setHovered] = useState(null);
 
   return (
     <div style={styles.page}>
@@ -105,33 +117,35 @@ const CenterConsultancies = ({ onNavigate }) => {
         <span style={styles.breadcrumbLink} onClick={() => onNavigate('consultancies')}>Consultancies</span> /{' '}
         <span style={styles.breadcrumbActive}>Centre / Other Campuses</span>
       </div>
-      <h1 style={styles.title}>Centre / Other Campuses</h1>
+      <div style={styles.titleRow}>
+        <BackButton onClick={() => onNavigate('consultancies')} />
+        <h1 style={styles.title}>Centre / Other Campuses</h1>
+      </div>
       <p style={styles.subtitle}>Consultancy engagement actions for centres and other campuses</p>
 
       <div style={styles.grid}>
-        <div
-          style={styles.card(accent, hovered)}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          onClick={() => onNavigate('center-consultancy-acceptance')}
-        >
-          <div style={styles.cardGlow(accent)} />
-          <div style={styles.iconWrap(accent)}>
-            <Icon path={
-              <>
-                <path d="M9 12l2 2 4-4" />
-                <circle cx="12" cy="12" r="9" />
-              </>
-            } />
-          </div>
-          <h3 style={styles.cardTitle}>Acceptance Form Generation</h3>
-          <p style={styles.cardDesc}>Generate the consultancy acceptance form for a centre / other-campus engagement.</p>
-          <div style={styles.arrow(accent, hovered)}>
-            <ArrowIcon color={hovered ? '#fff' : accent} />
-          </div>
-        </div>
-
-        <div style={styles.comingSoon}>More actions coming soon</div>
+        {cards.map((c) => {
+          const isHovered = hovered === c.key;
+          return (
+            <div
+              key={c.key}
+              style={styles.card(c.accent, isHovered)}
+              onMouseEnter={() => setHovered(c.key)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => onNavigate(c.key)}
+            >
+              <div style={styles.cardGlow(c.accent)} />
+              <div style={styles.iconWrap(c.accent)}>
+                <Icon path={c.icon} />
+              </div>
+              <h3 style={styles.cardTitle}>{c.title}</h3>
+              <p style={styles.cardDesc}>{c.desc}</p>
+              <div style={styles.arrow(c.accent, isHovered)}>
+                <ArrowIcon color={isHovered ? '#fff' : c.accent} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

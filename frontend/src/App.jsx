@@ -41,6 +41,14 @@ import Reports from './pages/projects/Reports';   // ← NEW
 
 import DepartmentConsultancies from './pages/consultancies/DepartmentConsultancies/DepartmentConsultancies';
 import CenterConsultancies     from './pages/consultancies/CenterConsultancies/CenterConsultancies';
+import AcceptanceFormWizard    from './pages/consultancies/shared/AcceptanceFormWizard';
+import AcceptanceFormStatus    from './pages/consultancies/shared/AcceptanceFormStatus';        // ← NEW
+// AcceptanceFormPrintView (./pages/consultancies/shared/AcceptanceFormPrintView) is imported
+// and rendered internally by AcceptanceFormStatus — no need to route to it directly.
+// NOTE: AcceptanceTypeSelect has been retired — the with/without-installment
+// choice is now a radio button inside AcceptanceFormWizard itself, so there's
+// no separate type-selection screen any more. Safe to delete
+// ./pages/consultancies/shared/AcceptanceTypeSelect.jsx.
 
 
 
@@ -110,8 +118,22 @@ function App() {
       case 'department-consultancies': return <DepartmentConsultancies onNavigate={navigate} />;
       case 'center-consultancies':     return <CenterConsultancies     onNavigate={navigate} />;
 
+      // Clicking "Acceptance Form Generation" now goes STRAIGHT into the
+      // wizard — the with/without-installment choice lives inside the form
+      // itself (a radio button on the Consultancy Work step), so there's no
+      // more intermediate type-selection screen.
+      case 'department-consultancy-acceptance':                                          // ← UPDATED
+        return <AcceptanceFormWizard campus="department" onNavigate={navigate} />;
+      case 'center-consultancy-acceptance':                                              // ← UPDATED
+        return <AcceptanceFormWizard campus="center" onNavigate={navigate} />;
 
-
+      // "Acceptance Form Status" — consultancy-wise list with All / Submitted
+      // / Accepted / Rejected filters, firm-letter viewer, and the printable
+      // acceptance form (rendered internally via AcceptanceFormPrintView).
+      case 'department-consultancy-status':                                              // ← NEW
+        return <AcceptanceFormStatus campus="department" onNavigate={navigate} />;
+      case 'center-consultancy-status':                                                  // ← NEW
+        return <AcceptanceFormStatus campus="center" onNavigate={navigate} />;
 
       case 'testing':           return <TestingPage />;
       case 'training':          return <TrainingPage />;

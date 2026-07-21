@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BackButton from '../shared/BackButton';
 
 const styles = {
   page: { minHeight: '100%', padding: '0 4px' },
@@ -8,9 +9,10 @@ const styles = {
   },
   breadcrumbLink: { cursor: 'pointer' },
   breadcrumbActive: { color: 'rgba(30,41,59,0.85)', fontWeight: 600 },
+  titleRow: { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 6 },
   title: {
     fontFamily: 'DM Sans, sans-serif', fontSize: 28, fontWeight: 700,
-    color: '#1e293b', margin: '0 0 6px 0', letterSpacing: '-0.02em',
+    color: '#1e293b', margin: 0, letterSpacing: '-0.02em',
   },
   subtitle: {
     fontFamily: 'DM Sans, sans-serif', fontSize: 14.5,
@@ -93,6 +95,17 @@ const cards = [
     ),
   },
   {
+    key: 'department-consultancy-status',
+    accent: '#0ea5e9',
+    title: 'Acceptance Form Status',
+    desc: 'View all submitted acceptance forms — filter by submitted, accepted, or rejected.',
+    icon: (
+      <>
+        <path d="M4 6h16M4 12h16M4 18h10" />
+      </>
+    ),
+  },
+  {
     key: 'department-consultancy-completion',
     accent: '#8b5cf6',
     title: 'Upload Completion Letter',
@@ -117,7 +130,10 @@ const DepartmentConsultancies = ({ onNavigate }) => {
         <span style={styles.breadcrumbLink} onClick={() => onNavigate('consultancies')}>Consultancies</span> /{' '}
         <span style={styles.breadcrumbActive}>Department</span>
       </div>
-      <h1 style={styles.title}>Department Consultancies</h1>
+      <div style={styles.titleRow}>
+        <BackButton onClick={() => onNavigate('consultancies')} />
+        <h1 style={styles.title}>Department Consultancies</h1>
+      </div>
       <p style={styles.subtitle}>CEG & SAP colleges — consultancy engagement actions</p>
 
       <div style={styles.grid}>
