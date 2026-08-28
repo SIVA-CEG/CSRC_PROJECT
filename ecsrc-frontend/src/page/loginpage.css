@@ -1,0 +1,400 @@
+/* =========================
+   LOGIN PAGE THEME (LIGHT)
+========================= */
+
+body {
+
+  margin: 0;
+
+  padding: 0;
+
+  font-family: "Poppins", sans-serif;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4f7fb 0%,
+      #e9eef5 50%,
+      #f7f9fc 100%
+    );
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+}
+
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.login-container {
+
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+}
+
+
+/* =========================
+   LOGIN CARD
+========================= */
+
+.login-card {
+
+  width: 420px;
+
+  background:
+    rgba(255,255,255,0.85);
+
+  border:
+    1px solid rgba(15,31,56,0.08);
+
+  backdrop-filter: blur(16px);
+
+  border-radius: 28px;
+
+  padding: 40px;
+
+  box-shadow:
+    0 12px 40px rgba(15,31,56,0.12);
+
+  box-sizing: border-box;
+
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.login-title {
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #0f1f38;
+
+  margin-bottom: 8px;
+
+  text-align: center;
+
+}
+
+
+.login-subtitle {
+
+  text-align: center;
+
+  color: rgba(15,31,56,0.62);
+
+  margin-bottom: 34px;
+
+  font-size: 14px;
+
+}
+
+
+/* =========================
+   INPUT GROUP
+========================= */
+
+.input-group {
+
+  margin-bottom: 22px;
+
+}
+
+
+.input-label {
+
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: rgba(15,31,56,0.75);
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+}
+
+
+/* =========================
+   INPUT FIELD
+========================= */
+
+.login-input {
+
+  width: 100%;
+
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  border:
+    1px solid rgba(15,31,56,0.14);
+
+  background:
+    rgba(15,31,56,0.03);
+
+  color: #0f1f38;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: 0.25s ease;
+
+  box-sizing: border-box;
+
+}
+
+
+.login-input::placeholder {
+
+  color: rgba(15,31,56,0.38);
+
+}
+
+
+.login-input:focus {
+
+  border:
+    1px solid #00a8cc;
+
+  box-shadow:
+    0 0 12px rgba(0,168,204,0.25);
+
+}
+
+
+/* =========================
+   PASSWORD WRAPPER
+========================= */
+
+.password-wrapper {
+
+  position: relative;
+
+}
+
+
+.password-toggle {
+
+  position: absolute;
+
+  right: 14px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  cursor: pointer;
+
+  color: rgba(15,31,56,0.55);
+
+  font-size: 18px;
+
+  transition: 0.2s ease;
+
+}
+
+
+.password-toggle:hover {
+
+  color: #00a8cc;
+
+}
+
+
+/* =========================
+   LOGIN BUTTON
+========================= */
+
+.login-button {
+
+  width: 100%;
+
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00a8cc,
+      #3a7bd5
+    );
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+
+  margin-top: 10px;
+
+}
+
+
+.login-button:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(0,168,204,0.3);
+
+}
+
+
+/* =========================
+   LINKS
+========================= */
+
+.login-links {
+
+  margin-top: 22px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+}
+
+
+.login-link {
+
+  color: rgba(15,31,56,0.7);
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  transition: 0.2s ease;
+
+}
+
+
+.login-link:hover {
+
+  color: #00a8cc;
+
+}
+
+
+/* =========================
+   REGISTER SECTION
+========================= */
+
+.register-section {
+
+  margin-top: 28px;
+
+  text-align: center;
+
+  color: rgba(15,31,56,0.65);
+
+  font-size: 14px;
+
+}
+
+
+.register-link {
+
+  color: #00a8cc;
+
+  text-decoration: none;
+
+  font-weight: 600;
+
+  margin-left: 6px;
+
+}
+
+
+.register-link:hover {
+
+  text-decoration: underline;
+
+}
+
+
+/* =========================
+   LOGO / HEADER
+========================= */
+
+.portal-logo {
+
+  width: 82px;
+
+  height: 82px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00a8cc,
+      #3a7bd5
+    );
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  margin: 0 auto 24px;
+
+  font-size: 34px;
+
+  font-weight: 700;
+
+  color: white;
+
+  box-shadow:
+    0 8px 20px rgba(0,168,204,0.25);
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 500px) {
+
+  .login-card {
+
+    width: 100%;
+
+    padding: 28px;
+
+    border-radius: 22px;
+
+  }
+
+}

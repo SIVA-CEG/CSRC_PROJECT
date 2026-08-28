@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+
+  /*
+    Light glassy background: a soft blue-white gradient that gives
+    depth behind the frosted glass cards and sidebar.
+    Replace with your preferred page-level background if needed.
+  */
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(0, 180, 255, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(120, 80, 255, 0.07) 0%, transparent 55%),
+    linear-gradient(160deg, #eef4ff 0%, #f5f8ff 50%, #fafbff 100%);
+
+  padding-top: 70px;
+}
+
+.dashboard-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 32px 36px;
+  min-height: calc(100vh - 70px);
+  position: relative;
+  z-index: 1;
+  transition: margin-left 0.3s ease;
+
+  /* Center the page content within the remaining space
+     instead of letting it stretch full-width on large screens */
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-content > * {
+  width: 100%;
+  max-width: 1440px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-content {
+    margin-left: 0;
+    padding: 20px 16px;
+  }
+}

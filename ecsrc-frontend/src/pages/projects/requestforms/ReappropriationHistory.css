@@ -1,0 +1,608 @@
+.rah-page {
+  max-width: 1500px;
+  margin: auto;
+  padding: 24px;
+}
+
+.rah-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.rah-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.rah-sub {
+  color: #64748b;
+}
+
+.rah-new-btn {
+  margin-left: auto;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Stats */
+/* ── Page ─────────────────────────────────────────────────────────────────── */
+.rah-page {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.rah-header {
+  margin-bottom: 24px;
+  position: relative;
+}
+.rah-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+.rah-sub {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+.rah-new-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.rah-new-btn:hover { background: #1e40af; }
+
+/* ── Stats ────────────────────────────────────────────────────────────────── */
+.rah-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+@media (max-width: 640px) { .rah-stats { grid-template-columns: repeat(2, 1fr); } }
+.rah-stat {
+  border: 1.5px solid;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.rah-stat-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
+.rah-stat-value { font-size: 26px; font-weight: 800; margin-top: 4px; }
+
+/* ── Controls ─────────────────────────────────────────────────────────────── */
+.rah-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.rah-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+.rah-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+.rah-search {
+  width: 100%;
+  padding: 8px 32px 8px 32px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+}
+.rah-search:focus { border-color: #1d4ed8; }
+.rah-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+.rah-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.rah-filter-group { display: flex; align-items: center; gap: 4px; }
+.rah-filter-label { font-size: 12px; color: #64748b; font-weight: 600; white-space: nowrap; }
+.rah-filter-btn {
+  padding: 5px 10px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rah-filter-btn:hover { border-color: #1d4ed8; color: #1d4ed8; }
+.rah-filter-btn.active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+/* ── Table ────────────────────────────────────────────────────────────────── */
+.rah-table-wrap { overflow-x: auto; border-radius: 10px; border: 1.5px solid #e2e8f0; background: #fff; }
+.rah-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rah-table thead tr { background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+.rah-table th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .4px; }
+.rah-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.rah-table tbody tr:last-child td { border-bottom: none; }
+.rah-table tbody tr:hover { background: #f8fafc; }
+
+.rah-sl      { color: #94a3b8; font-size: 12px; }
+.rah-id      { font-family: monospace; font-size: 12px; color: #1d4ed8; font-weight: 700; white-space: nowrap; }
+.rah-project-name { font-weight: 600; color: #0f172a; font-size: 13px; }
+.rah-pi-name      { font-size: 11px; color: #64748b; margin-top: 2px; }
+.rah-agency-chip  { background: #eff6ff; color: #1d4ed8; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+.rah-scheme       { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+.rah-date         { font-size: 12px; color: #64748b; white-space: nowrap; }
+.rah-detail-lines { font-size: 12px; color: #475569; line-height: 1.6; }
+.rah-detail-lines span { color: #94a3b8; font-size: 11px; }
+
+.rah-type-chip     { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.rah-type-with     { background: #f0fdf4; color: #15803d; }
+.rah-type-without  { background: #fefce8; color: #b45309; }
+
+.rah-badge      { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.rah-badge-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.rah-row-actions { display: flex; gap: 6px; }
+
+/* ── Empty state ──────────────────────────────────────────────────────────── */
+.rah-empty       { padding: 48px; text-align: center; }
+.rah-empty-icon  { font-size: 40px; margin-bottom: 12px; }
+.rah-empty-title { font-size: 16px; font-weight: 700; color: #1e293b; }
+.rah-empty-sub   { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.rah-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  border-radius: 7px;
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.rah-btn:hover   { opacity: 0.85; transform: translateY(-1px); }
+.rah-btn:active  { transform: translateY(0); }
+
+.rah-btn-preview  { background: #eff6ff; color: #1d4ed8; }
+.rah-btn-download { background: #16a34a; color: #fff; }
+.rah-btn-close    { background: #ef4444; color: #fff; }
+
+/* ── Modal overlay ────────────────────────────────────────────────────────── */
+.rah-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* ── Modal card ───────────────────────────────────────────────────────────── */
+.rah-modal {
+  background: #fff;
+  border-radius: 14px;
+  width: min(820px, 96vw);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: auto;   /* centres vertically when content is short */
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Modal header ─────────────────────────────────────────────────────────── */
+/* Fixed height, never scrolls, always fully visible */
+.rah-modal-header {
+  padding: 16px 20px;
+  background: #1e293b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;          /* never squish the header */
+  min-height: 64px;
+}
+.rah-modal-header-left {
+  min-width: 0;
+  flex: 1;
+}
+.rah-modal-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+.rah-modal-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rah-modal-header-right {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;   /* buttons never collapse */
+}
+
+/* ── Modal body ───────────────────────────────────────────────────────────── */
+.rah-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  background: #e5e7eb;
+  padding: 20px;
+  /* Give it a defined max height so the modal never exceeds the viewport */
+  max-height: calc(100vh - 64px - 40px);  /* 64px header, 40px overlay padding */
+}
+
+/* ── Scaled preview: the trick ────────────────────────────────────────────────
+   We wrap the 210mm report in a container that scales it down to fit the
+   modal width.  The outer container must have an explicit height equal to
+   the scaled height, otherwise it collapses (transform doesn't affect flow).
+
+   • Inner div (.rah-preview-scaler): always 210mm wide, scaled down.
+   • Outer div (.rah-preview-scaler-wrap): width 100%, height = inner height × scale.
+
+   We use CSS custom properties updated by JS (see component) so this is
+   automatic.  As a safe static default we use scale(0.72) and compensate
+   with a matching margin-bottom.
+────────────────────────────────────────────────────────────────────────────── */
+.rah-preview-scaler-wrap {
+  width: 100%;
+  /* Reserve the space the scaled element actually occupies visually */
+  display: flex;
+  justify-content: center;
+}
+
+.rah-preview-scaler {
+  /* Report is 210mm wide — let it be exactly that */
+  width: 210mm;
+  transform-origin: top center;
+  transform: scale(0.72);
+  /* Compensate for the space transform "removes" from flow:
+     210mm at 72% scale visually = 210mm × 0.72 = 151mm tall per page.
+     We use a negative margin to pull the empty space back up. */
+  margin-bottom: calc((210mm * 0.72 - 210mm) * 1.4);
+
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+/* On very narrow screens scale down further */
+@media (max-width: 600px) {
+  .rah-preview-scaler {
+    transform: scale(0.48);
+    margin-bottom: calc((210mm * 0.48 - 210mm) * 1.4);
+  }
+}
+.rah-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.rah-pagination button {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rah-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rah-stats {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.rah-stat {
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid;
+}
+
+.rah-stat-label {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.rah-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.rah-back-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #1d4ed8;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.rah-back-btn:hover {
+  opacity: 0.9;
+}
+/* Controls */
+
+.rah-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.rah-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 320px;
+}
+
+.rah-search {
+  width: 100%;
+  padding: 12px 42px;
+  border: 1px solid #dbe2ea;
+  border-radius: 12px;
+}
+
+.rah-search-icon {
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  color: #64748b;
+}
+
+.rah-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rah-filters {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.rah-filter-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rah-filter-label {
+  font-weight: 600;
+  color: #475569;
+}
+
+.rah-filter-btn {
+  border: 1px solid #dbe2ea;
+  background: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.rah-filter-btn.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+/* Table */
+
+.rah-table-wrap {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  overflow-x: auto;
+}
+
+.rah-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rah-table th {
+  background: #f8fafc;
+  color: #475569;
+  padding: 14px;
+  text-align: left;
+}
+
+.rah-table td {
+  padding: 14px;
+  border-top: 1px solid #edf2f7;
+}
+
+.rah-project-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.rah-pi-name {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.rah-agency-chip {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+.rah-scheme {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.rah-type-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.rah-type-with {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.rah-type-without {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.rah-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rah-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.rah-row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rah-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.rah-btn-preview {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.rah-btn-download {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+/* Empty */
+
+.rah-empty {
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.rah-empty-icon {
+  font-size: 50px;
+}
+
+.rah-empty-title {
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.rah-empty-sub {
+  color: #64748b;
+}
+
+/* Modal */
+
+.rah-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 999;
+}
+
+.rah-modal {
+  position: fixed;
+  inset: 30px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.rah-modal-header {
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rah-modal-body {
+  overflow: auto;
+  padding: 20px;
+}
+
+.rah-report-shadow {
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
